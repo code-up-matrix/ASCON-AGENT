@@ -21,13 +21,13 @@ jobs:
           enable-cache: true
       - name: Install pinned SDK and test tools
         run: uv sync --project competition --python 3.11.16 --frozen
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
       - name: Test strategy, JSONL protocol, lint and types without credentials
         run: make ascon-check
       - name: Prepare pinned official runtime
         run: make ascon-prepare
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "24"
       - name: Install official runtime dependencies
         working-directory: .eris/eris-agent-simulator
         run: npm ci --ignore-scripts

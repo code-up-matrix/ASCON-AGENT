@@ -30,7 +30,7 @@ npm ci --ignore-scripts
 
 `ascon-install` uses uv to install Python 3.11.16 and the isolated
 `competition/.venv`. It does not change the forecasting application's environment.
-`ascon-prepare` stages the candidate and two rosters, and creates `.env.local` with
+`ascon-prepare` stages the candidate and three rosters, and creates `.env.local` with
 blank credentials. It never overwrites an existing `.env.local` or a locally edited
 improving roster. It refuses a different Eris revision or unexpected tracked
 runtime changes (the generated local deployment address file is allowed).
@@ -48,6 +48,8 @@ also refresh it automatically. Do not edit the staged strategy as your source.
 | Default improving run: Ollama Cloud | `OLLAMA_API_KEY` | `.eris/eris-agent-simulator/.env.local` |
 | Alternative improving run: OpenAI | `OPENAI_API_KEY` | Same `.env.local`; change the candidate model in the improving roster |
 | Alternative improving run: Anthropic | `ANTHROPIC_API_KEY` | Same `.env.local`; change the candidate model in the improving roster |
+| Local OpenRouter development | `OPENROUTER_API_KEY` | Same `.env.local`; select with `--provider openrouter` |
+| Local AkashML development | `AKASHML_API_KEY` | Same `.env.local`; select with `--provider akashml` |
 | Retained FRED economic research | `FRED_API_KEY` | Repository-root `.env`, with `FINANCIAL_DATA_ENABLED=true` |
 | Hosted competition inference | One supported provider credential | Organizer's credential form, separately from the ZIP |
 
@@ -81,6 +83,91 @@ point-in-time research paths are retained. FRED is not called from `decide()`:
 competition observations are simulated and the strategy has no direct external
 network access. Forecasting provider and Metaculus keys are not needed to test
 this competition agent; see [FORECASTING.md](../FORECASTING.md) for that app.
+
+### OpenRouter and AkashML: store both keys, select one per run
+
+Create your own key at [OpenRouter](https://openrouter.ai/settings/keys) and in
+[AkashML Settings → API Keys](https://akashml.com/docs/getting-started/introduction).
+Add these entries to `.eris/eris-agent-simulator/.env.local` in your local editor.
+If that file already exists, append the entries rather than overwriting your
+existing deployment settings. Do not paste actual keys into chat or commit them.
+
+```dotenv
+OPENROUTER_API_KEY=your_personal_openrouter_key
+AKASHML_API_KEY=your_akashml_key
+ASCON_LLM_PROVIDER=openrouter
+OPENROUTER_MODEL=
+AKASHML_MODEL=
+```
+
+Both model fields default to `openai/gpt-oss-120b`, listed in both providers'
+catalogs on October 19, 2026. You can set different models for each provider.
+Copy the exact provider model ID; do not add Eris's `openai:` routing prefix.
+Check current availability and limits at
+[OpenRouter models](https://openrouter.ai/models) and
+[AkashML models](https://akashml.com/docs/platform/models). The revision prompt
+can grow over an epoch, and its output cap is 16,000 tokens; choose a model with
+enough context and output capacity. This launcher supports Chat Completions;
+IDs that the pinned Eris runtime routes to Responses (`pro`/`codex`) are rejected.
+
+From the ASCON repository root, after preparing Eris and running its `npm ci`:
+
+```bash
+# No network request or spend: validate the selection and key presence.
+make ascon-llm-check ARGS="--provider openrouter"
+make ascon-llm-check ARGS="--provider akashml"
+```
+
+The check prints provider, model, endpoint and key presence, never key values.
+It cannot establish that the key is valid or has credits. A CLI `--provider`
+overrides `ASCON_LLM_PROVIDER`; shell variables override `.env.local`. The launcher
+maps only the selected provider's key to `OPENAI_API_KEY` and sets its official
+endpoint in the child process. It overwrites stale `OPENAI_BASE_URL` and
+`ERIS_LLM_MODEL` values there without editing your file. Do not manually alias
+keys or put `${OPENROUTER_API_KEY}` into `.env.local`: Eris's loader does not expand
+variable references. Missing selected keys fail; there is no fallback spend on
+the other provider. The original provider keys do not pass Eris's agent-process
+allowlist, and its strategy-worker filter strips the mapped key too.
+
+When you choose to spend credits, these are **separate, manual operations**:
+
+```bash
+# ONE real model request, capped at 2,048 generated tokens including reasoning.
+make ascon-llm-smoke ARGS="--provider openrouter --i-accept-spend"
+make ascon-llm-smoke ARGS="--provider akashml --i-accept-spend"
+
+# After section 3 and the frozen baseline: one improving process-sandbox epoch.
+make ascon-llm-backtest ARGS="--provider openrouter --regime calm --seed 101 --i-accept-spend"
+# Substitute --provider akashml to test that provider in a separate paid run.
+```
+
+Each smoke command makes one request via the actual pinned Eris LLM transport.
+It reports the `ASCON_OK` marker and token usage. At the published default-model
+rates on October 19, a 2,048-output-token smoke request is roughly **under $0.001**
+with its short input; rates may change. Set provider spending limits. Reasoning
+can exhaust the cap before returning the marker: a failed/truncated test can
+still be billed. A backtest can make about six revisions in one 360-block epoch,
+each with up to 16,000 output tokens and a growing input. It is a different spend
+from a smoke test. This wrapper supports the local **process** sandbox only.
+
+The local roster keeps both controls frozen and takes the candidate model from
+the launcher. It is refreshed on each invocation, so keep model choices in
+`.env.local`. The original `ascon-improving.yaml` still serves direct designated
+providers, and `make ascon-backtest` remains entirely frozen.
+
+**Competition eligibility:** the published revision effective November 1, 2026
+names Ollama Cloud, Anthropic API and OpenAI API as designated services. Neither
+OpenRouter nor AkashML is listed. API compatibility or using the same underlying
+model does not establish eligibility. Use these configurations for local
+development; use a designated service/model for submission unless the organizer
+explicitly approves another provider. The launcher refuses a run with
+`ERIS_INFERENCE_BASE_URL` set so it cannot redirect the organizer's gateway.
+Provider settings and keys are outside the agent directory and the submission ZIP.
+
+Protocol references:
+[OpenRouter Chat Completions](https://openrouter.ai/docs/api/api-reference/chat/send-chat-completion-request),
+[AkashML Chat Completions](https://akashml.com/docs/api-reference/openai/post-v1-chat-completions),
+and [ASCON rules §2.5 / Appendix A](https://ascon.dev/en/rules).
 
 ## 3. Prepare local market state once
 
