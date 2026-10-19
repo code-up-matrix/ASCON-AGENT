@@ -33,6 +33,11 @@ The first GitHub audit found four advisories in the inherited root lockfile.
 Minimum constraints retain these fixes. The one-week freshness policy and existing
 audit exclusions were not changed. See the PR checks for the audit after this update.
 
+On the clean GitHub runner, the initial full suite passed 10,850 tests and failed
+two assertions pinning the list of workflows. Those inventories now include
+`ascon-ci.yaml`, subjecting its 15-minute job timeout to the same existing bounds.
+The 21 focused provider/import tests also passed after the dependency update.
+
 The bridge test supplies a deterministic synthetic observation and replacement
 source. It validates the execution interface and helper imports, not a model's
 judgment, persistent multi-epoch learning or on-chain fills.
