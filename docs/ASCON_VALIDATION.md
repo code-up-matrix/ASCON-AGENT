@@ -27,6 +27,12 @@ this host cannot resolve. They fail at the existing SSRF preflight before the fa
 HTTP session. This is not a fully green local legacy suite; consult the PR's GitHub
 Actions results for the clean-runner gate.
 
+The first GitHub audit found four advisories in the inherited root lockfile.
+`aiohttp` was updated from 3.14.3 to 3.14.4 and transitive `mcp` from 1.29.1 to
+1.30.0; the resolver also updated `yarl` from 1.24.5 to 1.25.1 for compatibility.
+Minimum constraints retain these fixes. The one-week freshness policy and existing
+audit exclusions were not changed. See the PR checks for the audit after this update.
+
 The bridge test supplies a deterministic synthetic observation and replacement
 source. It validates the execution interface and helper imports, not a model's
 judgment, persistent multi-epoch learning or on-chain fills.
