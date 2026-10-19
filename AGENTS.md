@@ -1,4 +1,4 @@
-# Metaculus Forecasting Bot: Agent Guidelines
+# ASCON Agent: Repository Guidelines
 
 Repo-specific context only; general coding style lives in the operator's private global config. A starting point, not
 the manual: the cost gate, the overrides, the layout, the pipeline, and the standing rules whose violation is silent and
