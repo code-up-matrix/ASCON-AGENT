@@ -25,6 +25,12 @@ Follow [the setup and API key guide](docs/ASCON_SETUP.md) for the simulator, fro
 baseline, model revision test and submission ZIP. No API key is needed for offline
 checks or frozen backtests. An improving run requires one inference provider.
 
+For local LLM development, store `OPENROUTER_API_KEY` and `AKASHML_API_KEY` in the
+Eris checkout's `.env.local`, then use `make ascon-llm-check ARGS="--provider openrouter"`
+or `--provider akashml`. Both keys can coexist. See the guide for model selection
+and explicit paid smoke/backtest commands. These two providers are not listed
+among the competition's designated inference services.
+
 ## Competition functionality
 
 `eris-adaptive-v1` implements the official Python `decide(obs, ctx)` / JSONL interface:
@@ -57,7 +63,8 @@ cash, not a liquidation execution feature.
 | `competition/agents/eris-adaptive-v1/` | Strategy, constants and mandatory improvement policy |
 | `competition/tests/` | Offline decision and SDK protocol tests |
 | `competition/rosters/` | Frozen comparison and manual improving runs |
-| `competition/tools.py` | Pinned runtime setup, checks, bundle and frozen backtests |
+| `competition/tools.py` | Pinned runtime setup, checks, bundle, frozen backtests and explicit local LLM commands |
+| `competition/llm/` | Local OpenRouter/AkashML selection using the official inference transport |
 | `docs/ASCON_SETUP.md` | Installation, keys, local simulation and packaging |
 | `docs/ASCON_VALIDATION.md` | Completed checks and remaining acceptance work |
 | `FORECASTING.md`, `metaculus_bot/` | Retained forecasting application, including optional FRED research |

@@ -1,0 +1,17 @@
+# Local OpenRouter/AkashML tests only; not a competition provider declaration.
+# The launcher selects ERIS_LLM_MODEL and OPENAI_BASE_URL in the environment.
+# Keep this generated roster unedited: tools.py stages it on every invocation.
+agents:
+  - id: noop
+    wallet: AGENT1_PRIVATE_KEY
+    baseline: true
+    env:
+      ERIS_AGENT_FROZEN: "1"
+  - id: my-arb-py
+    wallet: AUTO
+    env:
+      ERIS_AGENT_FROZEN: "1"
+  - id: eris-adaptive-v1
+    wallet: AUTO
+    env:
+      ERIS_AGENT_FROZEN: "0"

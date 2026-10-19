@@ -10,11 +10,13 @@ No profitability or competition acceptance claim is made.
 | Check | Result |
 | --- | --- |
 | Competition decisions and SDK JSONL tests, Python 3.11.16 | 34 passed |
+| OpenRouter/AkashML configuration tests, Node.js 24 | 6 passed: key isolation, model selection, missing-key rejection, organizer-proxy guard, API compatibility guard and explicit spend consent |
 | Competition Ruff checks and formatting | Passed |
 | Competition basedpyright | 0 errors, 0 warnings |
 | Official strategy static checker | Passed across 50 staged/upstream Python and TypeScript files |
 | Actual official TypeScript-to-Python bridge | Passed: resident decisions, cooldown, compiled replacement importing the companion module, restored original source |
 | Official improvement policy loader and revision parser | Passed with the candidate policy and a synthetic replacement; no LLM called |
+| Actual official LLM transport with mocked HTTP | Passed for both providers: endpoint, authorization, model, token cap, JSON/text modes, usage, truncation/auth errors, roster precedence and strategy credential filtering |
 | Official bundle creation | Passed; ZIP and source hashes recorded in the generated manifest |
 | Original app Ruff, formatting, basedpyright, deptry, import contracts | Passed; 0 type errors and all six import contracts kept |
 | Original app full test suite in this host | 10,807 passed, 63 skipped, 5 deselected, 6 failed and 13 setup errors on the first run |
@@ -37,6 +39,19 @@ On the clean GitHub runner, the initial full suite passed 10,850 tests and faile
 two assertions pinning the list of workflows. Those inventories now include
 `ascon-ci.yaml`, subjecting its 15-minute job timeout to the same existing bounds.
 The 21 focused provider/import tests also passed after the dependency update.
+
+The prior branch commit `b742b9f78783e1790302ab8f66f4bc42c92b9321` subsequently
+passed both workflows: [legacy CI](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39323303592)
+reported **10,852 passed, 40 skipped, 5 deselected**, with 93% coverage and all
+lint/type/audit/secret-scan jobs green. Its
+[ASCON checks](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39323303445)
+also passed. Consult the [GitHub Actions runs](https://github.com/code-up-matrix/ASCON-AGENT/actions)
+for checks on the subsequent local-provider integration.
+
+OpenRouter and AkashML have been verified against the pinned transport using
+synthetic credentials and mocked responses. Actual key authentication, credit
+availability, model output quality and live revisions remain untested. CI has no
+credentials and cannot run the paid smoke or improving-backtest commands.
 
 The bridge test supplies a deterministic synthetic observation and replacement
 source. It validates the execution interface and helper imports, not a model's

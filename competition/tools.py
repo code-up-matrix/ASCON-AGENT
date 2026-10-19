@@ -1,7 +1,7 @@
-"""Prepare/check/package against a pinned official runtime; backtests are frozen.
+"""Prepare/check/package against a pinned runtime; baseline backtests are frozen.
 
 Run with ``uv run --project competition --frozen python competition/tools.py --help``.
-There is deliberately no implicit paid run or contest submission in these tools.
+Paid local LLM commands require --i-accept-spend. There is no contest submission.
 """
 
 import argparse
@@ -73,7 +73,7 @@ def stage(checkout: Path) -> None:
     for roster in (root() / "rosters").glob("*.yaml"):
         target_roster = checkout / "config" / "rosters" / roster.name
         # Preserve deliberate local model selections in the improving roster.
-        if roster.name == "ascon-frozen.yaml" or not target_roster.exists():
+        if roster.name != "ascon-improving.yaml" or not target_roster.exists():
             shutil.copy2(roster, target_roster)
     template = root() / ".env.template"
     if not (checkout / ".env.local").exists():
@@ -94,6 +94,11 @@ def check(checkout: Path) -> None:
     command(["node", "--import", "tsx", "scripts/checkStrategyCode.ts"], checkout, env=execution_env())
     command(
         ["node", "--import", "tsx", str(root() / "tests" / "bridge-smoke.mjs")],
+        checkout,
+        env=execution_env(),
+    )
+    command(
+        ["node", "--import", "tsx", str(root() / "tests" / "llm-transport-smoke.mjs")],
         checkout,
         env=execution_env(),
     )
@@ -157,15 +162,46 @@ def doctor(checkout: Path) -> None:
     print("Keys belong in Eris .env.local; this command never reads or prints them.")
 
 
+def local_llm(checkout: Path, args: argparse.Namespace) -> None:
+    if args.operation != "llm-check" and not args.i_accept_spend:
+        raise ValueError("This operation spends inference credits; pass --i-accept-spend for this run.")
+    stage(checkout)
+    if args.operation == "llm-backtest":
+        if not (checkout / "backtest" / "state" / "manifest.json").exists():
+            raise ValueError("Missing state dump. Complete docs/ASCON_SETUP.md section 3 first.")
+        if (
+            "/" in args.regime
+            or "\\" in args.regime
+            or not (checkout / "config" / "regimes" / f"{args.regime}.yaml").is_file()
+        ):
+            raise ValueError("Unknown regime name")
+    argv = ["node", "--import", "tsx", str(root() / "llm" / "provider.mjs"), args.operation]
+    if args.provider:
+        argv += ["--provider", args.provider]
+    if args.i_accept_spend:
+        argv += ["--i-accept-spend"]
+    argv += ["--regime", args.regime, "--seed", str(args.seed)]
+    command(argv, checkout, env=execution_env())
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("operation", choices=("prepare", "stage", "doctor", "check", "bundle", "backtest"))
+    result.add_argument(
+        "operation",
+        choices=("prepare", "stage", "doctor", "check", "bundle", "backtest", "llm-check", "llm-smoke", "llm-backtest"),
+    )
     result.add_argument("--eris", type=Path, default=root().parent / ".eris" / "eris-agent-simulator")
     result.add_argument("--out", type=Path, default=root().parent / "dist" / "ascon")
     result.add_argument("--regime", default="calm")
     result.add_argument("--seed", type=int, default=1)
     result.add_argument("--sandbox", choices=("docker", "process"), default="docker")
     result.add_argument("--matrix", action="store_true", help="Frozen full public set; can take about 12 hours")
+    result.add_argument(
+        "--provider", choices=("openrouter", "akashml"), help="Local LLM provider; otherwise .env.local"
+    )
+    result.add_argument(
+        "--i-accept-spend", action="store_true", help="Approve this one local LLM operation's API spend"
+    )
     return result
 
 
@@ -173,7 +209,9 @@ def main() -> None:
     args = parser().parse_args()
     checkout = args.eris.resolve()
     try:
-        if args.operation == "bundle":
+        if args.operation.startswith("llm-"):
+            local_llm(checkout, args)
+        elif args.operation == "bundle":
             bundle(checkout, args.out.resolve())
         elif args.operation == "backtest":
             backtest(checkout, regime=args.regime, seed=args.seed, sandbox=args.sandbox, matrix=args.matrix)
