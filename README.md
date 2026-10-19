@@ -1,7 +1,7 @@
 # ASCON Agent
 
 A Python trading agent for **NYX ASCON**, built against the official Eris simulator.
-The original Metaculus/Mantic forecasting application is retained; its documentation
+The existing forecasting application is retained; its documentation
 is in [FORECASTING.md](FORECASTING.md).
 
 **Status:** initial implementation with offline tests and a submission packaging
@@ -67,7 +67,7 @@ cash, not a liquidation execution feature.
 | `competition/llm/` | Local OpenRouter/AkashML selection using the official inference transport |
 | `docs/ASCON_SETUP.md` | Installation, keys, local simulation and packaging |
 | `docs/ASCON_VALIDATION.md` | Completed checks and remaining acceptance work |
-| `FORECASTING.md`, `metaculus_bot/` | Retained forecasting application, including optional FRED research |
+| `FORECASTING.md` | Forecasting application guide, including optional FRED research |
 
 The separate competition lockfile pins the SDK to the same official Eris commit as
 `competition/eris.lock`. Updating it means updating both pins and rerunning the
@@ -76,9 +76,8 @@ and never runs paid inference or submits an entry.
 
 ## Attribution
 
-The forecasting application originated from
-[No-Stream/nostreambot-metaculus-bot](https://github.com/No-Stream/nostreambot-metaculus-bot).
-Its historical performance statements in the retained documentation describe that
-upstream forecasting bot, not this ASCON agent. The competition integration uses
+Third-party copyright and permission notices are recorded in [LICENSE](LICENSE).
+Historical forecasting results do not establish this agent's performance.
+The competition integration uses
 [NYX Foundation's Eris](https://github.com/NyxFoundation/eris-agent-simulator)
 under its upstream license. Original licensing and attribution are retained.

@@ -81,7 +81,7 @@ FRED is optional research for the retained forecasting app. Get its key from
 [FRED API keys](https://fred.stlouisfed.org/docs/api/api_key.html). The existing
 point-in-time research paths are retained. FRED is not called from `decide()`:
 competition observations are simulated and the strategy has no direct external
-network access. Forecasting provider and Metaculus keys are not needed to test
+network access. Forecasting provider and platform keys are not needed to test
 this competition agent; see [FORECASTING.md](../FORECASTING.md) for that app.
 
 ### OpenRouter and AkashML: store both keys, select one per run
