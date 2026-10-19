@@ -204,6 +204,8 @@ celerybeat.pid
 
 # Environments
 /.venv/
+/competition/.venv/
+/.eris/
 /env/
 /venv/
 /ENV/

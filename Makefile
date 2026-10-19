@@ -23,6 +23,34 @@ endif
 install:
 	uv sync --dev
 
+# ASCON is an independent Python 3.11 project. All these targets are keyless;
+# ascon-backtest freezes every strategy's LLM revision path.
+.PHONY: ascon-install ascon-test ascon-check ascon-prepare ascon-doctor ascon-bundle ascon-backtest
+ASCON = uv run --project competition --frozen
+
+ascon-install:
+	uv sync --project competition --python 3.11.16 --frozen
+
+ascon-test:
+	$(ASCON) pytest -c competition/pyproject.toml --confcutdir=competition competition/tests
+
+ascon-check: ascon-test
+	$(ASCON) ruff check competition
+	$(ASCON) ruff format --check competition
+	$(ASCON) basedpyright --project competition
+
+ascon-prepare:
+	$(ASCON) python competition/tools.py prepare $(ARGS)
+
+ascon-doctor:
+	$(ASCON) python competition/tools.py doctor $(ARGS)
+
+ascon-bundle:
+	$(ASCON) python competition/tools.py bundle $(ARGS)
+
+ascon-backtest:
+	$(ASCON) python competition/tools.py backtest $(ARGS)
+
 lock:
 	uv lock
 

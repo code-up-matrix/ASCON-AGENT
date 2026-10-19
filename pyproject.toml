@@ -297,6 +297,9 @@ exclude = [
 # gitignored and deptry honors gitignore, so naming them is belt-and-suspenders — a
 # .gitignore edit must not silently pull scratch/'s ~1500 analysis scripts into the scan.
 extend_exclude = [
+    # Independent Python 3.11 project, with its own SDK lock and dependency checks.
+    "competition",
+    "\\.eris",
     "REFERENCE_COPY_OF_.*",
     "scratch.*",
     "benchmarks",
