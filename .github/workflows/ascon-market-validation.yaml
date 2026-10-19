@@ -1,0 +1,187 @@
+name: ASCON market validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'competition/**'
+      - '.github/workflows/ascon-market-validation.yaml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ascon-market-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ERIS_AGENT_FROZEN: '1'
+  ERIS_DOCKER_MEM: 4g
+  ERIS_DOCKER_CPUS: '2'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: npm install --global yarn@1.22.22
+      - run: make ascon-install ascon-prepare
+      - name: Deploy every official venue and generate state
+        run: bash competition/ci/prepare-market.sh .eris/eris-agent-simulator
+      - name: Build the three official capped agent images
+        working-directory: .eris/eris-agent-simulator
+        run: |
+          bash infra/docker-agent/build.sh team noop
+          bash infra/docker-agent/build.sh team my-arb-py
+          bash infra/docker-agent/build.sh team eris-adaptive-v1
+      - name: Derive the public scenario matrix
+        id: plan
+        run: uv run --project competition --frozen python competition/validation.py plan --out dist/scenario-plan.json --github-output "$GITHUB_OUTPUT"
+      - name: Package deployed state, contract artifacts and images
+        run: |
+          mkdir -p dist/market-state
+          tar -C .eris/eris-agent-simulator -czf dist/market-state/state.tar.gz backtest/state sdk/src/constants.local.ts out
+          docker save eris-agent:noop eris-agent:my-arb-py eris-agent:eris-adaptive-v1 | gzip > dist/market-state/images.tar.gz
+          make ascon-bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ascon-market-state
+          path: dist/market-state/
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ascon-validated-candidate-input
+          path: |
+            dist/ascon/
+            dist/scenario-plan.json
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ascon-market-setup-logs
+          path: .eris/eris-agent-simulator/validation-setup/
+          retention-days: 7
+
+  smoke:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        regime: [calm, crash]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: make ascon-install ascon-prepare
+      - run: npm ci --ignore-scripts
+        working-directory: .eris/eris-agent-simulator
+      - uses: actions/download-artifact@v4
+        with:
+          name: ascon-market-state
+          path: dist/market-state
+      - name: Load identical state and images
+        run: |
+          tar -C .eris/eris-agent-simulator -xzf dist/market-state/state.tar.gz
+          gzip -dc dist/market-state/images.tar.gz | docker load
+      - name: Run full-length frozen scenario and verify Docker caps
+        run: uv run --project competition --frozen python competition/validation.py run --regime "${{ matrix.regime }}" --seed 101 --out "dist/market/${{ matrix.regime }}-101"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ascon-market-result-${{ matrix.regime }}-101
+          path: |
+            dist/market/
+            .eris/eris-agent-simulator/runs/
+          retention-days: 7
+
+  public-matrix:
+    needs: [prepare, smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: make ascon-install ascon-prepare
+      - run: npm ci --ignore-scripts
+        working-directory: .eris/eris-agent-simulator
+      - uses: actions/download-artifact@v4
+        with:
+          name: ascon-market-state
+          path: dist/market-state
+      - name: Load identical state and images
+        run: |
+          tar -C .eris/eris-agent-simulator -xzf dist/market-state/state.tar.gz
+          gzip -dc dist/market-state/images.tar.gz | docker load
+      - name: Run published scenario without shortening or changing its timing
+        run: uv run --project competition --frozen python competition/validation.py run --regime "${{ matrix.regime }}" --seed "${{ matrix.seed }}" --out "dist/market/${{ matrix.regime }}-${{ matrix.seed }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ascon-market-result-${{ matrix.regime }}-${{ matrix.seed }}
+          path: |
+            dist/market/
+            .eris/eris-agent-simulator/runs/
+          retention-days: 7
+
+  report:
+    if: always()
+    needs: [prepare, smoke, public-matrix]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: make ascon-install ascon-prepare
+      - run: npm ci --ignore-scripts
+        working-directory: .eris/eris-agent-simulator
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ascon-market-result-*
+          path: dist/scenario-results
+      - name: Require every public scenario and matching candidate hashes
+        run: uv run --project competition --frozen python competition/validation.py aggregate --inputs dist/scenario-results --out dist/public-matrix-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ascon-public-matrix-report
+          path: dist/public-matrix-report.json
+          retention-days: 30
