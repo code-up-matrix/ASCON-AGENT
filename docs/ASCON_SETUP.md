@@ -246,6 +246,35 @@ A three-agent local ranking is not a prediction of placement in the full contest
 Do not tune solely to one calm seed or claim a gain without the unchanged starter
 run on the same conditions. Public seeds may change after an official rule update.
 
+### Automated market and resource validation
+
+The **ASCON market validation** GitHub Actions workflow deploys the pinned local
+economy, builds the three official agent images, and runs the published calm and
+crash scenarios first. When those pass, it runs the other 58 regime/seed pairs in
+parallel. Every scenario retains its official block count and timing. The workflow
+uses no inference keys; all agents are frozen.
+
+The check fails for incomplete block windows, missing/failed valuation reads,
+early agent exits, decision errors/timeouts, missing decision logs, rule or gas
+violations, or missing resource evidence. During execution it inspects each
+running container to confirm 2 CPUs, 4 GiB RAM with no additional swap, and a
+read-only root filesystem. These are observed limits, not peak memory measurements.
+The official local runner uses host networking; this check does not certify the
+organizer's network isolation or live inference gateway.
+
+Download `ascon-public-matrix-report` from the workflow run for coverage, source
+hashes and economic P&L against both controls. The individual
+`ascon-market-result-<regime>-<seed>` artifacts contain summaries and execution
+logs. The aggregate passes only when all 60 cases pass with the same candidate
+sources and runtime pin. A green offline workflow is a separate result.
+
+On a Docker-enabled machine with deployed state and the images already built,
+run the same audit from the repository root:
+
+```bash
+uv run --project competition --frozen python competition/validation.py run --regime calm --seed 101 --out dist/market/calm-101
+```
+
 ## 5. Test the required LLM improvement path explicitly
 
 This is the first step that can spend provider credits. Set one provider key as
@@ -289,8 +318,10 @@ with a local replacement/restoration fixture (no LLM call), then bundles and pro
 - `dist/ascon/bundle-eris-adaptive-v1.zip`
 - `dist/ascon/manifest.json`, recording the runtime pin and ZIP/source SHA-256 hashes
 
-The bundle includes the official runtime/SDK, the candidate and its improvement
-policy. It does not include local credentials or the forecasting application.
+The bundle includes the official runtime/SDK, its `ERIS_LICENSE.txt` notice, the
+candidate and its improvement policy. Packaging verifies the candidate bytes
+against the checked source and refuses environment files. It does not include
+local credentials or the forecasting application.
 The official bundler may warn about a missing `AgentERC20` artifact referenced by
 its shared library. This candidate does not deploy tokens or call that helper;
 build contracts first if you later add deployment functionality.

@@ -11,6 +11,7 @@ import os
 import shutil
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 
@@ -113,6 +114,16 @@ def bundle(checkout: Path, output: Path) -> None:
         checkout,
         env=execution_env(),
     )
+    # The official bundler copies the SDK/runtime but omits their permission notice.
+    # Preserve the upstream license with the redistributed code.
+    with zipfile.ZipFile(archive, "a", compression=zipfile.ZIP_DEFLATED) as package:
+        package.write(checkout / "LICENSE", "ERIS_LICENSE.txt")
+        names = package.namelist()
+        if any(Path(name).name.startswith(".env") for name in names):
+            raise ValueError("Refusing a bundle containing an environment file")
+        for source in (root() / "agents" / "eris-adaptive-v1").iterdir():
+            if source.is_file() and package.read(f"agents/eris-adaptive-v1/{source.name}") != source.read_bytes():
+                raise ValueError(f"Bundled candidate differs from the checked source: {source.name}")
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     manifest = {
         "agent": "eris-adaptive-v1",
@@ -123,6 +134,7 @@ def bundle(checkout: Path, output: Path) -> None:
             for path in sorted((root() / "agents" / "eris-adaptive-v1").iterdir())
             if path.is_file()
         },
+        "upstream_license_sha256": hashlib.sha256((checkout / "LICENSE").read_bytes()).hexdigest(),
         "validation": "Packaged with official bundler; not a simulator score or submission acceptance.",
     }
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
@@ -133,7 +145,7 @@ def backtest(checkout: Path, *, regime: str, seed: int, sandbox: str, matrix: bo
     stage(checkout)
     if not (checkout / "backtest" / "state" / "manifest.json").exists():
         raise ValueError("Missing state dump. Follow docs/ASCON_SETUP.md: deploy, gen:local-constants, gen:state-dump.")
-    args = ["npm", "run", "backtest", "--"]
+    args = ["node", "--import", "tsx", "core/src/cli/backtest.ts"]
     if matrix:
         args += ["--scenarios", "config/scenarios/public.yaml"]
     else:
