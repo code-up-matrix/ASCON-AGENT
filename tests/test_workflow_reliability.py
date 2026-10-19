@@ -114,6 +114,7 @@ class TestEveryJobIsCapped:
         # Pinned so a NEW workflow has to satisfy the invariants below rather than
         # silently escape them. .y*ml because both spellings are live (claude.yml).
         assert _ALL_WORKFLOWS == [
+            ".github/workflows/ascon-ci.yaml",
             ".github/workflows/ci.yaml",
             ".github/workflows/claude.yml",
             ".github/workflows/fetch_diagnostic.yaml",
@@ -258,6 +259,7 @@ class TestNonBotWorkflowCapsStayInBand:
         # Complement of the pinned full set: a new non-bot workflow lands in the band
         # check above rather than escaping both parametrizations.
         assert _NON_BOT_WORKFLOWS == [
+            ".github/workflows/ascon-ci.yaml",
             ".github/workflows/ci.yaml",
             ".github/workflows/claude.yml",
             ".github/workflows/fetch_diagnostic.yaml",

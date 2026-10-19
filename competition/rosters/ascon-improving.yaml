@@ -1,0 +1,17 @@
+# PAID when credentials are configured. Run manually after the frozen baseline.
+# The original starter remains frozen as a control. The candidate revises every 60 blocks.
+agents:
+  - id: noop
+    wallet: AGENT1_PRIVATE_KEY
+    baseline: true
+    env:
+      ERIS_AGENT_FROZEN: "1"
+  - id: my-arb-py
+    wallet: AUTO
+    env:
+      ERIS_AGENT_FROZEN: "1"
+  - id: eris-adaptive-v1
+    wallet: AUTO
+    env:
+      ERIS_AGENT_FROZEN: "0"
+      ERIS_LLM_MODEL: "gpt-oss:120b"
