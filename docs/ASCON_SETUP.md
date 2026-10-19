@@ -4,7 +4,9 @@ This guide targets the official Eris commit recorded in `competition/eris.lock`,
 currently `e5b93b651bba2384aedfa891cecbf7b64d05b88b`. Keep the SDK, simulator,
 deployment state and public scenarios from the same revision when comparing runs.
 
-Official references: [rules](https://ascon.dev/en/rules),
+Official references: [dashboard](https://ascon-dash.nyx.foundation/),
+[rules](https://ascon.dev/en/rules),
+[current English participant guide](https://github.com/NyxFoundation/eris-agent-simulator/blob/main/docs/competition-start.en.md),
 [competition guide](https://github.com/NyxFoundation/eris-agent-simulator/blob/e5b93b651bba2384aedfa891cecbf7b64d05b88b/docs/competition-start.md),
 [Python SDK](https://github.com/NyxFoundation/eris-agent-simulator/tree/e5b93b651bba2384aedfa891cecbf7b64d05b88b/sdk-py),
 and [local deployment](https://github.com/NyxFoundation/eris-agent-simulator/blob/e5b93b651bba2384aedfa891cecbf7b64d05b88b/docs/guide/local-deploy.md).
@@ -296,6 +298,50 @@ Packaging is not a simulation score or an accepted submission. Follow the curren
 organizer submission procedure, supply credentials through their separate form,
 and retain the accepted artifact hash and confirmation. This repository does not
 automatically submit or enable paid competition runs.
+
+## 7. Register, practice and submit
+
+Checked against the [dashboard](https://ascon-dash.nyx.foundation/) and
+[rules](https://ascon.dev/en/rules) on October 19, 2026. The rules take precedence
+over dashboard summaries and older guide text. All dates below use **Japan
+Standard Time (JST, UTC+9)**.
+
+| Milestone | Date in 2026 |
+| --- | --- |
+| Registration closes | October 24 |
+| Submission and practice close; agent freezes | October 31 |
+| Live competition | November 1–7 |
+| Optional report-track deadline | November 21 |
+
+1. Join Discord **#ascon** through the dashboard, then use **Register**. Each team
+   member completes registration; having a GitHub repository does not register you.
+2. Open the separate inference-key form linked in **#ascon**. Register a designated
+   provider credential there, separately from the ZIP. The announced November 1
+   provider list is Ollama Cloud, Anthropic API and OpenAI API; choose a supported
+   model from rules Appendix A. The local OpenRouter/AkashML configuration in
+   section 2 does not register a competition credential.
+3. Complete the baseline, resource-limit and approved LLM-revision checks in
+   sections 4–5. Consult [validation results](ASCON_VALIDATION.md) for work still
+   outstanding; a passing bundle check alone is insufficient.
+4. Build the ZIP with `make ascon-bundle`, then use **Submit** on the dashboard
+   (Google sign-in required). Retain the acceptance email and the matching
+   `dist/ascon/manifest.json`. Up to five accepted replacements are allowed per
+   JST day; the most recently accepted submission at the deadline is evaluated.
+
+Optional practice: registered participants can run their agent locally against
+the trial chain. Follow the participant guide's
+[practice section](https://github.com/NyxFoundation/eris-agent-simulator/blob/main/docs/competition-start.en.md#9-the-practice-devnet-optional)
+using the dashboard's published environment manifest. To appear in practice
+standings, post the practice wallet's public address in **#ascon**. Practice
+results do not count toward the competition score.
+
+The [October 18 update](https://ascon-dash.nyx.foundation/updates/2026-10-18)
+explains that evaluation uses only the agent directory from the ZIP, combined
+with the organizer's frozen SDK/runtime. The final commit hash is due on
+October 31 in rules Appendix A and Discord. When published, verify the strategy
+against that SDK; `competition/eris.lock` records our local development pin,
+not a confirmed final evaluation commit. An older bundled runtime alone is not
+a reason for rejection or for rebuilding an already accepted ZIP.
 
 ## Troubleshooting
 

@@ -25,6 +25,11 @@ Follow [the setup and API key guide](docs/ASCON_SETUP.md) for the simulator, fro
 baseline, model revision test and submission ZIP. No API key is needed for offline
 checks or frozen backtests. An improving run requires one inference provider.
 
+Use the [official ASCON dashboard](https://ascon-dash.nyx.foundation/) for
+registration, submission, practice monitoring and environment updates. The
+[competition handoff checklist](docs/ASCON_SETUP.md#7-register-practice-and-submit)
+covers deadlines, separate credential registration and the final evaluation SDK.
+
 For local LLM development, store `OPENROUTER_API_KEY` and `AKASHML_API_KEY` in the
 Eris checkout's `.env.local`, then use `make ascon-llm-check ARGS="--provider openrouter"`
 or `--provider akashml`. Both keys can coexist. See the guide for model selection
