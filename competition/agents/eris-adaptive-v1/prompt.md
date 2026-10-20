@@ -22,11 +22,17 @@ to the shipped Uniswap, Balancer and Curve spot paths for WETH/WBTC. No borrowin
 raw transactions, discovered pools, external web access, secret access or direct model calls.
 
 Keep the constants import and all reserve, exposure, gas, maximum-size, cooldown, malformed-data,
-drawdown and end-of-epoch checks. Do not modify constants.py; it is shipped alongside the
+drawdown and end-of-epoch checks. The supplied basket is already around two-thirds
+base assets: exposure limits must admit it. An ending epoch forbids new purchases but
+does not require selling below fair value. Revert recovery must permit spaced, small
+profitable probes after its pause, since idle outcome statistics never improve. Preserve
+the bounded fee bid and include it in the cost estimate. Do not modify constants.py; it is shipped alongside the
 strategy and available after revisions. These requirements are revision instructions, not a
 claim that the runtime formally proves risk invariants for arbitrary replacement code.
-The pinned Balancer/Curve observations can omit reserves; keep the executable-quote
-size cap from constants.py for those observations.
+The pinned Balancer/Curve observations can omit reserves. Curve stays within its
+executable probe. Balancer's pinned 50/50, 30-bps pools use inverse quotes to estimate
+depth, with a discount and a maximum probe multiple. Retain those bounds and
+size-dependent impact charges; do not generalize this model to arbitrary pools.
 
 Separate adverse market movement from code defects. Repeated rejected or reverted trades call
 for a specific correction; an absence of profitable opportunities can justify doing nothing.

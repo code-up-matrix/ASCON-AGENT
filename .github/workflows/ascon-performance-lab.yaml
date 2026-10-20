@@ -1,0 +1,127 @@
+name: ASCON performance lab
+
+on:
+  push:
+    branches: ['experiment/ascon-sizing']
+    paths: ['competition/**', '.github/workflows/ascon-performance-lab.yaml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: ascon-performance-lab-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ERIS_AGENT_FROZEN: '1'
+  ERIS_DOCKER_MEM: 4g
+  ERIS_DOCKER_CPUS: '2'
+  OLLAMA_API_KEY: ''
+  OPENAI_API_KEY: ''
+  ANTHROPIC_API_KEY: ''
+  OPENROUTER_API_KEY: ''
+  AKASHML_API_KEY: ''
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        variant: [sizing]
+        regime: [calm, crash, cex-drift, whale]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: make ascon-install ascon-prepare
+      - run: npm ci --ignore-scripts
+        working-directory: .eris/eris-agent-simulator
+      - name: Check strategy and report canonical formatting
+        run: |
+          uv run --project competition --frozen ruff format competition
+          git diff -- competition
+          make ascon-check
+      - name: Select the ablation
+        env:
+          VARIANT: ${{ matrix.variant }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os, subprocess
+          agent = Path('competition/agents/eris-adaptive-v1')
+          if os.environ['VARIANT'] == 'baseline':
+              for name in ('strategy.py', 'constants.py', 'prompt.md'):
+                  content = subprocess.check_output(['git', 'show', f'4606cb00d2a0ee1efc43b3f4cb23b398c00efbf2:{agent / name}'])
+                  (agent / name).write_bytes(content)
+          elif os.environ['VARIANT'] == 'risk':
+              p = agent / 'constants.py'
+              p.write_text(p.read_text().replace('PRIORITY_MULTIPLIER = 3', 'PRIORITY_MULTIPLIER = 1'))
+          PY
+          make ascon-prepare
+      - name: Restore audited pinned state and unchanged controls
+        uses: actions/download-artifact@v4
+        with:
+          name: ascon-market-state
+          run-id: 39377687457
+          github-token: ${{ github.token }}
+          path: dist/restored-state
+      - run: |
+          tar -xzf dist/restored-state/state.tar.gz -C .eris/eris-agent-simulator
+          gzip -dc dist/restored-state/images.tar.gz | docker load
+      - name: Build selected candidate
+        working-directory: .eris/eris-agent-simulator
+        run: bash infra/docker-agent/build.sh team eris-adaptive-v1
+      - name: Full official scenario with frozen controls
+        run: uv run --project competition --frozen python competition/validation.py run --regime ${{ matrix.regime }} --seed 101 --out dist/lab
+      - name: Report performance and execution
+        if: always()
+        env:
+          VARIANT: ${{ matrix.variant }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import collections, csv, json, os
+          p = Path('dist/lab/report.json')
+          if not p.exists():
+              raise SystemExit('No complete result')
+          report = json.loads(p.read_text())
+          run = Path(report['run_directory']) if report['run_directory'] else None
+          result = {k: report[k] for k in ('regime', 'seed', 'passed', 'problems', 'source_sha256')}
+          result['variant'] = os.environ['VARIANT']
+          result['agents'] = [{k: a.get(k) for k in ('id', 'pnlUsdc', 'netPnlUsdc', 'includedTxCount', 'revertCount')} for a in report['agents']]
+          if run:
+              rows = [json.loads(x) for x in (run/'agents/eris-adaptive-v1.jsonl').read_text().splitlines()]
+              decisions = [r for r in rows if r.get('marker') == 'ASCON_DECISION']
+              result['reasons'] = dict(collections.Counter(r.get('reason') for r in decisions))
+              result['directions'] = dict(collections.Counter('/'.join((r.get('base', '?'), r.get('token_in', '?'), r.get('venue', '?'))) for r in decisions if r.get('decision') == 'swap'))
+              result['rejections'] = dict(collections.Counter(r.get('event') for r in rows if r.get('event') in ('submit_failed','rejected')))
+              transactions = [r for r in csv.DictReader((run/'blocks.csv').open()) if r['ownerId'] == 'eris-adaptive-v1']
+              result['gas_used'] = sum(int(r['gasUsed']) for r in transactions)
+              result['mean_tx_index'] = sum(int(r['txIndex']) for r in transactions)/len(transactions) if transactions else None
+          Path('dist/lab/result.json').write_text(json.dumps(result, indent=2)+'\n')
+          print('LAB_RESULT '+json.dumps(result))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lab-${{ matrix.variant }}-${{ matrix.regime }}-101
+          path: |
+            dist/lab/
+            competition/agents/eris-adaptive-v1/
+            .eris/eris-agent-simulator/runs/
+          include-hidden-files: true
+          retention-days: 14
