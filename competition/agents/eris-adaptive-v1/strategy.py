@@ -1,7 +1,7 @@
 """Bounded spot relative-value strategy for the official Eris Python runtime.
 
-One inventory-funded action at a time. A lagged reference is an uncertain signal,
-not a redeemable price; this is not atomic or risk-free cross-venue arbitrage.
+Inventory-funded spot actions and paired venue trades. A lagged reference is an
+uncertain signal, not a redeemable price. Bundles are not atomic or risk-free.
 """
 
 from dataclasses import dataclass
@@ -10,7 +10,7 @@ from statistics import median
 
 import constants as limits
 from eris import Context, Observation, run
-from eris.actions import balancer_swap, curve_swap, noop, swap
+from eris.actions import balancer_swap, bundle, curve_swap, noop, swap
 from eris.markets import AgentVenue, MarketView, market_views
 
 
@@ -31,6 +31,17 @@ class Candidate:
     amount: int
     notional: Decimal
     edge_bps: Decimal
+    expected_net: Decimal
+
+
+@dataclass(frozen=True)
+class Pair:
+    market: MarketView
+    buy_venue: AgentVenue
+    sell_venue: AgentVenue
+    buy_amount: int
+    sell_amount: int
+    cash_in: Decimal
     expected_net: Decimal
 
 
@@ -142,16 +153,31 @@ def balancer_depth(market: MarketView, venue: AgentVenue) -> tuple[Decimal, Deci
 
 def uniswap_reserve(obs: Observation, market: MarketView, venue: AgentVenue, token_in: str) -> Decimal:
     protocol = obs.protocols.uniswap
-    quote = protocol.pool if protocol and market.base == "WETH" else (protocol.markets or {}).get(f"{market.base}/USDC") if protocol else None
+    quote = (
+        protocol.pool
+        if protocol and market.base == "WETH"
+        else (protocol.markets or {}).get(f"{market.base}/USDC")
+        if protocol
+        else None
+    )
     liquidity = getattr(quote, "liquidity", None)
     if liquidity is None:
         return Decimal(0)
     raw_sqrt_price = (number(venue.price) * limits.USDC_SCALE / (10**market.base_decimals)).sqrt()
-    return Decimal(units(liquidity)) * raw_sqrt_price if token_in == limits.QUOTE_ASSET else Decimal(units(liquidity)) / raw_sqrt_price
+    return (
+        Decimal(units(liquidity)) * raw_sqrt_price
+        if token_in == limits.QUOTE_ASSET
+        else Decimal(units(liquidity)) / raw_sqrt_price
+    )
 
 
 def price_for_size(
-    obs: Observation, market: MarketView, venue: AgentVenue, token_in: str, amount: int, price: Decimal,
+    obs: Observation,
+    market: MarketView,
+    venue: AgentVenue,
+    token_in: str,
+    amount: int,
+    price: Decimal,
 ) -> Decimal:
     """Charge estimated own-price impact in addition to fees in the quote."""
     extra = Decimal(0)
@@ -166,7 +192,8 @@ def price_for_size(
             reserve = depth[1] if token_in == limits.QUOTE_ASSET else depth[0]
             probe = limits.AMM_QUOTE_PROBE_BASE * (
                 number(venue.sell_price) * limits.USDC_SCALE
-                if token_in == limits.QUOTE_ASSET else 10**market.base_decimals
+                if token_in == limits.QUOTE_ASSET
+                else 10**market.base_decimals
             )
             extra = max(Decimal(0), Decimal(amount) - probe) * (1 - limits.BALANCER_FEE_BPS / limits.BPS) / reserve
     return price * (1 + extra) if token_in == limits.QUOTE_ASSET else price / (1 + extra)
@@ -315,6 +342,82 @@ def candidates(
     return result
 
 
+def paired_candidates(
+    obs: Observation, markets: list[MarketView], *, equity: Decimal, exposure: Decimal,
+    margin: Decimal, size_bps: int, gas_cost: Decimal,
+) -> list[Pair]:
+    """Find funded round trips without treating the reference as redeemable.
+
+    A bundle is not atomic. Each leg must fit the current wallet, gas reserve
+    and exposure limits on its own, including when the other leg fails.
+    """
+    result = []
+    cushion = Decimal(limits.SLIPPAGE_BPS) / limits.BPS
+    for market in markets:
+        quoted = []
+        for venue in market.venues:
+            if venue.protocol not in obs.enabled_protocols or venue.protocol not in limits.ALLOWED_PROTOCOLS:
+                continue
+            try:
+                buy, sell = quote_prices(venue)
+                quoted.append((venue, buy, sell))
+            except (ValueError, InvalidOperation, ZeroDivisionError):
+                continue
+        for buy_venue, buy, _ in quoted:
+            for sell_venue, _, sell in quoted:
+                if buy_venue.protocol == sell_venue.protocol or sell <= buy:
+                    continue
+                try:
+                    buy_cap, _ = trade_size(
+                        obs, market, buy_venue, token_in=limits.QUOTE_ASSET, price=buy,
+                        size_bps=size_bps, equity=equity, exposure=exposure, reduce_only=False,
+                    )
+                    sell_cap, _ = trade_size(
+                        obs, market, sell_venue, token_in=market.base, price=sell,
+                        size_bps=size_bps, equity=equity, exposure=exposure, reduce_only=False,
+                    )
+                    if buy_cap <= 0 or sell_cap <= 0:
+                        continue
+                    # Use impact at the whole buy cap, a conservative estimate
+                    # when the matched inventory forces a smaller purchase.
+                    buy_price = price_for_size(obs, market, buy_venue, limits.QUOTE_ASSET, buy_cap, buy)
+                    base_scale = 10**market.base_decimals
+                    sell_amount = min(
+                        sell_cap,
+                        int(Decimal(buy_cap) / limits.USDC_SCALE / (buy_price * (1 + cushion)) * base_scale),
+                    )
+                    if sell_amount <= 0:
+                        continue
+                    base_quantity = Decimal(sell_amount) / base_scale
+                    buy_amount = min(buy_cap, int(base_quantity * buy_price * (1 + cushion) * limits.USDC_SCALE) + 1)
+                    cash_in = Decimal(buy_amount) / limits.USDC_SCALE
+                    sell_price = price_for_size(obs, market, sell_venue, market.base, sell_amount, sell)
+                    # Do not book the small leftover base as cash profit.
+                    proceeds = base_quantity * sell_price * (1 - cushion)
+                    net = proceeds - cash_in - 2 * gas_cost - cash_in * margin / limits.BPS
+                    if cash_in < limits.MIN_TRADE_USDC or net < limits.MIN_EXPECTED_EDGE_USDC:
+                        continue
+                    result.append(Pair(market, buy_venue, sell_venue, buy_amount, sell_amount, cash_in, net))
+                except (ValueError, InvalidOperation, ZeroDivisionError):
+                    continue
+    return result
+
+
+def pair_action(pair: Pair, priority: int):
+    constructors = {"uniswap": swap, "balancer": balancer_swap, "curve": curve_swap}
+    actions = [
+        constructors[pair.buy_venue.protocol](
+            token_in=limits.QUOTE_ASSET, base=pair.market.base, amount_in=str(pair.buy_amount),
+            slippage_bps=limits.SLIPPAGE_BPS, max_priority_fee_per_gas_wei=str(priority),
+        ),
+        constructors[pair.sell_venue.protocol](
+            token_in=pair.market.base, base=pair.market.base, amount_in=str(pair.sell_amount),
+            slippage_bps=limits.SLIPPAGE_BPS, max_priority_fee_per_gas_wei=str(priority),
+        ),
+    ]
+    return bundle(actions=actions, maxPriorityFeePerGasWei=str(priority))
+
+
 def wait(ctx: Context, reason: str, **details):
     ctx.log({"marker": "ASCON_DECISION", "decision": "noop", "reason": reason, **details})
     return noop(reason=reason)
@@ -378,10 +481,37 @@ def decide_valid(obs: Observation, ctx: Context):
     if units(obs.balances.eth_wei) < limits.MIN_GAS_WEI + gas_wei:
         return wait(ctx, "gas_reserve_after_estimated_cost")
     gas_cost = Decimal(gas_wei) / limits.WEI_SCALE * fair
+    markets = selected_markets(obs)
+    if (
+        limits.ENABLE_PAIRED_TRADES
+        and not reduce_only
+        and not recovering
+        and units(obs.balances.eth_wei) >= limits.MIN_GAS_WEI + 2 * gas_wei
+    ):
+        pairs = paired_candidates(
+            obs, markets, equity=equity, exposure=exposure,
+            margin=margin, size_bps=size_bps, gas_cost=gas_cost,
+        )
+        if pairs:
+            pair = max(pairs, key=lambda item: item.expected_net)
+            ctx.log({
+                "marker": "ASCON_DECISION", "decision": "bundle",
+                "reason": "cross_venue_pair", "regime": name, "block": block,
+                "base": pair.market.base, "buy_venue": pair.buy_venue.protocol,
+                "sell_venue": pair.sell_venue.protocol,
+                "buy_amount_in": str(pair.buy_amount), "sell_amount_in": str(pair.sell_amount),
+                "notional_usdc": str(pair.cash_in), "estimated_net_edge_usdc": str(pair.expected_net),
+                "estimated_gas_usdc": str(2 * gas_cost), "priority_fee_wei": str(priority),
+                "both_legs_prefunded": True, "atomic": False,
+            })
+            state.last_action_block = block
+            return pair_action(pair, priority)
+    if not limits.ALLOW_DIRECTIONAL_TRADES and not reduce_only and not recovering:
+        return wait(ctx, "no_profitable_pair", regime=name)
     rejected: dict[str, int] = {}
     choices = candidates(
         obs,
-        selected_markets(obs),
+        markets,
         equity=equity,
         exposure=exposure,
         margin=margin,

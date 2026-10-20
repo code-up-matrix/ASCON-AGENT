@@ -57,10 +57,11 @@ def observation():
 
 
 @pytest.fixture
-def engine():
+def engine(monkeypatch):
     import strategy
 
     strategy.state = strategy.State()
+    monkeypatch.setattr(strategy.limits, "ALLOW_DIRECTIONAL_TRADES", True)
     return strategy
 
 

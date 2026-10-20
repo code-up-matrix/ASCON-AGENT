@@ -1,6 +1,6 @@
 """Reviewed strategy limits; amounts below are human USDC unless named units/wei.
 
-These are conservative starting assumptions, not parameters fitted to an Eris run.
+Limits follow the pinned SDK and are reviewed with frozen market comparisons.
 The official runtime keeps this module on PYTHONPATH when replacing strategy.py.
 """
 
@@ -57,3 +57,6 @@ PRIORITY_MULTIPLIER = 3
 # explicit and report costs as estimates; calibrate against settled tx receipts.
 ASSUMED_BASE_FEE_WEI = 10**9
 ASSUMED_SWAP_GAS = 350_000
+
+ENABLE_PAIRED_TRADES = True
+ALLOW_DIRECTIONAL_TRADES = False

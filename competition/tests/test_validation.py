@@ -1,5 +1,6 @@
 """A zero backtester exit must not conceal missing execution or resource evidence."""
 
+import json
 from copy import deepcopy
 
 import pytest
@@ -114,11 +115,13 @@ def test_extra_seed_requires_explicit_opt_in_and_cannot_change_regime():
 
 
 def test_performance_comparison_keeps_losses_and_wins_separate():
-    result = validation.summarize_metrics([
-        {"pnlUsdc": -10, "versusStarterUsdc": -100, "versusNoopUsdc": 2},
-        {"pnlUsdc": 20, "versusStarterUsdc": 10, "versusNoopUsdc": -4},
-        {"pnlUsdc": 50, "versusStarterUsdc": 30, "versusNoopUsdc": 8},
-    ])
+    result = validation.summarize_metrics(
+        [
+            {"pnlUsdc": -10, "versusStarterUsdc": -100, "versusNoopUsdc": 2},
+            {"pnlUsdc": 20, "versusStarterUsdc": 10, "versusNoopUsdc": -4},
+            {"pnlUsdc": 50, "versusStarterUsdc": 30, "versusNoopUsdc": 8},
+        ]
+    )
     assert result["meanPnlUsdc"] == 20
     assert result["winsVersusStarter"] == 2
     assert result["meanVersusStarterUsdc"] == -20
@@ -126,3 +129,17 @@ def test_performance_comparison_keeps_losses_and_wins_separate():
     assert result["winsVersusNoop"] == 2
     assert result["worstPnlUsdc"] == -10
     assert validation.summarize_metrics([]) == {"scenarios": 0}
+
+
+def test_execution_report_distinguishes_pair_decisions_from_transactions():
+    log = "\n".join(json.dumps(row) for row in [
+        {"marker": "ASCON_DECISION", "reason": "cross_venue_pair"},
+        {"event": "submitted"},
+        {"event": "submitted"},
+        {"event": "submit_failed"},
+    ])
+    report = validation.execution_activity(log + "\nnot-json\n")
+    assert report["pairedTrades"] == 1
+    assert report["submitted"] == 2
+    assert report["submitFailures"] == 1
+    assert report["malformedLogLines"] == 1

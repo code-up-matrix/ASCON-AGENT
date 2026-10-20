@@ -12,6 +12,7 @@ import math
 import re
 import subprocess
 import threading
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from statistics import mean, median
@@ -133,6 +134,30 @@ def observe_containers(done: threading.Event, resources: dict) -> None:
         done.wait(5)
 
 
+def execution_activity(log: str) -> dict:
+    records = []
+    malformed = 0
+    for line in log.splitlines():
+        if not line.strip():
+            continue
+        try:
+            value = json.loads(line)
+            if isinstance(value, dict):
+                records.append(value)
+            else:
+                malformed += 1
+        except ValueError:
+            malformed += 1
+    decisions = [row for row in records if row.get("marker") == "ASCON_DECISION"]
+    return {
+        "decisionReasons": dict(Counter(str(row.get("reason")) for row in decisions)),
+        "pairedTrades": sum(row.get("reason") == "cross_venue_pair" for row in decisions),
+        "submitted": sum(row.get("event") == "submitted" for row in records),
+        "submitFailures": sum(row.get("event") == "submit_failed" for row in records),
+        "malformedLogLines": malformed,
+    }
+
+
 def validate_case(case: dict, published: list[dict], *, allow_extra_seed: bool = False) -> None:
     if case in published:
         return
@@ -163,6 +188,10 @@ def summarize_metrics(metrics: list[dict]) -> dict:
         "winsVersusNoop": sum(row["versusNoopUsdc"] > 0 for row in metrics),
         "worstVersusStarterUsdc": min(row["versusStarterUsdc"] for row in metrics),
         "worstPnlUsdc": min(row["pnlUsdc"] for row in metrics),
+        "includedTxCount": sum(row.get("includedTxCount", 0) for row in metrics),
+        "revertCount": sum(row.get("revertCount", 0) for row in metrics),
+        "submitFailures": sum(row.get("submitFailures", 0) for row in metrics),
+        "pairedTrades": sum(row.get("pairedTrades", 0) for row in metrics),
     }
 
 
@@ -186,6 +215,7 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
     observer = threading.Thread(target=observe_containers, args=(done, resources), daemon=True)
     observer.start()
     problems = []
+    logs: dict[str, str] = {}
     started = datetime.now(UTC).isoformat()
     try:
         with (output / "backtest.log").open("w") as log:
@@ -246,11 +276,18 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
         "resources": resources,
         "run_directory": str(run_dir) if run_dir else None,
         "agents": summary.get("agents", []),
+        "execution": execution_activity(logs.get("eris-adaptive-v1", "")),
         "frozen": True,
         "live_llm_validated": False,
     }
     write_json(output / "report.json", report)
-    print(json.dumps({"case": case, "passed": not problems, "problems": problems}), flush=True)
+    print(
+        "SCENARIO_RESULT " + json.dumps({
+            **{key: report[key] for key in ("regime", "seed", "passed", "problems", "source_sha256", "execution")},
+            "agents": [{key: agent.get(key) for key in ("id", "pnlUsdc", "netPnlUsdc", "includedTxCount", "revertCount")} for agent in report["agents"]],
+        }),
+        flush=True,
+    )
     if problems:
         raise ValueError("Market validation failed; inspect report.json and backtest.log")
 
@@ -280,6 +317,10 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
                     "pnlUsdc": candidate,
                     "versusStarterUsdc": candidate - agents["my-arb-py"]["pnlUsdc"],
                     "versusNoopUsdc": candidate - agents["noop"]["pnlUsdc"],
+                    "includedTxCount": agents["eris-adaptive-v1"].get("includedTxCount", 0),
+                    "revertCount": agents["eris-adaptive-v1"].get("revertCount", 0),
+                    "submitFailures": report.get("execution", {}).get("submitFailures", 0),
+                    "pairedTrades": report.get("execution", {}).get("pairedTrades", 0),
                 }
             )
     write_json(
@@ -302,6 +343,7 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
         },
     )
     print(f"Public matrix: {len(reports)}/{len(expected)} scenarios; passed={not problems}")
+    print("PUBLIC_MATRIX_RESULT " + json.dumps(read_json(output)), flush=True)
     if problems:
         raise ValueError("Incomplete or failing public market matrix")
 
@@ -314,7 +356,9 @@ def main() -> None:
     parser.add_argument("--inputs", type=Path)
     parser.add_argument("--regime")
     parser.add_argument("--seed", type=int)
-    parser.add_argument("--allow-extra-seed", action="store_true", help="Allow an additional seed for a published regime")
+    parser.add_argument(
+        "--allow-extra-seed", action="store_true", help="Allow an additional seed for a published regime"
+    )
     parser.add_argument("--github-output", type=Path)
     args = parser.parse_args()
     checkout = args.eris.resolve()
@@ -328,7 +372,9 @@ def main() -> None:
                 stream.write("matrix=" + json.dumps(matrix, separators=(",", ":")) + "\n")
     elif args.operation == "run":
         run_case(
-            checkout, {"regime": args.regime, "seed": args.seed}, args.out.resolve(),
+            checkout,
+            {"regime": args.regime, "seed": args.seed},
+            args.out.resolve(),
             allow_extra_seed=args.allow_extra_seed,
         )
     elif args.inputs:

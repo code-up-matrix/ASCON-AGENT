@@ -33,7 +33,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import json
-          files = [*Path('competition/agents/eris-adaptive-v1').glob('*'), Path('competition/validation.py'), Path('competition/tests/test_strategy.py'), Path('competition/tests/test_validation.py')]
+          files = [*Path('competition/agents/eris-adaptive-v1').glob('*'), Path('competition/validation.py'), Path('competition/tests/test_strategy.py'), Path('competition/tests/test_validation.py'), Path('competition/tests/conftest.py'), Path('competition/tests/bridge-smoke.mjs')]
           for p in sorted(files):
               if p.is_file():
                   print('CANONICAL_SOURCE '+json.dumps({'path': str(p), 'content': p.read_text()}))

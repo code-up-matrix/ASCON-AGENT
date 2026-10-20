@@ -268,8 +268,13 @@ def test_decisions_repeat_for_identical_inputs(engine, observation, context):
     assert decide(engine, deepcopy(observation), context) == one
 
 
-def test_resident_jsonl_process_and_imports_survive_two_requests(observation):
+def test_resident_jsonl_process_and_imports_survive_two_requests(observation, tmp_path):
     strategy = Path(__file__).resolve().parents[1] / "agents" / "eris-adaptive-v1" / "strategy.py"
+    original = strategy
+    strategy = tmp_path / "strategy.py"
+    strategy.write_text(original.read_text())
+    constants = (original.parent / "constants.py").read_text().replace("ALLOW_DIRECTIONAL_TRADES = False", "ALLOW_DIRECTIONAL_TRADES = True")
+    (tmp_path / "constants.py").write_text(constants)
     requests = [
         {
             "id": index,
@@ -366,7 +371,72 @@ def test_balancer_inverse_quotes_bound_size_and_impact(engine, observation, cont
     amount = Decimal(action["amountIn"]) / (10**6 if buy_base else 10**18)
     assert amount > (quote_out if buy_base else probe)
     assert amount <= (Decimal("2430.001") if buy_base else Decimal("0.900001"))
-    actual_out = x * amount * factor / (y + amount * factor) if buy_base else y * amount * factor / (x + amount * factor)
+    actual_out = (
+        x * amount * factor / (y + amount * factor) if buy_base else y * amount * factor / (x + amount * factor)
+    )
     actual_price = amount / actual_out if buy_base else actual_out / amount
-    estimated = engine.price_for_size(obs, market, venue, action["tokenIn"], int(action["amountIn"]), buy if buy_base else sell)
+    estimated = engine.price_for_size(
+        obs, market, venue, action["tokenIn"], int(action["amountIn"]), buy if buy_base else sell
+    )
     assert estimated >= actual_price if buy_base else estimated <= actual_price
+
+
+def paired_observation(observation):
+    observation["balances"]["wethWei"] = str(2 * 10**18)
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 3200
+    add_balancer(observation, buy=2800, sell=2790)
+
+
+def test_pair_is_funded_even_if_either_leg_fails(engine, observation, context):
+    paired_observation(observation)
+    action = decide(engine, observation, context)
+    assert action["type"] == "bundle"
+    buy, sell = action["actions"]
+    assert buy["tokenIn"] == "USDC"
+    assert sell["tokenIn"] == "WETH"
+    assert buy["type"] != sell["type"]
+    # No credit from the other leg is needed to submit or settle either swap.
+    assert int(sell["amountIn"]) <= int(observation["balances"]["wethWei"])
+    cash_after_buy_only = int(observation["balances"]["usdcUnits"]) - int(buy["amountIn"])
+    assert cash_after_buy_only >= 6_200_000_000  # 20% of 31k spot equity.
+    base_after_buy_only = Decimal(2) + Decimal(buy["amountIn"]) / 10**6 / 2800
+    assert base_after_buy_only * 3000 <= Decimal(31_000) / 2
+    assert context.messages[-1]["log"]["atomic"] is False
+
+
+def test_pair_rejects_a_spread_that_disappears_after_round_trip_costs(engine, observation, context):
+    paired_observation(observation)
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 3000
+    add_balancer(observation, buy=2985, sell=2975)
+    assert decide(engine, observation, context)["type"] != "bundle"
+
+
+def test_pair_never_relies_on_pending_buy_to_fund_sell(engine, observation, context):
+    paired_observation(observation)
+    observation["balances"]["wethWei"] = "0"
+    assert decide(engine, observation, context)["type"] != "bundle"
+
+
+def test_pair_requires_gas_for_both_legs(engine, observation, context):
+    paired_observation(observation)
+    observation["balances"]["ethWei"] = "10700000000000000"
+    assert decide(engine, observation, context)["type"] != "bundle"
+
+
+def test_end_of_epoch_keeps_pair_disabled(engine, observation, context):
+    paired_observation(observation)
+    observation["blocksRemaining"] = 4
+    action = decide(engine, observation, context)
+    assert action["type"] != "bundle"
+    assert action["tokenIn"] == "WETH"
+
+
+def test_pair_only_mode_never_opens_a_directional_position(engine, observation, context, monkeypatch):
+    monkeypatch.setattr(engine.limits, "ALLOW_DIRECTIONAL_TRADES", False)
+    assert decide(engine, observation, context)["reason"] == "no_profitable_pair"
+
+
+def test_pair_only_mode_keeps_funded_round_trips(engine, observation, context, monkeypatch):
+    monkeypatch.setattr(engine.limits, "ALLOW_DIRECTIONAL_TRADES", False)
+    paired_observation(observation)
+    assert decide(engine, observation, context)["type"] == "bundle"
