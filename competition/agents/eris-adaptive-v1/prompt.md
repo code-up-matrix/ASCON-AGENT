@@ -25,6 +25,8 @@ Keep the constants import and all reserve, exposure, gas, maximum-size, cooldown
 drawdown and end-of-epoch checks. Do not modify constants.py; it is shipped alongside the
 strategy and available after revisions. These requirements are revision instructions, not a
 claim that the runtime formally proves risk invariants for arbitrary replacement code.
+The pinned Balancer/Curve observations can omit reserves; keep the executable-quote
+size cap from constants.py for those observations.
 
 Separate adverse market movement from code defects. Repeated rejected or reverted trades call
 for a specific correction; an absence of profitable opportunities can justify doing nothing.

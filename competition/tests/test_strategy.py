@@ -25,7 +25,6 @@ def add_balancer(observation, *, buy=2840, sell=2830):
         "buyPriceUsdcPerWeth": buy,
         "sellPriceUsdcPerWeth": sell,
         "effectiveHalfSpreadBps": 18,
-        "reserves": {"weth": "10000000000000000000000", "usdc": "30000000000000"},
     }
 
 
@@ -44,8 +43,47 @@ def test_fee_band_means_no_trade(engine, observation, context):
 
 
 def test_best_net_executable_venue_wins(engine, observation, context):
-    add_balancer(observation)
+    add_balancer(observation, buy=2700, sell=2690)
     assert decide(engine, observation, context)["type"] == "balancerSwap"
+
+
+@pytest.mark.parametrize("protocol,action_type", [("balancer", "balancerSwap"), ("curve", "curveSwap")])
+@pytest.mark.parametrize("base,decimals,fair", [("WETH", 18, 3000), ("WBTC", 8, 60000)])
+@pytest.mark.parametrize("buy_base", [True, False])
+def test_real_amm_shape_without_reserves_trades_within_quote_probe(
+    engine, observation, context, protocol, action_type, base, decimals, fair, buy_base
+):
+    sell = fair * (Decimal("0.9") if buy_base else Decimal("1.1"))
+    quote = {
+        "priceUsdcPerWeth": float(sell + 5),
+        "buyPriceUsdcPerWeth": float(sell + 10),
+        "sellPriceUsdcPerWeth": float(sell),
+        "effectiveHalfSpreadBps": 20,
+    }
+    observation["fairPricesUsd"] = {"WETH": 3000, base: fair}
+    observation["baseDecimals"] = {"WETH": 18, base: decimals}
+    held = "0" if buy_base else str(10**decimals)
+    if base == "WETH":
+        observation["balances"]["wethWei"] = held
+        observation["protocols"] = {protocol: quote}
+    else:
+        observation["baseBalances"] = {base: held}
+        observation["protocols"] = {protocol: {"priceUsdcPerWeth": 3000, "markets": {f"{base}/USDC": quote}}}
+    action = decide(engine, observation, context)
+    assert action["type"] == action_type
+    assert action["base"] == base
+    assert action["tokenIn"] == ("USDC" if buy_base else base)
+    probe_cap = Decimal("0.1") * (sell * 10**6 if buy_base else 10**decimals)
+    assert 0 < int(action["amountIn"]) <= probe_cap
+
+
+@pytest.mark.parametrize("protocol", ["balancer", "curve"])
+def test_explicit_empty_reserves_still_prevent_trade(engine, observation, context, protocol):
+    add_balancer(observation, buy=2700, sell=2690)
+    quote = observation["protocols"]["balancer"]
+    quote["reserves"] = {"weth": "0", "usdc": "0"}
+    observation["protocols"] = {protocol: quote}
+    assert decide(engine, observation, context)["type"] == "noop"
 
 
 def test_two_sided_quote_does_not_pay_fee_twice(engine):

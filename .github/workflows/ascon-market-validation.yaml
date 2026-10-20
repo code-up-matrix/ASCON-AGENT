@@ -2,10 +2,12 @@ name: ASCON market validation
 
 on:
   workflow_dispatch:
-  pull_request:
+  # Push diffs cover only the new commits. A pull_request path filter includes
+  # the entire PR, so publishing its results would rerun the 60-case matrix.
+  # Workflow-only edits can be exercised with workflow_dispatch.
+  push:
     paths:
       - 'competition/**'
-      - '.github/workflows/ascon-market-validation.yaml'
 
 permissions:
   contents: read
@@ -122,7 +124,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       fail-fast: false
-      max-parallel: 16
+      max-parallel: 20
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v5
