@@ -1,0 +1,1591 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-20T01:30:25.102087+00:00",
+  "repositoryCommit": "b6ac83f7ffad985639b220c46201c036ed8b0b67",
+  "workflowRun": "https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39347083417",
+  "aggregateArtifact": {
+    "id": 12233603191,
+    "name": "ascon-public-matrix-report",
+    "digest": "sha256:7da9bfd60440add081ecfc08eceae6ed2735001291c8313e2d28c8d1b57a7a10"
+  },
+  "erisRevision": "e5b93b651bba2384aedfa891cecbf7b64d05b88b",
+  "sourceSha256": {
+    "constants.py": "014e581515f85e468406ad9adfc46bb7be6dad441c366cdce9f56598beaa8a78",
+    "prompt.md": "f79db03198639aee0af9176d02b06709e8b6e90a2c5b98ebc13cca935906c6a2",
+    "strategy.py": "e60ca01748191fbecb3931cb1287cdb427b30da2db2161a2c491c81328776a96"
+  },
+  "bundleSha256": "4f3d010dd07cbcd04045e5eb18272a28bbbd129d9454b8e6a2869f48f62b1f4d",
+  "bundleArtifactId": 12232081839,
+  "upstreamLicenseSha256": "4918fb7077042432b0751f9563bdf83106cbde5d42608af3c24b465339e1188c",
+  "frozen": true,
+  "liveLlmValidated": false,
+  "publicMatrixPassed": true,
+  "blocksPerScenario": 360,
+  "blockTimeSec": 2,
+  "observedDockerResources": {
+    "noop": {
+      "image": "sha256:b0c3f1722da278728a160e3b1975d4de50ccbd2a91180b68015a7956bcf74e70",
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "nanoCpus": 2000000000,
+      "readOnlyRootfs": true,
+      "networkMode": "host"
+    },
+    "my-arb-py": {
+      "image": "sha256:51f2062dddbf04c98aff342f81a301a420b3d8b698605a3b85f5c7fdf1fe8cf8",
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "nanoCpus": 2000000000,
+      "readOnlyRootfs": true,
+      "networkMode": "host"
+    },
+    "eris-adaptive-v1": {
+      "image": "sha256:e503ceba42b235d8e6a4aec437b4395c8a702cd12346944f4b69650b8e07d901",
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "nanoCpus": 2000000000,
+      "readOnlyRootfs": true,
+      "networkMode": "host"
+    }
+  },
+  "overall": {
+    "scenarios": 60,
+    "meanPnlUsdc": -33.16331350681745,
+    "meanVersusStarterUsdc": -816.0462498270659,
+    "meanVersusNoopUsdc": 127.04724620738101,
+    "winsAgainstStarter": 19,
+    "winsAgainstNoop": 37,
+    "includedTransactions": 2521,
+    "revertedTransactions": 115
+  },
+  "perRegime": [
+    {
+      "regime": "calm",
+      "scenarios": 5,
+      "meanPnlUsdc": 196.86891189091256,
+      "meanVersusStarterUsdc": 233.26696092130732,
+      "meanVersusNoopUsdc": 214.92378085402888,
+      "winsAgainstStarter": 3,
+      "winsAgainstNoop": 4,
+      "includedTransactions": 194,
+      "revertedTransactions": 0
+    },
+    {
+      "regime": "cdp-incident",
+      "scenarios": 5,
+      "meanPnlUsdc": -612.1816209424287,
+      "meanVersusStarterUsdc": -536.5186626834999,
+      "meanVersusNoopUsdc": 419.7312208503572,
+      "winsAgainstStarter": 2,
+      "winsAgainstNoop": 5,
+      "includedTransactions": 222,
+      "revertedTransactions": 24
+    },
+    {
+      "regime": "cex-drift",
+      "scenarios": 5,
+      "meanPnlUsdc": 591.8463390113902,
+      "meanVersusStarterUsdc": -2976.8421488125723,
+      "meanVersusNoopUsdc": -400.99752339194237,
+      "winsAgainstStarter": 0,
+      "winsAgainstNoop": 0,
+      "includedTransactions": 244,
+      "revertedTransactions": 7
+    },
+    {
+      "regime": "crash",
+      "scenarios": 5,
+      "meanPnlUsdc": -410.8087062216684,
+      "meanVersusStarterUsdc": -1156.632117384742,
+      "meanVersusNoopUsdc": 0.13782017620105763,
+      "winsAgainstStarter": 1,
+      "winsAgainstNoop": 2,
+      "includedTransactions": 206,
+      "revertedTransactions": 16
+    },
+    {
+      "regime": "depeg",
+      "scenarios": 5,
+      "meanPnlUsdc": 145.23870988060372,
+      "meanVersusStarterUsdc": -373.3834151609684,
+      "meanVersusNoopUsdc": -134.7180661316699,
+      "winsAgainstStarter": 1,
+      "winsAgainstNoop": 1,
+      "includedTransactions": 114,
+      "revertedTransactions": 2
+    },
+    {
+      "regime": "depeg-persist",
+      "scenarios": 5,
+      "meanPnlUsdc": 428.4497846301354,
+      "meanVersusStarterUsdc": 164.40002386126724,
+      "meanVersusNoopUsdc": 235.0718568022421,
+      "winsAgainstStarter": 3,
+      "winsAgainstNoop": 4,
+      "includedTransactions": 206,
+      "revertedTransactions": 2
+    },
+    {
+      "regime": "informed-flow",
+      "scenarios": 5,
+      "meanPnlUsdc": 289.98553480972475,
+      "meanVersusStarterUsdc": 13.816288097761571,
+      "meanVersusNoopUsdc": 307.616599195436,
+      "winsAgainstStarter": 3,
+      "winsAgainstNoop": 4,
+      "includedTransactions": 302,
+      "revertedTransactions": 8
+    },
+    {
+      "regime": "launch",
+      "scenarios": 5,
+      "meanPnlUsdc": -23.172136729452177,
+      "meanVersusStarterUsdc": 80.85620995812641,
+      "meanVersusNoopUsdc": -2.0095219653332608,
+      "winsAgainstStarter": 3,
+      "winsAgainstNoop": 3,
+      "includedTransactions": 172,
+      "revertedTransactions": 0
+    },
+    {
+      "regime": "lending-incident",
+      "scenarios": 5,
+      "meanPnlUsdc": -1006.1063607986173,
+      "meanVersusStarterUsdc": -1279.5505896630318,
+      "meanVersusNoopUsdc": 82.43488342718919,
+      "winsAgainstStarter": 0,
+      "winsAgainstNoop": 2,
+      "includedTransactions": 171,
+      "revertedTransactions": 19
+    },
+    {
+      "regime": "spike",
+      "scenarios": 5,
+      "meanPnlUsdc": -544.3115917515097,
+      "meanVersusStarterUsdc": -1068.4127166942228,
+      "meanVersusNoopUsdc": 296.2891759671678,
+      "winsAgainstStarter": 0,
+      "winsAgainstNoop": 4,
+      "includedTransactions": 224,
+      "revertedTransactions": 22
+    },
+    {
+      "regime": "vuln",
+      "scenarios": 5,
+      "meanPnlUsdc": 133.72714314449405,
+      "meanVersusStarterUsdc": -145.81451033129125,
+      "meanVersusNoopUsdc": 180.00272296867334,
+      "winsAgainstStarter": 2,
+      "winsAgainstNoop": 3,
+      "includedTransactions": 206,
+      "revertedTransactions": 2
+    },
+    {
+      "regime": "whale",
+      "scenarios": 5,
+      "meanPnlUsdc": 412.504230994606,
+      "meanVersusStarterUsdc": -2747.7403200329254,
+      "meanVersusNoopUsdc": 326.084005736222,
+      "winsAgainstStarter": 1,
+      "winsAgainstNoop": 5,
+      "includedTransactions": 260,
+      "revertedTransactions": 13
+    }
+  ],
+  "decisionReasons": {
+    "no_net_edge": 16314,
+    "relative_value": 2347,
+    "settlement_cooldown": 2592,
+    "epoch_exit": 274,
+    "recent_execution_failures": 240,
+    "drawdown_exit": 7
+  },
+  "transactionsByActionStatus": {
+    "balancerSwap:success": 538,
+    "curveSwap:success": 964,
+    "swap:success": 904,
+    "swap:reverted": 84,
+    "curveSwap:reverted": 18,
+    "balancerSwap:reverted": 13
+  },
+  "submitFailuresByProtocol": {
+    "uniswap": 70,
+    "balancer": 3
+  },
+  "scenarios": [
+    {
+      "regime": "calm",
+      "seed": 101,
+      "pnlUsdc": 424.4953865857533,
+      "versusStarterUsdc": -3.442529366846429,
+      "versusNoopUsdc": -89.56476575441775,
+      "passed": true,
+      "includedTransactions": 52,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 40,
+        "swap:success": 12
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232422867,
+        "name": "ascon-market-result-calm-101",
+        "digest": "sha256:f4e7f30c488d3b886f602fc73f4928007932db6d2c29598f0260cc5fbb22d104"
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 202,
+      "pnlUsdc": 382.4485608978139,
+      "versusStarterUsdc": -199.36314248014241,
+      "versusNoopUsdc": 133.0714009123767,
+      "passed": true,
+      "includedTransactions": 38,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 7,
+        "swap:success": 8,
+        "curveSwap:success": 23
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233201880,
+        "name": "ascon-market-result-calm-202",
+        "digest": "sha256:2b35553fe99139c2f69c3d3cc315b1053cadd7a749a3c1f4f4e97626b59466c7"
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 303,
+      "pnlUsdc": -157.79713328801154,
+      "versusStarterUsdc": 152.20325755157683,
+      "versusNoopUsdc": 359.26647147782205,
+      "passed": true,
+      "includedTransactions": 50,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 2,
+        "swap:success": 13,
+        "curveSwap:success": 35
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232722629,
+        "name": "ascon-market-result-calm-303",
+        "digest": "sha256:d0ddd14c34cf82e1dcea12bcfaab3dcca7f2e46269e98bf649b222378cbda67c"
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 404,
+      "pnlUsdc": 462.980191555529,
+      "versusStarterUsdc": 554.3059437663906,
+      "versusNoopUsdc": 647.4719974747422,
+      "passed": true,
+      "includedTransactions": 41,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 18,
+        "curveSwap:success": 12,
+        "swap:success": 11
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232189418,
+        "name": "ascon-market-result-calm-404",
+        "digest": "sha256:aaf0564b9151fb4f439e31ac55a0e1be5b72f34a39a6199ed5a54405ae144e96"
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 505,
+      "pnlUsdc": -127.78244629652181,
+      "versusStarterUsdc": 662.6312751355581,
+      "versusNoopUsdc": 24.37380015962117,
+      "passed": true,
+      "includedTransactions": 13,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 2,
+        "swap:success": 8,
+        "balancerSwap:success": 3
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 1
+      },
+      "artifact": {
+        "id": 12232484727,
+        "name": "ascon-market-result-calm-505",
+        "digest": "sha256:175b29a32bc6ec1cec4997a0e505e5d28bbd5e0b214908ae345557dce93ef55a"
+      }
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 101,
+      "pnlUsdc": -850.4094590686873,
+      "versusStarterUsdc": -32.12063767701329,
+      "versusNoopUsdc": 488.7447712444409,
+      "passed": true,
+      "includedTransactions": 48,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 10,
+        "curveSwap:success": 19,
+        "swap:success": 18,
+        "swap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3,
+        "balancer": 1
+      },
+      "artifact": {
+        "id": 12234016973,
+        "name": "ascon-market-result-cdp-incident-101",
+        "digest": "sha256:2d0ae15190f3bc6f12118a975deb6812ad17200f1ba2f686b796b94bfb3654cc"
+      }
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 202,
+      "pnlUsdc": 188.33250077074626,
+      "versusStarterUsdc": 270.72194180807855,
+      "versusNoopUsdc": 823.499809096349,
+      "passed": true,
+      "includedTransactions": 38,
+      "revertedTransactions": 5,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 25,
+        "swap:reverted": 4,
+        "curveSwap:reverted": 1,
+        "balancerSwap:success": 1,
+        "swap:success": 7
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 1
+      },
+      "artifact": {
+        "id": 12234621425,
+        "name": "ascon-market-result-cdp-incident-202",
+        "digest": "sha256:3c1d6c56ad9c08372e6b7cedaf3d47fe5845f37bb7f3d4d4e16c9ceb60a9bd4b"
+      }
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 303,
+      "pnlUsdc": -392.49198827447253,
+      "versusStarterUsdc": 53.225443000148516,
+      "versusNoopUsdc": 41.87481444775767,
+      "passed": true,
+      "includedTransactions": 29,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 15,
+        "swap:success": 10,
+        "swap:reverted": 3,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 1
+      },
+      "artifact": {
+        "id": 12233619384,
+        "name": "ascon-market-result-cdp-incident-303",
+        "digest": "sha256:f804aaedac288f5bb3f3e7350907055955cfab8ab25a3f04a9434a266fc086aa"
+      }
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 404,
+      "pnlUsdc": -1037.2714642072242,
+      "versusStarterUsdc": -2082.887138914637,
+      "versusNoopUsdc": 128.35709570048493,
+      "passed": true,
+      "includedTransactions": 68,
+      "revertedTransactions": 7,
+      "transactionsByActionStatus": {
+        "swap:success": 19,
+        "curveSwap:success": 25,
+        "balancerSwap:success": 17,
+        "swap:reverted": 4,
+        "curveSwap:reverted": 3
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12233629221,
+        "name": "ascon-market-result-cdp-incident-404",
+        "digest": "sha256:504b5a2aff58105f1aac7a1830a095c36d21b48c5cbd88262ea06d8397a4e668"
+      }
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 505,
+      "pnlUsdc": -969.0676939325058,
+      "versusStarterUsdc": -891.532921634076,
+      "versusNoopUsdc": 616.1796137627534,
+      "passed": true,
+      "includedTransactions": 39,
+      "revertedTransactions": 7,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 12,
+        "swap:success": 10,
+        "balancerSwap:success": 10,
+        "swap:reverted": 4,
+        "curveSwap:reverted": 2,
+        "balancerSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12233519676,
+        "name": "ascon-market-result-cdp-incident-505",
+        "digest": "sha256:c514b9ac04c3fbb2c4bc43c926d7c45f9969cb6d2a238a968240cb34e92ae256"
+      }
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "pnlUsdc": 557.1879311456141,
+      "versusStarterUsdc": -3566.501638183021,
+      "versusNoopUsdc": -283.2637522103032,
+      "passed": true,
+      "includedTransactions": 59,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 20,
+        "swap:success": 21,
+        "curveSwap:reverted": 2,
+        "balancerSwap:success": 16
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232982287,
+        "name": "ascon-market-result-cex-drift-101",
+        "digest": "sha256:4cda2f752ff9cc0fc6855898622f22cd62e1c7977da5b1afd353d572d7ca679c"
+      }
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 202,
+      "pnlUsdc": 492.7561582066701,
+      "versusStarterUsdc": -2839.02237472056,
+      "versusNoopUsdc": -407.21917274274165,
+      "passed": true,
+      "includedTransactions": 29,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "swap:success": 21,
+        "swap:reverted": 1,
+        "curveSwap:success": 4,
+        "balancerSwap:success": 3
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232564733,
+        "name": "ascon-market-result-cex-drift-202",
+        "digest": "sha256:e611b2be2b2af080c76d1044e618a14cfb91b0782976735495eb5f1718cb993d"
+      }
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 303,
+      "pnlUsdc": 1652.5918403381365,
+      "versusStarterUsdc": -3818.4158357901906,
+      "versusNoopUsdc": -773.5477023778658,
+      "passed": true,
+      "includedTransactions": 52,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "swap:reverted": 2,
+        "curveSwap:success": 30,
+        "swap:success": 18,
+        "balancerSwap:success": 2
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233147085,
+        "name": "ascon-market-result-cex-drift-303",
+        "digest": "sha256:ab5382d925a6811547289995382cb500634fca93b9e25d9f4754f7e9a444a2a5"
+      }
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 404,
+      "pnlUsdc": -87.22007815966208,
+      "versusStarterUsdc": -3076.0073333797773,
+      "versusNoopUsdc": -322.9541322130972,
+      "passed": true,
+      "includedTransactions": 51,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 6,
+        "curveSwap:success": 14,
+        "swap:success": 29,
+        "balancerSwap:reverted": 1,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232687757,
+        "name": "ascon-market-result-cex-drift-404",
+        "digest": "sha256:f194926f2bb48a9c7d8fc469310aaa0448cb89033e50cf3fdd2c7c0ac7b06dcf"
+      }
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 505,
+      "pnlUsdc": 343.9158435261925,
+      "versusStarterUsdc": -1584.2635619893117,
+      "versusNoopUsdc": -218.00285741570406,
+      "passed": true,
+      "includedTransactions": 53,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 22,
+        "swap:success": 22,
+        "curveSwap:success": 9
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232329286,
+        "name": "ascon-market-result-cex-drift-505",
+        "digest": "sha256:6addebb1219f55ad59a6bd3373f79f6e4cfe20dff68740f2424abe71a6039e17"
+      }
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "pnlUsdc": -583.5541125557647,
+      "versusStarterUsdc": 449.76861362218915,
+      "versusNoopUsdc": -20.341840032546315,
+      "passed": true,
+      "includedTransactions": 9,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 1,
+        "swap:reverted": 3,
+        "balancerSwap:reverted": 1,
+        "swap:success": 4
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12232825377,
+        "name": "ascon-market-result-crash-101",
+        "digest": "sha256:54a6b1f2f9c93c1ba215c060d7f3e12f55233084e5ba5f7fb2bd53019edda28d"
+      }
+    },
+    {
+      "regime": "crash",
+      "seed": 202,
+      "pnlUsdc": 1333.4353875117813,
+      "versusStarterUsdc": -669.0467142061971,
+      "versusNoopUsdc": -252.28852018815815,
+      "passed": true,
+      "includedTransactions": 46,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "swap:success": 9,
+        "balancerSwap:success": 17,
+        "curveSwap:success": 16,
+        "swap:reverted": 3,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12233681827,
+        "name": "ascon-market-result-crash-202",
+        "digest": "sha256:bffd32c41b05a052e8727bb6dc443b058340575ef70060883924cc38b1be94d2"
+      }
+    },
+    {
+      "regime": "crash",
+      "seed": 303,
+      "pnlUsdc": -1469.0211091501988,
+      "versusStarterUsdc": -1607.1045856317069,
+      "versusNoopUsdc": 287.37297282782674,
+      "passed": true,
+      "includedTransactions": 50,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 13,
+        "swap:success": 12,
+        "swap:reverted": 2,
+        "curveSwap:success": 23
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 8
+      },
+      "artifact": {
+        "id": 12233064211,
+        "name": "ascon-market-result-crash-303",
+        "digest": "sha256:9af6366c9947cd97fae3ae4cb46f882404b028cba02dfa02a9f5e0ace6007e5a"
+      }
+    },
+    {
+      "regime": "crash",
+      "seed": 404,
+      "pnlUsdc": -828.9979610987066,
+      "versusStarterUsdc": -3566.115295935233,
+      "versusNoopUsdc": 103.79935548920184,
+      "passed": true,
+      "includedTransactions": 52,
+      "revertedTransactions": 3,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 20,
+        "curveSwap:success": 19,
+        "swap:success": 10,
+        "swap:reverted": 3
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 4
+      },
+      "artifact": {
+        "id": 12233681822,
+        "name": "ascon-market-result-crash-404",
+        "digest": "sha256:00a8d062f2ecc9893def536203871b18031bddf1f468c585372654c8ac023283"
+      }
+    },
+    {
+      "regime": "crash",
+      "seed": 505,
+      "pnlUsdc": -505.9057358154532,
+      "versusStarterUsdc": -390.6626047727623,
+      "versusNoopUsdc": -117.85286721531884,
+      "passed": true,
+      "includedTransactions": 49,
+      "revertedTransactions": 3,
+      "transactionsByActionStatus": {
+        "swap:success": 16,
+        "curveSwap:success": 26,
+        "balancerSwap:success": 4,
+        "swap:reverted": 3
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12233890846,
+        "name": "ascon-market-result-crash-505",
+        "digest": "sha256:c6831eccae2df959ba7a906c08dc9747df6db0c387098148df593490f57c1bb6"
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 101,
+      "pnlUsdc": 44.350736706590396,
+      "versusStarterUsdc": -447.7983409499575,
+      "versusNoopUsdc": 135.00193705657148,
+      "passed": true,
+      "includedTransactions": 32,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "swap:success": 14,
+        "curveSwap:success": 17,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233384101,
+        "name": "ascon-market-result-depeg-101",
+        "digest": "sha256:558cfcc0b92e936280304774a12b0176837378871f001f49cfed4f09a04426ee"
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 202,
+      "pnlUsdc": 172.58362621898414,
+      "versusStarterUsdc": 2.76061774516711,
+      "versusNoopUsdc": -493.3048611102131,
+      "passed": true,
+      "includedTransactions": 31,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "swap:success": 5,
+        "balancerSwap:success": 4,
+        "curveSwap:success": 21,
+        "swap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233408879,
+        "name": "ascon-market-result-depeg-202",
+        "digest": "sha256:0d5c68c7f5a2f832efe32c0d1c8a4dd37fc3c230ad0340632658ad80b484850b"
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 303,
+      "pnlUsdc": -183.2047910351248,
+      "versusStarterUsdc": -433.732681037407,
+      "versusNoopUsdc": -20.547184521856252,
+      "passed": true,
+      "includedTransactions": 10,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "swap:success": 5,
+        "balancerSwap:success": 3,
+        "curveSwap:success": 2
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233413926,
+        "name": "ascon-market-result-depeg-303",
+        "digest": "sha256:9fe971a747d45884bb83c59a9f8ca4592b79abbd7a6a4becd5e044d4614489eb"
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 404,
+      "pnlUsdc": 365.98022337036673,
+      "versusStarterUsdc": -387.26092131716723,
+      "versusNoopUsdc": -192.61180175284971,
+      "passed": true,
+      "includedTransactions": 19,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 5,
+        "swap:success": 14
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233885893,
+        "name": "ascon-market-result-depeg-404",
+        "digest": "sha256:16c4d9e06739f47c81559e3ea8451135f893f43e5a38c022b71fa2352eec4175"
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 505,
+      "pnlUsdc": 326.4837541422021,
+      "versusStarterUsdc": -600.8857502454775,
+      "versusNoopUsdc": -102.12842033000197,
+      "passed": true,
+      "includedTransactions": 22,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 6,
+        "swap:success": 13,
+        "balancerSwap:success": 3
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233269238,
+        "name": "ascon-market-result-depeg-505",
+        "digest": "sha256:34cd2cd3354b89444713d09fd4c90f95b53cd3c22e39a0dc978f9c0a432f7786"
+      }
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 101,
+      "pnlUsdc": 378.83646819171554,
+      "versusStarterUsdc": 1494.9079953410837,
+      "versusNoopUsdc": 812.6998757887486,
+      "passed": true,
+      "includedTransactions": 40,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 19,
+        "swap:success": 8,
+        "curveSwap:success": 13
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234301583,
+        "name": "ascon-market-result-depeg-persist-101",
+        "digest": "sha256:f434c77739f3678bbba77510e3a66ff17736f16253355475ea3398e13e7b11aa"
+      }
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 202,
+      "pnlUsdc": 847.6073773289972,
+      "versusStarterUsdc": -781.4806734806916,
+      "versusNoopUsdc": -138.3060024241422,
+      "passed": true,
+      "includedTransactions": 53,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 10,
+        "swap:success": 31,
+        "swap:reverted": 2,
+        "curveSwap:success": 10
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234715663,
+        "name": "ascon-market-result-depeg-persist-202",
+        "digest": "sha256:fed0fcfd7eb7fff33de93b9518b87c2144197c5c1e3259f76f7990bf837ecf10"
+      }
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 303,
+      "pnlUsdc": -114.8149416357337,
+      "versusStarterUsdc": -400.3716604602232,
+      "versusNoopUsdc": 225.03327533291304,
+      "passed": true,
+      "includedTransactions": 38,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "swap:success": 17,
+        "balancerSwap:success": 4,
+        "curveSwap:success": 17
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234341794,
+        "name": "ascon-market-result-depeg-persist-303",
+        "digest": "sha256:86e4dfaa08fcdfec85409bdfc63bbd179a4ed4eac979960f5f48f115fb844745"
+      }
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 404,
+      "pnlUsdc": 26.660121871813317,
+      "versusStarterUsdc": 306.99358193152875,
+      "versusNoopUsdc": 75.72472817564267,
+      "passed": true,
+      "includedTransactions": 46,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 20,
+        "curveSwap:success": 16,
+        "swap:success": 10
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233678998,
+        "name": "ascon-market-result-depeg-persist-404",
+        "digest": "sha256:65d789e545f10e026cde9a1eae5c6b6b0be1a05acdfa0db12e6e766f08606ff5"
+      }
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 505,
+      "pnlUsdc": 1003.9598973938846,
+      "versusStarterUsdc": 201.95087597463862,
+      "versusNoopUsdc": 200.20740713804844,
+      "passed": true,
+      "includedTransactions": 29,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 8,
+        "swap:success": 12,
+        "balancerSwap:success": 9
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233519670,
+        "name": "ascon-market-result-depeg-persist-505",
+        "digest": "sha256:beabb59991c5cda423bce6a938f0e5aaa72d5ede8e1f289db8b24aeb20e55c0a"
+      }
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 101,
+      "pnlUsdc": 563.5170866244734,
+      "versusStarterUsdc": -702.5709596211382,
+      "versusNoopUsdc": -51.3021816653345,
+      "passed": true,
+      "includedTransactions": 65,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "swap:reverted": 2,
+        "curveSwap:success": 32,
+        "balancerSwap:success": 12,
+        "swap:success": 19
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232588455,
+        "name": "ascon-market-result-informed-flow-101",
+        "digest": "sha256:2658c3c626bf5d19cb39ffabc6d4798520e4544b549b5c526d492163830801be"
+      }
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 202,
+      "pnlUsdc": -406.5220929221832,
+      "versusStarterUsdc": 177.35783701075707,
+      "versusNoopUsdc": 194.47842135785322,
+      "passed": true,
+      "includedTransactions": 53,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 6,
+        "curveSwap:success": 29,
+        "swap:success": 17,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233107070,
+        "name": "ascon-market-result-informed-flow-202",
+        "digest": "sha256:ca687fbd9d6915832b7a60b2e2f0d0e8c5d95446c8071fc25e12df6f9a80c4bf"
+      }
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 303,
+      "pnlUsdc": 493.9463748126582,
+      "versusStarterUsdc": 433.4780986564292,
+      "versusNoopUsdc": 958.7835444066295,
+      "passed": true,
+      "includedTransactions": 78,
+      "revertedTransactions": 3,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 6,
+        "curveSwap:success": 45,
+        "swap:success": 24,
+        "swap:reverted": 2,
+        "balancerSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12232862035,
+        "name": "ascon-market-result-informed-flow-303",
+        "digest": "sha256:33b67e0fd0770868e8200d9cee868961514e8a7f74745d298c6c68c1f0462960"
+      }
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 404,
+      "pnlUsdc": 663.7608527712728,
+      "versusStarterUsdc": -282.8773235032713,
+      "versusNoopUsdc": 189.64182395614625,
+      "passed": true,
+      "includedTransactions": 63,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "swap:success": 26,
+        "balancerSwap:success": 14,
+        "curveSwap:success": 23
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232254418,
+        "name": "ascon-market-result-informed-flow-404",
+        "digest": "sha256:09514828f2d768ebb3b080e5d81a3e49310807270a131bf62821f3c7d4b4a950"
+      }
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 505,
+      "pnlUsdc": 135.2254527624027,
+      "versusStarterUsdc": 443.6937879460311,
+      "versusNoopUsdc": 246.48138792188547,
+      "passed": true,
+      "includedTransactions": 43,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "swap:success": 13,
+        "curveSwap:success": 6,
+        "balancerSwap:success": 22,
+        "swap:reverted": 1,
+        "balancerSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232767433,
+        "name": "ascon-market-result-informed-flow-505",
+        "digest": "sha256:5bdf8bc6257abc6b79bc0b5e318808155b678e4009152999851f0a69dad65ace"
+      }
+    },
+    {
+      "regime": "launch",
+      "seed": 101,
+      "pnlUsdc": -106.67720791947795,
+      "versusStarterUsdc": 753.1257096022891,
+      "versusNoopUsdc": 8.289795819553547,
+      "passed": true,
+      "includedTransactions": 50,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 33,
+        "swap:success": 14,
+        "balancerSwap:success": 3
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234536702,
+        "name": "ascon-market-result-launch-101",
+        "digest": "sha256:7d6406970f974c00daa69b40ec861fa8ebf57500bd7cce98359431d5ad6dcf86"
+      }
+    },
+    {
+      "regime": "launch",
+      "seed": 202,
+      "pnlUsdc": -23.929400593275204,
+      "versusStarterUsdc": -535.2179439093743,
+      "versusNoopUsdc": -238.0027473489463,
+      "passed": true,
+      "includedTransactions": 35,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 17,
+        "swap:success": 17,
+        "balancerSwap:success": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233593117,
+        "name": "ascon-market-result-launch-202",
+        "digest": "sha256:f027cde543b394d202e89679801e0abd87d4801beffa6637c8c5e35592b80d87"
+      }
+    },
+    {
+      "regime": "launch",
+      "seed": 303,
+      "pnlUsdc": 32.45685322085046,
+      "versusStarterUsdc": -477.106885953297,
+      "versusNoopUsdc": -89.10145513209864,
+      "passed": true,
+      "includedTransactions": 31,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 15,
+        "swap:success": 13,
+        "balancerSwap:success": 3
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234461390,
+        "name": "ascon-market-result-launch-303",
+        "digest": "sha256:059e5a2c75bb245a73ec677fab5b1a9fb3a5d146d5b23d8d45e464c9301604ef"
+      }
+    },
+    {
+      "regime": "launch",
+      "seed": 404,
+      "pnlUsdc": -159.3163808522222,
+      "versusStarterUsdc": 461.4842543425475,
+      "versusNoopUsdc": 248.1555547654134,
+      "passed": true,
+      "includedTransactions": 26,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 16,
+        "balancerSwap:success": 4,
+        "swap:success": 6
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234676467,
+        "name": "ascon-market-result-launch-404",
+        "digest": "sha256:a03133d93e3276f7ab5380f82f9d958ac12b619d7f264209eebbbddf01c61f87"
+      }
+    },
+    {
+      "regime": "launch",
+      "seed": 505,
+      "pnlUsdc": 141.60545249686402,
+      "versusStarterUsdc": 201.99591570846678,
+      "versusNoopUsdc": 60.611242069411674,
+      "passed": true,
+      "includedTransactions": 30,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 6,
+        "swap:success": 11,
+        "curveSwap:success": 13
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12234301683,
+        "name": "ascon-market-result-launch-505",
+        "digest": "sha256:e2e458c80d5e4d424517c3f06cd27791611425bfa49274c2c6bb440cd536cc00"
+      }
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 101,
+      "pnlUsdc": -1693.3795205470233,
+      "versusStarterUsdc": -2128.143274391332,
+      "versusNoopUsdc": -54.49785633114516,
+      "passed": true,
+      "includedTransactions": 48,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 12,
+        "swap:success": 22,
+        "swap:reverted": 2,
+        "curveSwap:reverted": 2,
+        "balancerSwap:success": 10
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12233171896,
+        "name": "ascon-market-result-lending-incident-101",
+        "digest": "sha256:ba32b2a7a5c4368d079da3c6cca6793469e7088d0f0ab61e8c07821170f9969c"
+      }
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 202,
+      "pnlUsdc": 274.20619485047064,
+      "versusStarterUsdc": -259.09774582719547,
+      "versusNoopUsdc": -186.2359219007776,
+      "passed": true,
+      "includedTransactions": 18,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "swap:success": 10,
+        "balancerSwap:success": 2,
+        "curveSwap:success": 4,
+        "swap:reverted": 2
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12232779328,
+        "name": "ascon-market-result-lending-incident-202",
+        "digest": "sha256:d2f7b16969e39d6b160a444d9e700b72dabc644140a27dd15da84d675b102c26"
+      }
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 303,
+      "pnlUsdc": -1301.4509789999283,
+      "versusStarterUsdc": -917.1098769067466,
+      "versusNoopUsdc": 820.2344391239021,
+      "passed": true,
+      "includedTransactions": 54,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 17,
+        "swap:success": 23,
+        "balancerSwap:success": 10,
+        "swap:reverted": 4
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12232828814,
+        "name": "ascon-market-result-lending-incident-303",
+        "digest": "sha256:e89161e0edb22e3af921c68639b8b49ba43e42a6a446cacd6776ce198c4feaeb"
+      }
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 404,
+      "pnlUsdc": -792.2157550807606,
+      "versusStarterUsdc": -1447.6057744533755,
+      "versusNoopUsdc": 78.28659147310827,
+      "passed": true,
+      "includedTransactions": 22,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "swap:success": 13,
+        "swap:reverted": 3,
+        "curveSwap:reverted": 1,
+        "curveSwap:success": 3,
+        "balancerSwap:success": 2
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12233706681,
+        "name": "ascon-market-result-lending-incident-404",
+        "digest": "sha256:e3884d81399dabad379496b14066717b85ed140c31acd11b5730e6a5f92b3b94"
+      }
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 505,
+      "pnlUsdc": -1517.6917442158447,
+      "versusStarterUsdc": -1645.7962767365098,
+      "versusNoopUsdc": -245.61283522914164,
+      "passed": true,
+      "includedTransactions": 29,
+      "revertedTransactions": 5,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 14,
+        "swap:success": 7,
+        "swap:reverted": 4,
+        "balancerSwap:success": 3,
+        "balancerSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12233144028,
+        "name": "ascon-market-result-lending-incident-505",
+        "digest": "sha256:036d6d212762be5a2f3091f50041aa82b62bb9497302a61dd0ff55595b52b71f"
+      }
+    },
+    {
+      "regime": "spike",
+      "seed": 101,
+      "pnlUsdc": -24.62080224652891,
+      "versusStarterUsdc": -1784.323393966435,
+      "versusNoopUsdc": 449.00533394191007,
+      "passed": true,
+      "includedTransactions": 38,
+      "revertedTransactions": 6,
+      "transactionsByActionStatus": {
+        "swap:reverted": 6,
+        "swap:success": 13,
+        "curveSwap:success": 16,
+        "balancerSwap:success": 3
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12233646483,
+        "name": "ascon-market-result-spike-101",
+        "digest": "sha256:92551d5fc505ebde11fb75c8113017ff9be8a1e6812a3203035531bac82eef96"
+      }
+    },
+    {
+      "regime": "spike",
+      "seed": 202,
+      "pnlUsdc": -1660.5464838953922,
+      "versusStarterUsdc": -602.3284225678653,
+      "versusNoopUsdc": 442.1498425512982,
+      "passed": true,
+      "includedTransactions": 47,
+      "revertedTransactions": 3,
+      "transactionsByActionStatus": {
+        "swap:success": 24,
+        "balancerSwap:success": 9,
+        "swap:reverted": 2,
+        "balancerSwap:reverted": 1,
+        "curveSwap:success": 11
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 4
+      },
+      "artifact": {
+        "id": 12232789279,
+        "name": "ascon-market-result-spike-202",
+        "digest": "sha256:e87042d9f053636cdab7c59c38323004fda18b26ed43a800f14bcbccba908fd4"
+      }
+    },
+    {
+      "regime": "spike",
+      "seed": 303,
+      "pnlUsdc": 539.6711879756476,
+      "versusStarterUsdc": -1608.0431818405777,
+      "versusNoopUsdc": 463.06612638229853,
+      "passed": true,
+      "includedTransactions": 50,
+      "revertedTransactions": 5,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 17,
+        "swap:success": 22,
+        "swap:reverted": 4,
+        "balancerSwap:reverted": 1,
+        "balancerSwap:success": 6
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 5
+      },
+      "artifact": {
+        "id": 12234436683,
+        "name": "ascon-market-result-spike-303",
+        "digest": "sha256:14974d47bdaafa312ad92479b687fa3425ec82587d498715a551b56c50263cd3"
+      }
+    },
+    {
+      "regime": "spike",
+      "seed": 404,
+      "pnlUsdc": -2014.6011110589752,
+      "versusStarterUsdc": -330.13731623860076,
+      "versusNoopUsdc": 178.913230809354,
+      "passed": true,
+      "includedTransactions": 38,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 9,
+        "swap:success": 9,
+        "balancerSwap:success": 16,
+        "swap:reverted": 3,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 3
+      },
+      "artifact": {
+        "id": 12234406853,
+        "name": "ascon-market-result-spike-404",
+        "digest": "sha256:d8673cb7580bf007b58b685d0f0bd1cea0930a7ff814bae3e31689e4a4924743"
+      }
+    },
+    {
+      "regime": "spike",
+      "seed": 505,
+      "pnlUsdc": 438.5392504677002,
+      "versusStarterUsdc": -1017.2312688576349,
+      "versusNoopUsdc": -51.68865384902165,
+      "passed": true,
+      "includedTransactions": 51,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "swap:success": 22,
+        "balancerSwap:success": 12,
+        "curveSwap:success": 13,
+        "balancerSwap:reverted": 1,
+        "swap:reverted": 3
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233763984,
+        "name": "ascon-market-result-spike-505",
+        "digest": "sha256:965bd751686bd56523db4029dc5914cc4f6083d12059847324828152d0036abe"
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 101,
+      "pnlUsdc": 53.54345697381359,
+      "versusStarterUsdc": 59.300148579175584,
+      "versusNoopUsdc": 744.4798442268802,
+      "passed": true,
+      "includedTransactions": 60,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 6,
+        "swap:success": 15,
+        "curveSwap:success": 38,
+        "swap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233726858,
+        "name": "ascon-market-result-vuln-101",
+        "digest": "sha256:f4689d01d52a9ea79b4c0b05cb002ade130ea1458a902881c1691f92f8a80c82"
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 202,
+      "pnlUsdc": 451.9530611365917,
+      "versusStarterUsdc": -283.6622755645076,
+      "versusNoopUsdc": -75.26410484267399,
+      "passed": true,
+      "includedTransactions": 20,
+      "revertedTransactions": 1,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 3,
+        "balancerSwap:success": 7,
+        "swap:success": 9,
+        "balancerSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233033224,
+        "name": "ascon-market-result-vuln-202",
+        "digest": "sha256:96a869b7f5719442fda37ad268f0629ae2b8f2c782c240927b07fefffcabbb9e"
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 303,
+      "pnlUsdc": -14.682400512232562,
+      "versusStarterUsdc": 185.15436018945184,
+      "versusNoopUsdc": 30.36403696493653,
+      "passed": true,
+      "includedTransactions": 39,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "swap:success": 27,
+        "curveSwap:success": 7,
+        "balancerSwap:success": 5
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232739354,
+        "name": "ascon-market-result-vuln-303",
+        "digest": "sha256:f63ebae614db85ef2009436c4f08b4b1cf13e2f7a7b4406f7c99bb8378c4a03e"
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 404,
+      "pnlUsdc": 157.8657316447061,
+      "versusStarterUsdc": -381.48011077573756,
+      "versusNoopUsdc": 207.71260808824445,
+      "passed": true,
+      "includedTransactions": 33,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "curveSwap:success": 9,
+        "swap:success": 10,
+        "balancerSwap:success": 14
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12232684478,
+        "name": "ascon-market-result-vuln-404",
+        "digest": "sha256:7da756086cac1d30690668070b493947c8d0a4cda43b6b1d0f394d95bf99506f"
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 505,
+      "pnlUsdc": 19.95586647959135,
+      "versusStarterUsdc": -308.3846740848385,
+      "versusNoopUsdc": -7.2787695940205595,
+      "passed": true,
+      "includedTransactions": 54,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "balancerSwap:success": 6,
+        "curveSwap:success": 28,
+        "swap:success": 20
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 1
+      },
+      "artifact": {
+        "id": 12233980050,
+        "name": "ascon-market-result-vuln-505",
+        "digest": "sha256:47c9d7b18fb4d63d970865b3d561e235b8231d102673745b5aaf9df85d11691a"
+      }
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "pnlUsdc": 280.07275903437403,
+      "versusStarterUsdc": -5443.392642674327,
+      "versusNoopUsdc": 386.96378870063927,
+      "passed": true,
+      "includedTransactions": 49,
+      "revertedTransactions": 2,
+      "transactionsByActionStatus": {
+        "swap:success": 17,
+        "swap:reverted": 2,
+        "curveSwap:success": 12,
+        "balancerSwap:success": 18
+      },
+      "submitFailuresByProtocol": {
+        "balancer": 1,
+        "uniswap": 7
+      },
+      "artifact": {
+        "id": 12233057180,
+        "name": "ascon-market-result-whale-101",
+        "digest": "sha256:0b9797bcf055b125e8c292cce60f84aee348ed864483ecddfe1b0693516c22eb"
+      }
+    },
+    {
+      "regime": "whale",
+      "seed": 202,
+      "pnlUsdc": 10.710661645513028,
+      "versusStarterUsdc": -4341.759399198374,
+      "versusNoopUsdc": 51.98218401694612,
+      "passed": true,
+      "includedTransactions": 25,
+      "revertedTransactions": 0,
+      "transactionsByActionStatus": {
+        "swap:success": 11,
+        "balancerSwap:success": 11,
+        "curveSwap:success": 3
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233112086,
+        "name": "ascon-market-result-whale-202",
+        "digest": "sha256:e14e34badb3c1f9780aebf023ff58036892914daa822cb93dfefe5c92e483a76"
+      }
+    },
+    {
+      "regime": "whale",
+      "seed": 303,
+      "pnlUsdc": -331.99164441550965,
+      "versusStarterUsdc": -162.8374325922341,
+      "versusNoopUsdc": 174.53062868252164,
+      "passed": true,
+      "includedTransactions": 49,
+      "revertedTransactions": 3,
+      "transactionsByActionStatus": {
+        "swap:success": 29,
+        "balancerSwap:success": 9,
+        "curveSwap:success": 8,
+        "balancerSwap:reverted": 1,
+        "swap:reverted": 2
+      },
+      "submitFailuresByProtocol": {},
+      "artifact": {
+        "id": 12233127084,
+        "name": "ascon-market-result-whale-303",
+        "digest": "sha256:0da1886d60495c79b17ae9915adbd1f535cfe233e2b7185d60306c605570f8e2"
+      }
+    },
+    {
+      "regime": "whale",
+      "seed": 404,
+      "pnlUsdc": 1055.0473054484464,
+      "versusStarterUsdc": -4031.054850120956,
+      "versusNoopUsdc": 505.892237952241,
+      "passed": true,
+      "includedTransactions": 87,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "balancerSwap:reverted": 2,
+        "balancerSwap:success": 54,
+        "swap:success": 8,
+        "swap:reverted": 2,
+        "curveSwap:success": 21
+      },
+      "submitFailuresByProtocol": {
+        "balancer": 1
+      },
+      "artifact": {
+        "id": 12232937472,
+        "name": "ascon-market-result-whale-404",
+        "digest": "sha256:34f8901aaf3f38aafde0e636e5097275105793bf8157bc7c659ec4b0005ea424"
+      }
+    },
+    {
+      "regime": "whale",
+      "seed": 505,
+      "pnlUsdc": 1048.6820732602064,
+      "versusStarterUsdc": 240.3427244212653,
+      "versusNoopUsdc": 511.0511893287621,
+      "passed": true,
+      "includedTransactions": 50,
+      "revertedTransactions": 4,
+      "transactionsByActionStatus": {
+        "swap:success": 26,
+        "curveSwap:success": 5,
+        "balancerSwap:success": 15,
+        "swap:reverted": 3,
+        "curveSwap:reverted": 1
+      },
+      "submitFailuresByProtocol": {
+        "uniswap": 2
+      },
+      "artifact": {
+        "id": 12232489862,
+        "name": "ascon-market-result-whale-505",
+        "digest": "sha256:c3f4923346956a1cbe1b709551582005fe1b83157798d2d005a463fd8f0bff9c"
+      }
+    }
+  ],
+  "limitations": [
+    "Frozen local three-agent comparison; not an official score or forecast of placement.",
+    "Actual configured Docker caps were observed; peak RAM and organizer network isolation were not measured.",
+    "No live inference, state-resumption/reversion with a real model, registration or submission was performed.",
+    "Final evaluation SDK compatibility must be checked when its hash is published."
+  ],
+  "submissionFailureReasons": {
+    "Execution reverted with reason: Too little received.": 70,
+    "Execution reverted with reason: BAL#507.": 3
+  }
+}

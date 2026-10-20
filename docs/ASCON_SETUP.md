@@ -248,8 +248,9 @@ run on the same conditions. Public seeds may change after an official rule updat
 
 ### Automated market and resource validation
 
-The **ASCON market validation** GitHub Actions workflow deploys the pinned local
-economy, builds the three official agent images, and runs the published calm and
+The **ASCON market validation** GitHub Actions workflow runs on competition-source
+pushes or manual dispatch. Documentation-only pushes do not repeat the matrix.
+It deploys the pinned local economy, builds the three official agent images, and runs the published calm and
 crash scenarios first. When those pass, it runs the other 58 regime/seed pairs in
 parallel. Every scenario retains its official block count and timing. The workflow
 uses no inference keys; all agents are frozen.
@@ -298,6 +299,22 @@ model errors has not validated improvement. Revisions replace `strategy.py`;
 `constants.py` remains available on the runtime's Python path. A revision can still
 change its own risk logic. Static checks and compilation do not establish economic
 safety, and the runtime does not automatically roll back losing code.
+
+In `runs/<run-id>/agents/eris-adaptive-v1.jsonl`, inspect the actual outcome:
+
+| Runtime event | What it establishes |
+| --- | --- |
+| `revision installed`, followed by successful decisions | A real model replacement compiled and ran |
+| `revision reverted`, followed by successful decisions | A saved version was selected and ran again |
+| `revision declined` | The model returned a valid decision to retain the current code; replacement execution remains untested |
+| `revision rejected` | The call, response validation or compilation failed; inspect `state.reason` |
+| `revision_resumed` | Saved state was loaded; inspect `versionsRefused`, `runningVersion` and `hasMemory` |
+
+Record the run directory, provider/model, source hashes, successful revision
+outcomes and subsequent decision errors with the test result. An `ASCON_OK`
+connection smoke test alone does not exercise strategy revision. Do not treat a
+short epoch as passing the upstream hourly revision-health check, which requires
+more than an hour of evidence.
 
 For multi-epoch memory tests, the official backtester accepts
 `--agent-state-root runs/ascon-learning-state`. Use a fresh state root for a clean
