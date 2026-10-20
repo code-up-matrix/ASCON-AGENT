@@ -11,9 +11,9 @@ The merged baseline executed the full public matrix, but averaged **816.05 USDC 
 - Reserve-free Balancer quotes previously limited WETH trades to 0.1 WETH. The pinned official 50/50 pools and 30-bps fee allow depth inference from both executable probes. A 10% depth discount, 0.1% reserve-input cap, maximum probe multiple and size impact estimate constrain extrapolation. Curve keeps its actual probe cap.
 - Standalone reference bets repeatedly depleted inventory. The default strategy now seeks cross-venue pairs, funding both legs from balances already held. A pair must cover both slippage allowances, both gas estimates and an uncertainty margin. Bundles are **not atomic**: either leg can fail.
 
-Malformed-data checks, gas reserves, drawdown control, cooldowns, maximum sizes and the official SDK pin remain enforced. No borrowing, perpetuals, raw transactions or discovered pools were added. Directional fallback remains an explicit constant for controlled comparisons and is disabled by default.
-
 - The pinned competition chain has zero base fee, and its fee rule charges the bid. The old gas estimate added an unsupported 1 gwei. The estimate now uses the actual fee rule while keeping the conservative 350,000 gas-unit budget per leg and wallet gas reserves.
+
+Malformed-data checks, gas reserves, drawdown control, cooldowns, maximum sizes and the official SDK pin remain enforced. No borrowing, perpetuals, raw transactions or discovered pools were added. Directional fallback remains an explicit constant for controlled comparisons and is disabled by default.
 
 ## Development evidence
 
@@ -35,10 +35,20 @@ All monetary columns are USDC per development scenario. These four deliberately 
 
 ## Frozen validation protocol
 
-Before the broad comparison, select paired-only with corrected gas pricing and freeze its source bytes. An earlier broad run of the pre-correction source was superseded before any additional-seed results were used. Run every published case (12 regimes × seeds 101–505), plus all 12 regimes at additional seed 606. Seed 606 was selected before paired comparisons completed and is not used for tuning. The standard seed is public in other upstream examples; it is an unused development holdout, not a secret evaluation seed.
+For the broad comparison, paired-only with corrected gas pricing was selected and its source bytes were frozen. An earlier broad run of the pre-correction source was superseded before any additional-seed results were used. Validation covered every published case (12 regimes × seeds 101–505), plus all 12 regimes at additional seed 606. Seed 606 was selected before paired comparisons completed and was not used for tuning. The standard seed is public in other upstream examples; it is an unused development holdout, not a secret evaluation seed.
 
 Every case uses the pinned official duration and cadence, all official venues, unchanged starter/no-op controls, and actual Docker settings of 2 CPUs, 4 GiB RAM, no extra swap and read-only root. The workflow blanks all inference keys. Public and additional-seed aggregates require exact coverage and matching strategy/SDK hashes separately.
 
 Reports retain P&L, within-run differences to each control, win counts, mined reverts, pre-submission failures and partial paired fills. Receipt matching uses the simulator round rather than the chain block number. A passing execution flag never substitutes for the performance comparison.
 
-Broad validation is pending on this branch. Its results and candidate bundle will be recorded before the pull request is marked ready. No paid model call, organizer registration or competition submission is part of this repair.
+## Full-set results
+
+The frozen repair passed all **60 public cases**. Mean candidate P&L rose from **−33.16 to +473.19 USDC**. The average difference to the starter improved from **−816.05 to −292.08 USDC**, narrowing the deficit by **64.2%**. Starter wins rose from **19/60 to 25/60**; no-op wins rose from **37/60 to 59/60**. Mined reverts fell from **115/2,521 (4.56%) to 5/1,567 (0.32%)**, with 11 pre-submission failures and 16 partial pairs.
+
+The separate **12/12 seed-606** cases passed execution/resource checks. Mean P&L was **+121.13 USDC**, mean versus starter **−547.43**, and mean versus no-op **+472.88**, with **4/12** starter wins and **12/12** no-op wins. These cases were not used for tuning.
+
+One public case initially failed during upstream wallet funding before trading; one unchanged retry passed. The failed attempt remains recorded. Source and SDK hashes match throughout, and the independent artifact review reproduces both final aggregates.
+
+The repair improves the measured baseline but does not establish competitive dominance. All five public drift cases still trail the starter, and lending incidents and crashes remain difficult. Further strategy changes need a new development/holdout split; these observed seed-606 outcomes can no longer serve as an untouched holdout for later tuning.
+
+See [the full validation record](ASCON_VALIDATION.md), [public evidence](validation/2026-10-20-performance-public.json) and [additional-seed evidence](validation/2026-10-20-performance-extra-seed.json) for all regimes, source/artifact hashes, the startup retry and the candidate ZIP. No paid model call, organizer registration or competition submission was performed.

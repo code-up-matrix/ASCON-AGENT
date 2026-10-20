@@ -1,0 +1,2991 @@
+{
+  "schemaVersion": 2,
+  "reviewedAt": "2026-10-20T20:20:32.774Z",
+  "repositoryCommit": "8cadc87a0c728ee509f77d2a4ee5a6c1a3d1ed8c",
+  "workflowRun": {
+    "id": 39478740739,
+    "url": "https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478740739",
+    "successfulAttempt": 2,
+    "conclusion": "success"
+  },
+  "erisRevision": "e5b93b651bba2384aedfa891cecbf7b64d05b88b",
+  "sourceSha256": {
+    "constants.py": "296432e0fcb15f948b23a419221019bb89ddc553995cd43a0501f50b30961b19",
+    "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433",
+    "strategy.py": "121cdd6ded095faa73b0b1b514c4ae2c5ada41f224210a0a6bcfe758dc9f6b8c"
+  },
+  "frozen": true,
+  "liveLlmValidated": false,
+  "paidInferenceUsed": false,
+  "blocksPerScenario": 360,
+  "blockTimeSec": 2,
+  "observedDockerResources": {
+    "eris-adaptive-v1": {
+      "image": "sha256:0097d598aa5eecd76e2a67c0dfd7949f5fbdffc3482943e8bc7032a8ec1d4a2a",
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "nanoCpus": 2000000000,
+      "networkMode": "host",
+      "readOnlyRootfs": true
+    },
+    "my-arb-py": {
+      "image": "sha256:c9bf8037d0a1a2506a672edaf114094d89f57aa6bc1f7a6d817819946812228b",
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "nanoCpus": 2000000000,
+      "networkMode": "host",
+      "readOnlyRootfs": true
+    },
+    "noop": {
+      "image": "sha256:e862b48f632aec8cd4fa4e01a6045840e12e62a280eca338431b63b7452d9097",
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "nanoCpus": 2000000000,
+      "networkMode": "host",
+      "readOnlyRootfs": true
+    }
+  },
+  "artifactDigestsVerified": true,
+  "sourcesVerifiedAgainstBundle": true,
+  "bundle": {
+    "artifactId": 12291507824,
+    "artifactSha256": "119ef99ff918b7a97a20adf3c7891bd6dfe05ba132150ae703cdd6e924452bae",
+    "bundleSha256": "56094304f14049cebd47d9d78c117e4f4f5ea99747b2e3a90b8ce540f64cf579",
+    "licenses": {
+      "ERIS_LICENSE.txt": "4918fb7077042432b0751f9563bdf83106cbde5d42608af3c24b465339e1188c"
+    },
+    "sourceSha256": {
+      "strategy.py": "121cdd6ded095faa73b0b1b514c4ae2c5ada41f224210a0a6bcfe758dc9f6b8c",
+      "constants.py": "296432e0fcb15f948b23a419221019bb89ddc553995cd43a0501f50b30961b19",
+      "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433"
+    },
+    "environmentFiles": [],
+    "artifact": {
+      "id": 12291507824,
+      "name": "ascon-validated-candidate-input",
+      "digest": "sha256:119ef99ff918b7a97a20adf3c7891bd6dfe05ba132150ae703cdd6e924452bae",
+      "size_in_bytes": 460423,
+      "created_at": "2026-10-20T19:05:56Z",
+      "expires_at": "2026-11-03T19:05:55Z"
+    },
+    "archiveEntries": 124
+  },
+  "limitations": [
+    "This is frozen local-simulator evidence, not live LLM revision or organizer submission acceptance.",
+    "Observed Docker limits are not peak resource measurements or certification of organizer network isolation.",
+    "The official local runner uses host networking.",
+    "These three-agent comparisons do not predict full-field or hidden-scenario placement.",
+    "Independent pair funding does not make execution atomic; partial fills and starting inventory can lose value.",
+    "Market interactions and wall-clock ordering can change control returns between runs."
+  ],
+  "scenarioSet": "public",
+  "publicMatrixPassed": true,
+  "aggregateArtifact": {
+    "id": 12294659692,
+    "name": "ascon-public-matrix-report",
+    "digest": "sha256:d592880c56db2898081afeeb2167820ee01f6de0fe01df8eaf4ef12f23c7ceb1",
+    "size_in_bytes": 4693,
+    "created_at": "2026-10-20T20:17:24Z",
+    "expires_at": "2026-11-19T20:17:23Z"
+  },
+  "aggregateJobId": 118862513685,
+  "overall": {
+    "scenarios": 60,
+    "meanPnlUsdc": 473.1942317992381,
+    "medianPnlUsdc": 276.0645854096874,
+    "meanVersusStarterUsdc": -292.0788962948425,
+    "medianVersusStarterUsdc": -102.67903442129318,
+    "meanVersusNoopUsdc": 633.4047915134365,
+    "medianVersusNoopUsdc": 314.6981501511327,
+    "includedTxCount": 1567,
+    "revertCount": 5,
+    "submitFailures": 11,
+    "pairedTrades": 752,
+    "partialPairs": 16,
+    "winsVersusStarter": 25,
+    "winsVersusNoop": 59,
+    "worstPnlUsdc": -2047.6750592677708,
+    "worstVersusStarterUsdc": -2903.836856190028
+  },
+  "perRegime": {
+    "calm": {
+      "scenarios": 5,
+      "meanPnlUsdc": 190.88446425397123,
+      "medianPnlUsdc": 124.46960484092415,
+      "meanVersusStarterUsdc": 245.27360386654908,
+      "medianVersusStarterUsdc": 183.77404050969926,
+      "meanVersusNoopUsdc": 208.93933321708755,
+      "medianVersusNoopUsdc": 243.55309310127632,
+      "includedTxCount": 54,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 24,
+      "partialPairs": 0,
+      "winsVersusStarter": 3,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -273.51051166455727,
+      "worstVersusStarterUsdc": -239.5455304080824
+    },
+    "cdp-incident": {
+      "scenarios": 5,
+      "meanPnlUsdc": -567.6307197440067,
+      "medianPnlUsdc": -410.418462310874,
+      "meanVersusStarterUsdc": -337.5644662859413,
+      "medianVersusStarterUsdc": -527.2673560100811,
+      "meanVersusNoopUsdc": 464.2821220487793,
+      "medianVersusNoopUsdc": 380.8479089698958,
+      "includedTxCount": 135,
+      "revertCount": 1,
+      "submitFailures": 1,
+      "pairedTrades": 63,
+      "partialPairs": 2,
+      "winsVersusStarter": 1,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -1052.7709014320571,
+      "worstVersusStarterUsdc": -887.6189402022574
+    },
+    "cex-drift": {
+      "scenarios": 5,
+      "meanPnlUsdc": 1320.614558011599,
+      "medianPnlUsdc": 1104.0826966304448,
+      "meanVersusStarterUsdc": -2350.9714763254974,
+      "medianVersusStarterUsdc": -2387.2894544740993,
+      "meanVersusNoopUsdc": 327.7706956082664,
+      "medianVersusNoopUsdc": 286.48642870638287,
+      "includedTxCount": 134,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 65,
+      "partialPairs": 0,
+      "winsVersusStarter": 0,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": 665.4054814755218,
+      "worstVersusStarterUsdc": -2903.836856190028
+    },
+    "crash": {
+      "scenarios": 5,
+      "meanPnlUsdc": -41.10228744999913,
+      "medianPnlUsdc": -312.11177557581686,
+      "meanVersusStarterUsdc": -943.3939081131626,
+      "medianVersusStarterUsdc": -563.9716247996112,
+      "meanVersusNoopUsdc": 369.84423894787034,
+      "medianVersusNoopUsdc": 364.9701553076302,
+      "includedTxCount": 190,
+      "revertCount": 1,
+      "submitFailures": 3,
+      "pairedTrades": 94,
+      "partialPairs": 4,
+      "winsVersusStarter": 1,
+      "winsVersusNoop": 4,
+      "worstPnlUsdc": -1077.2890787794604,
+      "worstVersusStarterUsdc": -2497.373627057954
+    },
+    "depeg": {
+      "scenarios": 5,
+      "meanPnlUsdc": 511.84541397449505,
+      "medianPnlUsdc": 626.0495327013487,
+      "meanVersusStarterUsdc": 101.85883767337654,
+      "medianVersusStarterUsdc": 23.837630614099908,
+      "meanVersusNoopUsdc": 231.8886379622214,
+      "medianVersusNoopUsdc": 279.49284070740396,
+      "includedTxCount": 55,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 23,
+      "partialPairs": 0,
+      "winsVersusStarter": 3,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": 188.4312986350269,
+      "worstVersusStarterUsdc": -254.7875567304436
+    },
+    "depeg-persist": {
+      "scenarios": 5,
+      "meanPnlUsdc": 520.2257170398021,
+      "medianPnlUsdc": 281.69681355440116,
+      "meanVersusStarterUsdc": 489.24399541736057,
+      "medianVersusStarterUsdc": 251.90634563352796,
+      "meanVersusNoopUsdc": 326.84778921190883,
+      "medianVersusNoopUsdc": 222.4043747636315,
+      "includedTxCount": 77,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 37,
+      "partialPairs": 0,
+      "winsVersusStarter": 4,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": 173.33976845980214,
+      "worstVersusStarterUsdc": -102.12762328427925
+    },
+    "informed-flow": {
+      "scenarios": 5,
+      "meanPnlUsdc": 731.2122646044561,
+      "medianPnlUsdc": 824.7016307785816,
+      "meanVersusStarterUsdc": -47.235559947011645,
+      "medianVersusStarterUsdc": -51.44887106170063,
+      "meanVersusNoopUsdc": 748.8433289901674,
+      "medianVersusNoopUsdc": 505.185900291297,
+      "includedTxCount": 150,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 71,
+      "partialPairs": 0,
+      "winsVersusStarter": 1,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -95.81461398873944,
+      "worstVersusStarterUsdc": -563.7354169859609
+    },
+    "launch": {
+      "scenarios": 5,
+      "meanPnlUsdc": 195.93721763300127,
+      "medianPnlUsdc": 222.36631078385108,
+      "meanVersusStarterUsdc": 38.44524725550436,
+      "medianVersusStarterUsdc": 200.26349465931708,
+      "meanVersusNoopUsdc": 217.0998323971202,
+      "medianVersusNoopUsdc": 246.56090404109273,
+      "includedTxCount": 63,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 28,
+      "partialPairs": 0,
+      "winsVersusStarter": 3,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -160.91103157654288,
+      "worstVersusStarterUsdc": -703.3241539585724
+    },
+    "lending-incident": {
+      "scenarios": 5,
+      "meanPnlUsdc": -826.9610544687806,
+      "medianPnlUsdc": -1158.925145978108,
+      "meanVersusStarterUsdc": -1163.7553092054354,
+      "medianVersusStarterUsdc": -1520.0950136676547,
+      "meanVersusNoopUsdc": 261.5801897570258,
+      "medianVersusNoopUsdc": 276.54733840798144,
+      "includedTxCount": 129,
+      "revertCount": 3,
+      "submitFailures": 0,
+      "pairedTrades": 64,
+      "partialPairs": 3,
+      "winsVersusStarter": 1,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -1801.2505285817024,
+      "worstVersusStarterUsdc": -1797.514940367968
+    },
+    "spike": {
+      "scenarios": 5,
+      "meanPnlUsdc": -484.5354861955217,
+      "medianPnlUsdc": 131.77472549462982,
+      "meanVersusStarterUsdc": -703.8673858989175,
+      "medianVersusStarterUsdc": -628.9489517783804,
+      "meanVersusNoopUsdc": 356.0652815231559,
+      "medianVersusNoopUsdc": 258.9412352022482,
+      "includedTxCount": 97,
+      "revertCount": 0,
+      "submitFailures": 3,
+      "pairedTrades": 46,
+      "partialPairs": 3,
+      "winsVersusStarter": 0,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -2047.6750592677708,
+      "worstVersusStarterUsdc": -1258.7510998845974
+    },
+    "vuln": {
+      "scenarios": 5,
+      "meanPnlUsdc": 278.13446688293186,
+      "medianPnlUsdc": 309.3724251301028,
+      "meanVersusStarterUsdc": 310.7424214756582,
+      "medianVersusStarterUsdc": 321.8272983028728,
+      "meanVersusNoopUsdc": 324.4100467071112,
+      "medianVersusNoopUsdc": 282.1377890564909,
+      "includedTxCount": 71,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 32,
+      "partialPairs": 0,
+      "winsVersusStarter": 5,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": -340.52751904178876,
+      "worstVersusStarterUsdc": 40.56854504496732
+    },
+    "whale": {
+      "scenarios": 5,
+      "meanPnlUsdc": 3849.7062270489087,
+      "medianPnlUsdc": 3857.679390838952,
+      "meanVersusStarterUsdc": 856.2772445494077,
+      "medianVersusStarterUsdc": 1458.2833276295278,
+      "meanVersusNoopUsdc": 3763.2860017905246,
+      "medianVersusNoopUsdc": 3434.3223950658285,
+      "includedTxCount": 412,
+      "revertCount": 0,
+      "submitFailures": 4,
+      "pairedTrades": 205,
+      "partialPairs": 4,
+      "winsVersusStarter": 3,
+      "winsVersusNoop": 5,
+      "worstPnlUsdc": 1943.1582742122264,
+      "worstVersusStarterUsdc": -2353.697126230123
+    }
+  },
+  "transactionsByMethodStatus": {
+    "exactInputSingle:success": 631,
+    "exchange:success": 439,
+    "swap:success": 492,
+    "exchange:reverted": 4,
+    "swap:reverted": 1
+  },
+  "submissionFailureReasons": {
+    "Execution reverted with reason: Too little received.": 8,
+    "Execution reverted with reason: BAL#507.": 3
+  },
+  "scenarios": [
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 859.9048942568043,
+      "versusStarterUsdc": 421.26603480226186,
+      "versusNoopUsdc": 345.8447419166332,
+      "includedTxCount": 21,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 10,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 335,
+          "cross_venue_pair": 10,
+          "settlement_cooldown": 11,
+          "no_fundable_exit": 7,
+          "epoch_exit": 1
+        },
+        "pairedTrades": 10,
+        "submitted": 21,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 10
+        }
+      },
+      "artifact": {
+        "id": 12290709551,
+        "name": "ascon-market-result-calm-101",
+        "digest": "sha256:1a3e4f216ad4b5b8d4dee2d4a47b7b0aeb4a181c0e5886fbf1a38902103a7543",
+        "size_in_bytes": 831092
+      },
+      "startedAt": "2026-10-20T19:06:51.238870+00:00",
+      "finishedAt": "2026-10-20T19:19:35.546827+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 9,
+        "exchange:success": 5,
+        "swap:success": 7
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": -958.3063213432324,
+      "versusStarterUsdc": 335.3051778272202,
+      "versusNoopUsdc": 380.8479089698958,
+      "includedTxCount": 16,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 342,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 10,
+          "epoch_exit": 5
+        },
+        "pairedTrades": 6,
+        "submitted": 16,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12294776819,
+        "name": "ascon-market-result-cdp-incident-101",
+        "digest": "sha256:054f59f112bd3b9670588ad32907697d8114bfba5612a23d7e5462dd916fb0d8",
+        "size_in_bytes": 839698
+      },
+      "startedAt": "2026-10-20T19:48:01.091933+00:00",
+      "finishedAt": "2026-10-20T20:00:45.818456+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 5,
+        "exchange:success": 7,
+        "swap:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 1126.9381120623002,
+      "versusStarterUsdc": -2903.836856190028,
+      "versusNoopUsdc": 286.48642870638287,
+      "includedTxCount": 56,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 28,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 299,
+          "cross_venue_pair": 28,
+          "settlement_cooldown": 28,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 28,
+        "submitted": 56,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 28
+        }
+      },
+      "artifact": {
+        "id": 12292013960,
+        "name": "ascon-market-result-cex-drift-101",
+        "digest": "sha256:c9ee3b99c6d36420511eee0b7a26389f0cb1e420bc6851426861680f8b81471b",
+        "size_in_bytes": 878472
+      },
+      "startedAt": "2026-10-20T19:20:46.574871+00:00",
+      "finishedAt": "2026-10-20T19:33:31.292249+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 26,
+        "exactInputSingle:success": 26,
+        "swap:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": -312.11177557581686,
+      "versusStarterUsdc": -105.81887738659861,
+      "versusNoopUsdc": 251.10049694740155,
+      "includedTxCount": 19,
+      "revertCount": 1,
+      "submitFailures": 1,
+      "pairedTrades": 10,
+      "partialPairs": 2,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 334,
+          "cross_venue_pair": 10,
+          "settlement_cooldown": 10,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 10,
+        "submitted": 19,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 8,
+          "oneFilled": 2
+        }
+      },
+      "artifact": {
+        "id": 12291464961,
+        "name": "ascon-market-result-crash-101",
+        "digest": "sha256:86932ae969b9d2c9c9814d30e7443949d14fbea064bcbdba2996214771fbe651",
+        "size_in_bytes": 847579
+      },
+      "startedAt": "2026-10-20T19:06:49.902801+00:00",
+      "finishedAt": "2026-10-20T19:19:44.953185+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 8,
+        "exactInputSingle:success": 9,
+        "exchange:reverted": 1,
+        "exchange:success": 1
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 1
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 211.00710231508128,
+      "versusStarterUsdc": 420.38124030570907,
+      "versusNoopUsdc": 301.65830266506237,
+      "includedTxCount": 11,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 4,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 346,
+          "cross_venue_pair": 4,
+          "settlement_cooldown": 7,
+          "no_fundable_exit": 2,
+          "epoch_exit": 4
+        },
+        "pairedTrades": 4,
+        "submitted": 11,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 4
+        }
+      },
+      "artifact": {
+        "id": 12294290583,
+        "name": "ascon-market-result-depeg-101",
+        "digest": "sha256:e896429ec565ac4d68173bf4e44f2b5462359e9e0540002503fcf6665364341c",
+        "size_in_bytes": 823764
+      },
+      "startedAt": "2026-10-20T19:34:17.726361+00:00",
+      "finishedAt": "2026-10-20T19:47:02.856979+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 2,
+        "exactInputSingle:success": 4,
+        "exchange:success": 5
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 186.23201126379718,
+      "versusStarterUsdc": 1512.3599354819453,
+      "versusNoopUsdc": 620.0954188608303,
+      "includedTxCount": 32,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 16,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 322,
+          "cross_venue_pair": 16,
+          "settlement_cooldown": 16,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 16,
+        "submitted": 32,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 16
+        }
+      },
+      "artifact": {
+        "id": 12293493984,
+        "name": "ascon-market-result-depeg-persist-101",
+        "digest": "sha256:3c8e7485c62c2159464fd0bb3370379fba3ca795ee81e12efcc1432f0e047ea0",
+        "size_in_bytes": 814043
+      },
+      "startedAt": "2026-10-20T19:47:51.305415+00:00",
+      "finishedAt": "2026-10-20T20:00:44.605670+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 12,
+        "swap:success": 10,
+        "exactInputSingle:success": 10
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 1290.017358175217,
+      "versusStarterUsdc": -563.7354169859609,
+      "versusNoopUsdc": 675.198089885409,
+      "includedTxCount": 34,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 17,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 320,
+          "cross_venue_pair": 17,
+          "settlement_cooldown": 17,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 17,
+        "submitted": 34,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 17
+        }
+      },
+      "artifact": {
+        "id": 12292548072,
+        "name": "ascon-market-result-informed-flow-101",
+        "digest": "sha256:0fa5e50568fa12f7966846b691082cefa8c0100f21e5ffbe2c8a105ee7b9b1a0",
+        "size_in_bytes": 848116
+      },
+      "startedAt": "2026-10-20T19:20:34.211658+00:00",
+      "finishedAt": "2026-10-20T19:33:26.621190+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 14,
+        "swap:success": 10,
+        "exchange:success": 10
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "launch",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 12.949552062927978,
+      "versusStarterUsdc": 350.5275590864767,
+      "versusNoopUsdc": 127.91655580195948,
+      "includedTxCount": 7,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 3,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 348,
+          "cross_venue_pair": 3,
+          "settlement_cooldown": 4,
+          "no_fundable_exit": 7,
+          "epoch_exit": 1
+        },
+        "pairedTrades": 3,
+        "submitted": 7,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 3
+        }
+      },
+      "artifact": {
+        "id": 12292884791,
+        "name": "ascon-market-result-launch-101",
+        "digest": "sha256:78c66067b34a178c4a18256f5362a02392c7c399e652daf9cd5a5b32e0c31a16",
+        "size_in_bytes": 1005670
+      },
+      "startedAt": "2026-10-20T19:48:09.203867+00:00",
+      "finishedAt": "2026-10-20T20:01:04.759784+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 2,
+        "exactInputSingle:success": 4,
+        "exchange:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": -1252.0853277655406,
+      "versusStarterUsdc": -1767.4272598716198,
+      "versusNoopUsdc": 386.79633645033755,
+      "includedTxCount": 37,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 18,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 319,
+          "cross_venue_pair": 18,
+          "settlement_cooldown": 19,
+          "epoch_exit": 1,
+          "no_fundable_exit": 7
+        },
+        "pairedTrades": 18,
+        "submitted": 37,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 18
+        }
+      },
+      "artifact": {
+        "id": 12293250999,
+        "name": "ascon-market-result-lending-incident-101",
+        "digest": "sha256:e5740d225d2c1a0033f2bd2190f72f4dfbdafbb1755af98aaba44a3b8e9e4f60",
+        "size_in_bytes": 849217
+      },
+      "startedAt": "2026-10-20T19:20:40.114126+00:00",
+      "finishedAt": "2026-10-20T19:33:25.254100+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 8,
+        "exactInputSingle:success": 17,
+        "exchange:success": 12
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "spike",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 131.77472549462982,
+      "versusStarterUsdc": -1258.7510998845974,
+      "versusNoopUsdc": 605.4008616830688,
+      "includedTxCount": 37,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 16,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 312,
+          "cross_venue_pair": 16,
+          "settlement_cooldown": 21,
+          "drawdown_exit": 5,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 16,
+        "submitted": 37,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 16
+        }
+      },
+      "artifact": {
+        "id": 12292709877,
+        "name": "ascon-market-result-spike-101",
+        "digest": "sha256:c7a4e7d85f7e499ec7b64f4373d719c5f202d3c4297bd54ca5f16c503891c505",
+        "size_in_bytes": 856277
+      },
+      "startedAt": "2026-10-20T19:35:52.362337+00:00",
+      "finishedAt": "2026-10-20T19:48:37.636671+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 8,
+        "exactInputSingle:success": 16,
+        "swap:success": 13
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "vuln",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": -340.52751904178876,
+      "versusStarterUsdc": 40.56854504496732,
+      "versusNoopUsdc": 350.4088682112779,
+      "includedTxCount": 4,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 0,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 355,
+          "epoch_exit": 4,
+          "settlement_cooldown": 4
+        },
+        "pairedTrades": 0,
+        "submitted": 4,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {}
+      },
+      "artifact": {
+        "id": 12294335387,
+        "name": "ascon-market-result-vuln-101",
+        "digest": "sha256:54beaaee0012daac7c9cba452d1f446a6be73b4662de2bf8babc38d942a86c57",
+        "size_in_bytes": 833954
+      },
+      "startedAt": "2026-10-20T19:34:45.681709+00:00",
+      "finishedAt": "2026-10-20T19:47:30.678730+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "pnlUsdc": 3327.431365399563,
+      "versusStarterUsdc": -1155.4003544184816,
+      "versusNoopUsdc": 3434.3223950658285,
+      "includedTxCount": 68,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 32,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 291,
+          "cross_venue_pair": 32,
+          "settlement_cooldown": 36,
+          "epoch_exit": 5
+        },
+        "pairedTrades": 32,
+        "submitted": 68,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 32
+        }
+      },
+      "artifact": {
+        "id": 12291929402,
+        "name": "ascon-market-result-whale-101",
+        "digest": "sha256:78e5e9d386a2a3dbebfb9359bc37af3466fb1e0f8362c47a306b53ecf8f44362",
+        "size_in_bytes": 878442
+      },
+      "startedAt": "2026-10-20T19:20:39.263229+00:00",
+      "finishedAt": "2026-10-20T19:33:37.866218+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 30,
+        "swap:success": 27,
+        "exchange:success": 11
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "calm",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 270.4323572649737,
+      "versusStarterUsdc": -11.143342392751947,
+      "versusNoopUsdc": 21.055197279536515,
+      "includedTxCount": 1,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 0,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 354,
+          "no_fundable_exit": 6,
+          "epoch_exit": 1,
+          "settlement_cooldown": 1
+        },
+        "pairedTrades": 0,
+        "submitted": 1,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {}
+      },
+      "artifact": {
+        "id": 12293436193,
+        "name": "ascon-market-result-calm-202",
+        "digest": "sha256:86ce6a799b6c71dcd27a96ca6a866314105392c5b4c5ac79e864fafeb72bc3ae",
+        "size_in_bytes": 814792
+      },
+      "startedAt": "2026-10-20T19:20:37.596969+00:00",
+      "finishedAt": "2026-10-20T19:33:23.104290+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": -283.4278262749867,
+      "versusStarterUsdc": -527.2673560100811,
+      "versusNoopUsdc": 351.73948205061606,
+      "includedTxCount": 26,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 13,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 329,
+          "cross_venue_pair": 13,
+          "settlement_cooldown": 13,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 13,
+        "submitted": 26,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 13
+        }
+      },
+      "artifact": {
+        "id": 12294223119,
+        "name": "ascon-market-result-cdp-incident-202",
+        "digest": "sha256:ee17cc15bc1b2434cc42b90c606e860b3dddc279f8248180d51dee18b2994a10",
+        "size_in_bytes": 859060
+      },
+      "startedAt": "2026-10-20T19:47:58.775684+00:00",
+      "finishedAt": "2026-10-20T20:00:44.033506+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 7,
+        "exchange:success": 9,
+        "exactInputSingle:success": 10
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 1104.0826966304448,
+      "versusStarterUsdc": -1627.3759794328362,
+      "versusNoopUsdc": 204.10736568103312,
+      "includedTxCount": 18,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 9,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 336,
+          "cross_venue_pair": 9,
+          "settlement_cooldown": 9,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 9,
+        "submitted": 18,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 9
+        }
+      },
+      "artifact": {
+        "id": 12293031294,
+        "name": "ascon-market-result-cex-drift-202",
+        "digest": "sha256:4c9ee062ed6ec3cc8c95d1d8f80d44e606b30684fa37cfa8c9156cc8ca3583d8",
+        "size_in_bytes": 857131
+      },
+      "startedAt": "2026-10-20T19:20:35.132226+00:00",
+      "finishedAt": "2026-10-20T19:33:20.383809+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 4,
+        "exactInputSingle:success": 7,
+        "exchange:success": 7
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "crash",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 1561.9530645728664,
+      "versusStarterUsdc": -2497.373627057954,
+      "versusNoopUsdc": -23.77084312707302,
+      "includedTxCount": 48,
+      "revertCount": 0,
+      "submitFailures": 1,
+      "pairedTrades": 24,
+      "partialPairs": 1,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 306,
+          "cross_venue_pair": 24,
+          "settlement_cooldown": 25,
+          "epoch_exit": 1,
+          "no_fundable_exit": 6
+        },
+        "pairedTrades": 24,
+        "submitted": 48,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 23,
+          "oneFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12292374862,
+        "name": "ascon-market-result-crash-202",
+        "digest": "sha256:6259498ab9285a3cf092ddc4570b19ed3ac50452791673d679b27777b6002503",
+        "size_in_bytes": 879064
+      },
+      "startedAt": "2026-10-20T19:34:11.492888+00:00",
+      "finishedAt": "2026-10-20T19:47:02.304733+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 23,
+        "exchange:success": 21,
+        "swap:success": 4
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 1
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 825.6341210414103,
+      "versusStarterUsdc": 433.3585911445116,
+      "versusNoopUsdc": 159.74563371221302,
+      "includedTxCount": 10,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 5,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 344,
+          "cross_venue_pair": 5,
+          "settlement_cooldown": 5,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 5,
+        "submitted": 10,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 5
+        }
+      },
+      "artifact": {
+        "id": 12292819611,
+        "name": "ascon-market-result-depeg-202",
+        "digest": "sha256:4be49af8733384760061bda3534b27d2f51d56301dab10faf9e7c95ef4c51b39",
+        "size_in_bytes": 811862
+      },
+      "startedAt": "2026-10-20T19:34:18.055340+00:00",
+      "finishedAt": "2026-10-20T19:47:02.769475+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 5,
+        "exactInputSingle:success": 4,
+        "exchange:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 1119.1239061072702,
+      "versusStarterUsdc": -102.12762328427925,
+      "versusNoopUsdc": 133.2105263541307,
+      "includedTxCount": 8,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 4,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 346,
+          "cross_venue_pair": 4,
+          "settlement_cooldown": 4,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 4,
+        "submitted": 8,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 4
+        }
+      },
+      "artifact": {
+        "id": 12295075491,
+        "name": "ascon-market-result-depeg-persist-202",
+        "digest": "sha256:1ba9bcde74cb91cdef84fe165b6c2b20c904ae3821b1d1eeedf8302303c5bd91",
+        "size_in_bytes": 839108
+      },
+      "startedAt": "2026-10-20T19:47:53.550852+00:00",
+      "finishedAt": "2026-10-20T20:00:48.087095+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 4,
+        "exchange:success": 1,
+        "swap:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": -95.81461398873944,
+      "versusStarterUsdc": -9.60440736671444,
+      "versusNoopUsdc": 505.185900291297,
+      "includedTxCount": 24,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 12,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 331,
+          "cross_venue_pair": 12,
+          "settlement_cooldown": 12,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 12,
+        "submitted": 24,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 12
+        }
+      },
+      "artifact": {
+        "id": 12292672594,
+        "name": "ascon-market-result-informed-flow-202",
+        "digest": "sha256:f55d7fde04ea519f317e51829634114a5493ad8247588b4dc8715027bfc4bcde",
+        "size_in_bytes": 865457
+      },
+      "startedAt": "2026-10-20T19:20:37.641661+00:00",
+      "finishedAt": "2026-10-20T19:33:22.070365+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 5,
+        "exactInputSingle:success": 9,
+        "exchange:success": 10
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "launch",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 565.4703209933941,
+      "versusStarterUsdc": -103.23044555830711,
+      "versusNoopUsdc": 351.39697423772304,
+      "includedTxCount": 20,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 9,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 336,
+          "cross_venue_pair": 9,
+          "settlement_cooldown": 11,
+          "epoch_exit": 2,
+          "no_fundable_exit": 4
+        },
+        "pairedTrades": 9,
+        "submitted": 20,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 9
+        }
+      },
+      "artifact": {
+        "id": 12293554475,
+        "name": "ascon-market-result-launch-202",
+        "digest": "sha256:4060c7f14743689510e087591ed8793abc6ceab0f81d5b6c917d9a8814075645",
+        "size_in_bytes": 1027989
+      },
+      "startedAt": "2026-10-20T19:48:15.332940+00:00",
+      "finishedAt": "2026-10-20T20:01:01.242093+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 9,
+        "exactInputSingle:success": 11
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 736.9894551592297,
+      "versusStarterUsdc": 601.6241397143749,
+      "versusNoopUsdc": 276.54733840798144,
+      "includedTxCount": 16,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 8,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 338,
+          "cross_venue_pair": 8,
+          "settlement_cooldown": 8,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 8,
+        "submitted": 16,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 8
+        }
+      },
+      "artifact": {
+        "id": 12293786621,
+        "name": "ascon-market-result-lending-incident-202",
+        "digest": "sha256:8ad44aac727c3bccbef8eba859861506bae35e6c0e23fc20014d20ebe026b9b3",
+        "size_in_bytes": 858251
+      },
+      "startedAt": "2026-10-20T19:34:08.432633+00:00",
+      "finishedAt": "2026-10-20T19:46:55.273993+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 7,
+        "swap:success": 8,
+        "exchange:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "spike",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": -1843.7550912444422,
+      "versusStarterUsdc": -895.2487280556234,
+      "versusNoopUsdc": 258.9412352022482,
+      "includedTxCount": 17,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 8,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 338,
+          "cross_venue_pair": 8,
+          "settlement_cooldown": 9,
+          "epoch_exit": 1,
+          "no_fundable_exit": 7
+        },
+        "pairedTrades": 8,
+        "submitted": 17,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 8
+        }
+      },
+      "artifact": {
+        "id": 12294428487,
+        "name": "ascon-market-result-spike-202",
+        "digest": "sha256:3660c6750ed2430d5caed02737440efbcac1d09fd4f1fd1eb11106524ca94611",
+        "size_in_bytes": 854695
+      },
+      "startedAt": "2026-10-20T20:04:03.941875+00:00",
+      "finishedAt": "2026-10-20T20:16:48.185142+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 6,
+        "swap:success": 8,
+        "exchange:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "vuln",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 712.6693106246821,
+      "versusStarterUsdc": 75.66955883370247,
+      "versusNoopUsdc": 185.4521446454164,
+      "includedTxCount": 10,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 5,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 344,
+          "cross_venue_pair": 5,
+          "settlement_cooldown": 5,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 5,
+        "submitted": 10,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 5
+        }
+      },
+      "artifact": {
+        "id": 12293841519,
+        "name": "ascon-market-result-vuln-202",
+        "digest": "sha256:1b744b2d1851b112d2b5b25503326b1898fd522ce39a607f5830d144293abf55",
+        "size_in_bytes": 836822
+      },
+      "startedAt": "2026-10-20T19:34:27.083241+00:00",
+      "finishedAt": "2026-10-20T19:47:10.984037+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 2,
+        "exactInputSingle:success": 5,
+        "exchange:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "whale",
+      "seed": 202,
+      "passed": true,
+      "pnlUsdc": 1943.1582742122264,
+      "versusStarterUsdc": -2353.697126230123,
+      "versusNoopUsdc": 1984.4297965836595,
+      "includedTxCount": 93,
+      "revertCount": 0,
+      "submitFailures": 1,
+      "pairedTrades": 47,
+      "partialPairs": 1,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 261,
+          "cross_venue_pair": 47,
+          "settlement_cooldown": 47,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 47,
+        "submitted": 93,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 46,
+          "oneFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12291979121,
+        "name": "ascon-market-result-whale-202",
+        "digest": "sha256:14d9aff4bef58939dc399487ef4b5a266362ee90d2ae241f483194b6892477f4",
+        "size_in_bytes": 833795
+      },
+      "startedAt": "2026-10-20T19:20:46.541153+00:00",
+      "finishedAt": "2026-10-20T19:33:31.278588+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 30,
+        "swap:success": 37,
+        "exchange:success": 26
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: BAL#507.": 1
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": -273.51051166455727,
+      "versusStarterUsdc": 183.77404050969926,
+      "versusNoopUsdc": 243.55309310127632,
+      "includedTxCount": 14,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 342,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 8,
+          "epoch_exit": 3,
+          "no_fundable_exit": 4
+        },
+        "pairedTrades": 6,
+        "submitted": 14,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12292263113,
+        "name": "ascon-market-result-calm-303",
+        "digest": "sha256:f952542342c604db9d4c0031c82a56160ef767731d175a64895b50d03c934e10",
+        "size_in_bytes": 829216
+      },
+      "startedAt": "2026-10-20T19:20:45.145011+00:00",
+      "finishedAt": "2026-10-20T19:33:40.870354+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 6,
+        "swap:success": 4,
+        "exactInputSingle:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": -133.23008735888288,
+      "versusStarterUsdc": -34.18298589324695,
+      "versusNoopUsdc": 301.1367153633473,
+      "includedTxCount": 20,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 9,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 337,
+          "cross_venue_pair": 9,
+          "settlement_cooldown": 10,
+          "no_fundable_exit": 5,
+          "epoch_exit": 2
+        },
+        "pairedTrades": 9,
+        "submitted": 20,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 9
+        }
+      },
+      "artifact": {
+        "id": 12294896450,
+        "name": "ascon-market-result-cdp-incident-303",
+        "digest": "sha256:a0826344e3969f9a1bd8109866e5132fc294c4397655404495c7d339d420cf27",
+        "size_in_bytes": 876781
+      },
+      "startedAt": "2026-10-20T19:48:10.769502+00:00",
+      "finishedAt": "2026-10-20T20:00:55.970776+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 9,
+        "exchange:success": 7,
+        "swap:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 2909.4745922383445,
+      "versusStarterUsdc": -2489.583521602879,
+      "versusNoopUsdc": 483.33504952234216,
+      "includedTxCount": 20,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 8,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 338,
+          "cross_venue_pair": 8,
+          "settlement_cooldown": 11,
+          "epoch_exit": 4,
+          "no_fundable_exit": 1
+        },
+        "pairedTrades": 8,
+        "submitted": 20,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 8
+        }
+      },
+      "artifact": {
+        "id": 12292807773,
+        "name": "ascon-market-result-cex-drift-303",
+        "digest": "sha256:e65e74b0acbe984dfa7068b301dab680ea9a945590fb01f8d71a27af71f175af",
+        "size_in_bytes": 870344
+      },
+      "startedAt": "2026-10-20T19:20:41.792515+00:00",
+      "finishedAt": "2026-10-20T19:33:36.166081+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 8,
+        "swap:success": 11,
+        "exchange:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "crash",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": -1077.2890787794604,
+      "versusStarterUsdc": -563.9716247996112,
+      "versusNoopUsdc": 679.1050031985651,
+      "includedTxCount": 57,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 28,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 298,
+          "cross_venue_pair": 28,
+          "settlement_cooldown": 29,
+          "no_fundable_exit": 7,
+          "epoch_exit": 1
+        },
+        "pairedTrades": 28,
+        "submitted": 57,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 28
+        }
+      },
+      "artifact": {
+        "id": 12293282707,
+        "name": "ascon-market-result-crash-303",
+        "digest": "sha256:6221e430a3096f8aa1b09a326eed8a50daea2d0182ed420f14998b60cefec95c",
+        "size_in_bytes": 870372
+      },
+      "startedAt": "2026-10-20T19:34:11.773578+00:00",
+      "finishedAt": "2026-10-20T19:46:57.255533+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 26,
+        "exchange:success": 22,
+        "swap:success": 9
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 188.4312986350269,
+      "versusStarterUsdc": -254.7875567304436,
+      "versusNoopUsdc": 351.08890514829545,
+      "includedTxCount": 15,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 342,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 9,
+          "epoch_exit": 4,
+          "no_fundable_exit": 2
+        },
+        "pairedTrades": 6,
+        "submitted": 15,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12293178942,
+        "name": "ascon-market-result-depeg-303",
+        "digest": "sha256:6bfa06a73db4d80fa9eacd1dd778fee630fb22bddfe9a0c1bf3b4278058252df",
+        "size_in_bytes": 852629
+      },
+      "startedAt": "2026-10-20T19:34:17.867444+00:00",
+      "finishedAt": "2026-10-20T19:47:03.646013+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 8,
+        "exactInputSingle:success": 5,
+        "exchange:success": 2
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 281.69681355440116,
+      "versusStarterUsdc": 251.90634563352796,
+      "versusNoopUsdc": 621.5450305230479,
+      "includedTxCount": 23,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 10,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 334,
+          "cross_venue_pair": 10,
+          "settlement_cooldown": 13,
+          "epoch_exit": 4,
+          "no_fundable_exit": 2
+        },
+        "pairedTrades": 10,
+        "submitted": 23,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 10
+        }
+      },
+      "artifact": {
+        "id": 12294367329,
+        "name": "ascon-market-result-depeg-persist-303",
+        "digest": "sha256:5338b8c3c80f6beb11d6080cce97481eff589c943fe01313cb88a8c13c14195a",
+        "size_in_bytes": 846454
+      },
+      "startedAt": "2026-10-20T19:47:52.934162+00:00",
+      "finishedAt": "2026-10-20T20:00:46.258379+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 10,
+        "swap:success": 2,
+        "exchange:success": 11
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 1331.0854762439558,
+      "versusStarterUsdc": -51.44887106170063,
+      "versusNoopUsdc": 1795.9226458379271,
+      "includedTxCount": 64,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 30,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 295,
+          "cross_venue_pair": 30,
+          "settlement_cooldown": 34,
+          "epoch_exit": 4
+        },
+        "pairedTrades": 30,
+        "submitted": 64,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 30
+        }
+      },
+      "artifact": {
+        "id": 12292157481,
+        "name": "ascon-market-result-informed-flow-303",
+        "digest": "sha256:2ae78fb6991b7aea484b21b592e1e156291c705005db2224dd494871c0dd0a13",
+        "size_in_bytes": 851740
+      },
+      "startedAt": "2026-10-20T19:20:33.528909+00:00",
+      "finishedAt": "2026-10-20T19:33:17.716812+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 24,
+        "exchange:success": 14,
+        "swap:success": 26
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "launch",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 222.36631078385108,
+      "versusStarterUsdc": -703.3241539585724,
+      "versusNoopUsdc": 100.80800243090198,
+      "includedTxCount": 6,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 3,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 348,
+          "cross_venue_pair": 3,
+          "settlement_cooldown": 3,
+          "no_fundable_exit": 8,
+          "epoch_exit": 1
+        },
+        "pairedTrades": 3,
+        "submitted": 6,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 3
+        }
+      },
+      "artifact": {
+        "id": 12294311927,
+        "name": "ascon-market-result-launch-303",
+        "digest": "sha256:70b3eae113aa187f1092de6850bbdf91e0419a6df57591f2cc16759955399688",
+        "size_in_bytes": 1027794
+      },
+      "startedAt": "2026-10-20T19:48:26.151125+00:00",
+      "finishedAt": "2026-10-20T20:01:11.675900+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 3,
+        "exchange:success": 2,
+        "exactInputSingle:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": -1801.2505285817024,
+      "versusStarterUsdc": -1520.0950136676547,
+      "versusNoopUsdc": 320.4348895421281,
+      "includedTxCount": 38,
+      "revertCount": 1,
+      "submitFailures": 0,
+      "pairedTrades": 19,
+      "partialPairs": 1,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 316,
+          "cross_venue_pair": 19,
+          "settlement_cooldown": 19,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 19,
+        "submitted": 38,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 18,
+          "oneFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12294450109,
+        "name": "ascon-market-result-lending-incident-303",
+        "digest": "sha256:72f133278350df3d99cb08f59734773068de3860a0aa64a440aa0516a46933c0",
+        "size_in_bytes": 848840
+      },
+      "startedAt": "2026-10-20T19:34:15.386309+00:00",
+      "finishedAt": "2026-10-20T19:46:59.936892+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 16,
+        "swap:success": 8,
+        "exchange:success": 13,
+        "exchange:reverted": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "spike",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 799.624451487718,
+      "versusStarterUsdc": -543.2358748291881,
+      "versusNoopUsdc": 723.0193898943689,
+      "includedTxCount": 30,
+      "revertCount": 0,
+      "submitFailures": 2,
+      "pairedTrades": 15,
+      "partialPairs": 2,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 324,
+          "cross_venue_pair": 15,
+          "settlement_cooldown": 17,
+          "epoch_exit": 2,
+          "no_fundable_exit": 4
+        },
+        "pairedTrades": 15,
+        "submitted": 30,
+        "submitFailures": 2,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 13,
+          "oneFilled": 2
+        }
+      },
+      "artifact": {
+        "id": 12293422878,
+        "name": "ascon-market-result-spike-303",
+        "digest": "sha256:99e324e597c06bf854c2f65f6747c24f2c6fa9c29e00c414764e4c840e97e3f4",
+        "size_in_bytes": 854642
+      },
+      "startedAt": "2026-10-20T19:39:13.923808+00:00",
+      "finishedAt": "2026-10-20T19:52:04.652593+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 13,
+        "swap:success": 11,
+        "exactInputSingle:success": 6
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: BAL#507.": 2
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 223.84089179964212,
+      "versusStarterUsdc": 577.8346097721515,
+      "versusNoopUsdc": 268.8873292768112,
+      "includedTxCount": 14,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 7,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 340,
+          "cross_venue_pair": 7,
+          "settlement_cooldown": 7,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 7,
+        "submitted": 14,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 7
+        }
+      },
+      "artifact": {
+        "id": 12294225727,
+        "name": "ascon-market-result-vuln-303",
+        "digest": "sha256:683cc7caf2813f97d33b03e7a51e20006fd323def849366aa339dd155a928c14",
+        "size_in_bytes": 807756
+      },
+      "startedAt": "2026-10-20T19:34:25.939357+00:00",
+      "finishedAt": "2026-10-20T19:47:10.246681+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 7,
+        "exactInputSingle:success": 7
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "whale",
+      "seed": 303,
+      "passed": true,
+      "pnlUsdc": 4360.707293566986,
+      "versusStarterUsdc": 3549.007967208905,
+      "versusNoopUsdc": 4867.229566665017,
+      "includedTxCount": 92,
+      "revertCount": 0,
+      "submitFailures": 2,
+      "pairedTrades": 47,
+      "partialPairs": 2,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 260,
+          "cross_venue_pair": 47,
+          "settlement_cooldown": 47,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 47,
+        "submitted": 92,
+        "submitFailures": 2,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "oneFilled": 2,
+          "bothFilled": 45
+        }
+      },
+      "artifact": {
+        "id": 12292762535,
+        "name": "ascon-market-result-whale-303",
+        "digest": "sha256:ce303752a7e5e5da150576cd15f2ea51b202fc8028592890c0cb5982c31b4e97",
+        "size_in_bytes": 848177
+      },
+      "startedAt": "2026-10-20T19:20:35.109195+00:00",
+      "finishedAt": "2026-10-20T19:33:20.347692+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 39,
+        "exactInputSingle:success": 41,
+        "exchange:success": 12
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 2
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 124.46960484092415,
+      "versusStarterUsdc": -239.5455304080824,
+      "versusNoopUsdc": 308.96141076013737,
+      "includedTxCount": 14,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 7,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 341,
+          "cross_venue_pair": 7,
+          "settlement_cooldown": 7,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 7,
+        "submitted": 14,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 7
+        }
+      },
+      "artifact": {
+        "id": 12293710034,
+        "name": "ascon-market-result-calm-404",
+        "digest": "sha256:43eb4cf3b17da432b250f29cfbc8e8dd74a88c85726a2425497faf0300355501",
+        "size_in_bytes": 832493
+      },
+      "startedAt": "2026-10-20T19:20:44.843080+00:00",
+      "finishedAt": "2026-10-20T19:33:39.030825+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 5,
+        "swap:success": 6,
+        "exactInputSingle:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": -410.418462310874,
+      "versusStarterUsdc": -574.0582271513413,
+      "versusNoopUsdc": 755.2100975968351,
+      "includedTxCount": 48,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 24,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 306,
+          "cross_venue_pair": 24,
+          "settlement_cooldown": 24,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 24,
+        "submitted": 48,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 24
+        }
+      },
+      "artifact": {
+        "id": 12294083624,
+        "name": "ascon-market-result-cdp-incident-404",
+        "digest": "sha256:3c2174569854061483ea628fcf5f86bebd44c709c291b0d3f99009e42c2e89b7",
+        "size_in_bytes": 877286
+      },
+      "startedAt": "2026-10-20T19:48:04.897140+00:00",
+      "finishedAt": "2026-10-20T20:01:00.240857+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 8,
+        "exactInputSingle:success": 19,
+        "exchange:success": 21
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 797.1719076513837,
+      "versusStarterUsdc": -2346.771569927645,
+      "versusNoopUsdc": 561.4378535979486,
+      "includedTxCount": 28,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 14,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 326,
+          "cross_venue_pair": 14,
+          "settlement_cooldown": 14,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 14,
+        "submitted": 28,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 14
+        }
+      },
+      "artifact": {
+        "id": 12292372850,
+        "name": "ascon-market-result-cex-drift-404",
+        "digest": "sha256:fb8bc872dadfbd3f9f143bfb4364fc6ef45e18fa5092e1d7b3bcd0676bda664b",
+        "size_in_bytes": 851177
+      },
+      "startedAt": "2026-10-20T19:20:46.686130+00:00",
+      "finishedAt": "2026-10-20T19:33:42.013857+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 11,
+        "swap:success": 13,
+        "exactInputSingle:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "crash",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": -354.9809341750806,
+      "versusStarterUsdc": -2467.505154798084,
+      "versusNoopUsdc": 577.8163824128278,
+      "includedTxCount": 45,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 21,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 306,
+          "cross_venue_pair": 21,
+          "settlement_cooldown": 24,
+          "drawdown_exit": 3,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 21,
+        "submitted": 45,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 21
+        }
+      },
+      "artifact": {
+        "id": 12292734769,
+        "name": "ascon-market-result-crash-404",
+        "digest": "sha256:c02f8ac4ebfa3b41d8b14fe9687c1f4f7567f8a0354bea3573df06d9e3b52bbf",
+        "size_in_bytes": 850669
+      },
+      "startedAt": "2026-10-20T19:34:20.793900+00:00",
+      "finishedAt": "2026-10-20T19:47:14.983944+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 19,
+        "swap:success": 8,
+        "exchange:success": 18
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 626.0495327013487,
+      "versusStarterUsdc": -113.49571696699422,
+      "versusNoopUsdc": 67.45750757813221,
+      "includedTxCount": 4,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 2,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 350,
+          "cross_venue_pair": 2,
+          "settlement_cooldown": 2,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 2,
+        "submitted": 4,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 2
+        }
+      },
+      "artifact": {
+        "id": 12292159435,
+        "name": "ascon-market-result-depeg-404",
+        "digest": "sha256:306d0897a7db95b7554d6c461eaa49be0e78864a02995b16414e250e98b843f2",
+        "size_in_bytes": 834604
+      },
+      "startedAt": "2026-10-20T19:34:21.630385+00:00",
+      "finishedAt": "2026-10-20T19:47:14.379052+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 1,
+        "swap:success": 2,
+        "exactInputSingle:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 173.33976845980214,
+      "versusStarterUsdc": 725.4588986783638,
+      "versusNoopUsdc": 222.4043747636315,
+      "includedTxCount": 12,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 342,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 6,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 6,
+        "submitted": 12,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12293644572,
+        "name": "ascon-market-result-depeg-persist-404",
+        "digest": "sha256:c9b1c2267c8f09f72c26ea2c17e891400d715577ee13a24895a33a6fa191a0e4",
+        "size_in_bytes": 823480
+      },
+      "startedAt": "2026-10-20T19:47:53.007429+00:00",
+      "finishedAt": "2026-10-20T20:00:37.328303+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 5,
+        "exactInputSingle:success": 2,
+        "exchange:success": 5
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 824.7016307785816,
+      "versusStarterUsdc": -192.2994611854956,
+      "versusNoopUsdc": 350.5826019634551,
+      "includedTxCount": 18,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 9,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 336,
+          "cross_venue_pair": 9,
+          "settlement_cooldown": 9,
+          "no_fundable_exit": 8,
+          "epoch_exit": 1
+        },
+        "pairedTrades": 9,
+        "submitted": 19,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 9
+        }
+      },
+      "artifact": {
+        "id": 12291973352,
+        "name": "ascon-market-result-informed-flow-404",
+        "digest": "sha256:1ada5f583bc8a525c38e853e17ea51aee1f283269626c1e53efe859d099f484a",
+        "size_in_bytes": 828870
+      },
+      "startedAt": "2026-10-20T19:20:33.801444+00:00",
+      "finishedAt": "2026-10-20T19:33:17.664550+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 9,
+        "swap:success": 6,
+        "exchange:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "launch",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": -160.91103157654288,
+      "versusStarterUsdc": 200.26349465931708,
+      "versusNoopUsdc": 246.56090404109273,
+      "includedTxCount": 10,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 3,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 348,
+          "cross_venue_pair": 3,
+          "settlement_cooldown": 7,
+          "epoch_exit": 5
+        },
+        "pairedTrades": 3,
+        "submitted": 10,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 3
+        }
+      },
+      "artifact": {
+        "id": 12294697065,
+        "name": "ascon-market-result-launch-404",
+        "digest": "sha256:6521f3e2dbe0ae54a5a04c733c34400b3e08ba815624b86237d2b513ce357ac6",
+        "size_in_bytes": 1036564
+      },
+      "startedAt": "2026-10-20T19:48:23.694180+00:00",
+      "finishedAt": "2026-10-20T20:01:09.344617+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 3,
+        "exactInputSingle:success": 4,
+        "exchange:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": -659.5337251777819,
+      "versusStarterUsdc": -1797.514940367968,
+      "versusNoopUsdc": 210.96862137608696,
+      "includedTxCount": 20,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 10,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 335,
+          "cross_venue_pair": 10,
+          "settlement_cooldown": 10,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 10,
+        "submitted": 20,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 10
+        }
+      },
+      "artifact": {
+        "id": 12294200475,
+        "name": "ascon-market-result-lending-incident-404",
+        "digest": "sha256:5cd7959190ee37b8ff79d1994b3cc41c797c9538184b02217f06a7a2078b4798",
+        "size_in_bytes": 855397
+      },
+      "startedAt": "2026-10-20T19:34:08.848008+00:00",
+      "finishedAt": "2026-10-20T19:46:53.715851+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 4,
+        "exactInputSingle:success": 9,
+        "exchange:success": 7
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "spike",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": -2047.6750592677708,
+      "versusStarterUsdc": -193.15227494679857,
+      "versusNoopUsdc": 145.83928260055836,
+      "includedTxCount": 9,
+      "revertCount": 0,
+      "submitFailures": 1,
+      "pairedTrades": 5,
+      "partialPairs": 1,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 344,
+          "cross_venue_pair": 5,
+          "settlement_cooldown": 5,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 5,
+        "submitted": 9,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 4,
+          "oneFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12294586959,
+        "name": "ascon-market-result-spike-404",
+        "digest": "sha256:d3135e399973a000f5a57619472a8e882b6d693d8e3bad833202e39f785ab280",
+        "size_in_bytes": 853471
+      },
+      "startedAt": "2026-10-20T19:47:52.595459+00:00",
+      "finishedAt": "2026-10-20T20:00:38.101195+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 4,
+        "exactInputSingle:success": 3,
+        "exchange:success": 2
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 1
+      }
+    },
+    {
+      "regime": "vuln",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 485.31722590202116,
+      "versusStarterUsdc": 537.8120954245969,
+      "versusNoopUsdc": 535.1641023455595,
+      "includedTxCount": 28,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 14,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 327,
+          "cross_venue_pair": 14,
+          "settlement_cooldown": 14,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 14,
+        "submitted": 28,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 14
+        }
+      },
+      "artifact": {
+        "id": 12293128330,
+        "name": "ascon-market-result-vuln-404",
+        "digest": "sha256:316d8c277d9a056f7eb903577669357875ea105fc7b1b89289e9529fccd51a4e",
+        "size_in_bytes": 817310
+      },
+      "startedAt": "2026-10-20T19:34:33.491839+00:00",
+      "finishedAt": "2026-10-20T19:47:29.388544+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 6,
+        "exactInputSingle:success": 12,
+        "exchange:success": 10
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "whale",
+      "seed": 404,
+      "passed": true,
+      "pnlUsdc": 5759.554811226815,
+      "versusStarterUsdc": 1458.2833276295278,
+      "versusNoopUsdc": 5210.39974373061,
+      "includedTxCount": 101,
+      "revertCount": 0,
+      "submitFailures": 1,
+      "pairedTrades": 51,
+      "partialPairs": 1,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 252,
+          "cross_venue_pair": 51,
+          "settlement_cooldown": 51,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 51,
+        "submitted": 101,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 50,
+          "oneFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12292532823,
+        "name": "ascon-market-result-whale-404",
+        "digest": "sha256:4c9b832fd09352c81e58dfd60324f9aeac79ade4c32ebb351147c05901e48b19",
+        "size_in_bytes": 871448
+      },
+      "startedAt": "2026-10-20T19:20:43.848578+00:00",
+      "finishedAt": "2026-10-20T19:33:39.372764+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 49,
+        "exactInputSingle:success": 45,
+        "exchange:success": 7
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 1
+      }
+    },
+    {
+      "regime": "calm",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": -26.874023428288638,
+      "versusStarterUsdc": 872.0168168216187,
+      "versusNoopUsdc": 125.28222302785434,
+      "includedTxCount": 4,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 1,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 352,
+          "cross_venue_pair": 1,
+          "settlement_cooldown": 3,
+          "no_fundable_exit": 4,
+          "epoch_exit": 2
+        },
+        "pairedTrades": 1,
+        "submitted": 4,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12293445689,
+        "name": "ascon-market-result-calm-505",
+        "digest": "sha256:71877dd895b238b540d32f7aa5095c778835cb8f69be8bd4ea67a2f1924abde7",
+        "size_in_bytes": 791296
+      },
+      "startedAt": "2026-10-20T19:20:41.444136+00:00",
+      "finishedAt": "2026-10-20T19:33:25.123181+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 1,
+        "swap:success": 3
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "cdp-incident",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": -1052.7709014320571,
+      "versusStarterUsdc": -887.6189402022574,
+      "versusNoopUsdc": 532.4764062632021,
+      "includedTxCount": 25,
+      "revertCount": 1,
+      "submitFailures": 1,
+      "pairedTrades": 11,
+      "partialPairs": 2,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 332,
+          "cross_venue_pair": 11,
+          "settlement_cooldown": 15,
+          "no_fundable_exit": 1,
+          "epoch_exit": 4
+        },
+        "pairedTrades": 11,
+        "submitted": 25,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 9,
+          "oneFilled": 2
+        }
+      },
+      "artifact": {
+        "id": 12293289290,
+        "name": "ascon-market-result-cdp-incident-505",
+        "digest": "sha256:586134c0d188813db0133cfd0565c0e332e8fdf6ee998965a3b98aa8d2b89301",
+        "size_in_bytes": 850502
+      },
+      "startedAt": "2026-10-20T19:47:56.517480+00:00",
+      "finishedAt": "2026-10-20T20:00:40.841724+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 8,
+        "exchange:success": 7,
+        "exactInputSingle:success": 9,
+        "swap:reverted": 1
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 1
+      }
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 665.4054814755218,
+      "versusStarterUsdc": -2387.2894544740993,
+      "versusNoopUsdc": 103.48678053362528,
+      "includedTxCount": 12,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 343,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 6,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 6,
+        "submitted": 12,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12292871883,
+        "name": "ascon-market-result-cex-drift-505",
+        "digest": "sha256:1a904f34267a37ef00e9c31e5ff62166bdb3f6bd1aead270ef16749b24e2e5ac",
+        "size_in_bytes": 835314
+      },
+      "startedAt": "2026-10-20T19:20:45.184550+00:00",
+      "finishedAt": "2026-10-20T19:33:43.993449+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 5,
+        "swap:success": 5,
+        "exactInputSingle:success": 2
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "crash",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": -23.082713292504195,
+      "versusStarterUsdc": 917.6997434764344,
+      "versusNoopUsdc": 364.9701553076302,
+      "includedTxCount": 21,
+      "revertCount": 0,
+      "submitFailures": 1,
+      "pairedTrades": 11,
+      "partialPairs": 1,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 332,
+          "cross_venue_pair": 11,
+          "settlement_cooldown": 11,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 11,
+        "submitted": 21,
+        "submitFailures": 1,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 10,
+          "oneFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12294400243,
+        "name": "ascon-market-result-crash-505",
+        "digest": "sha256:edde8d8931b8f2f8e31b4c41a2b8b02ae022143059942f6ee88b6f85d4249e42",
+        "size_in_bytes": 827157
+      },
+      "startedAt": "2026-10-20T19:34:15.755134+00:00",
+      "finishedAt": "2026-10-20T19:47:08.866763+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 7,
+        "exactInputSingle:success": 9,
+        "swap:success": 5
+      },
+      "submissionFailureReasons": {
+        "Execution reverted with reason: Too little received.": 1
+      }
+    },
+    {
+      "regime": "depeg",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 708.105015179608,
+      "versusStarterUsdc": 23.837630614099908,
+      "versusNoopUsdc": 279.49284070740396,
+      "includedTxCount": 15,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 343,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 9,
+          "no_fundable_exit": 3,
+          "epoch_exit": 3
+        },
+        "pairedTrades": 6,
+        "submitted": 15,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12293064180,
+        "name": "ascon-market-result-depeg-505",
+        "digest": "sha256:b7450ddee400576efd6934345665926f8db83759db632e86655c212c0b32c02e",
+        "size_in_bytes": 840934
+      },
+      "startedAt": "2026-10-20T19:34:24.383722+00:00",
+      "finishedAt": "2026-10-20T19:47:10.622418+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 5,
+        "exactInputSingle:success": 5,
+        "swap:success": 5
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "depeg-persist",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 840.7360858137399,
+      "versusStarterUsdc": 58.622420577245066,
+      "versusNoopUsdc": 36.983595557903755,
+      "includedTxCount": 2,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 1,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 352,
+          "cross_venue_pair": 1,
+          "settlement_cooldown": 1,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 1,
+        "submitted": 2,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 1
+        }
+      },
+      "artifact": {
+        "id": 12295145532,
+        "name": "ascon-market-result-depeg-persist-505",
+        "digest": "sha256:24bc371c0431dd8df4117fcb3a59342d8c4fb0e178f37437aa997044925cf1ce",
+        "size_in_bytes": 815797
+      },
+      "startedAt": "2026-10-20T19:47:58.914597+00:00",
+      "finishedAt": "2026-10-20T20:00:51.101394+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 1,
+        "swap:success": 1
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "informed-flow",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 306.0714718132658,
+      "versusStarterUsdc": 580.9103568648134,
+      "versusNoopUsdc": 417.3274069727486,
+      "includedTxCount": 10,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 3,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 348,
+          "cross_venue_pair": 3,
+          "settlement_cooldown": 7,
+          "epoch_exit": 5
+        },
+        "pairedTrades": 3,
+        "submitted": 10,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 3
+        }
+      },
+      "artifact": {
+        "id": 12292023847,
+        "name": "ascon-market-result-informed-flow-505",
+        "digest": "sha256:459a4dd9ad02ad9fa1140ca82b5e949b8b7605e1a0a79f927c107b0d119f23e3",
+        "size_in_bytes": 832758
+      },
+      "startedAt": "2026-10-20T19:20:45.728383+00:00",
+      "finishedAt": "2026-10-20T19:33:30.953299+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 3,
+        "exactInputSingle:success": 3,
+        "exchange:success": 4
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "launch",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 339.81093590137607,
+      "versusStarterUsdc": 447.9897820486076,
+      "versusNoopUsdc": 258.8167254739237,
+      "includedTxCount": 20,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 10,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 335,
+          "cross_venue_pair": 10,
+          "settlement_cooldown": 10,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 10,
+        "submitted": 20,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 10
+        }
+      },
+      "artifact": {
+        "id": 12294009144,
+        "name": "ascon-market-result-launch-505",
+        "digest": "sha256:33783f67c40e76e29acf3d0f1f6d65a719678dc9868af8f17dbbcea657d519e8",
+        "size_in_bytes": 1026344
+      },
+      "startedAt": "2026-10-20T19:48:40.074547+00:00",
+      "finishedAt": "2026-10-20T20:01:37.178286+00:00",
+      "transactionsByMethodStatus": {
+        "exchange:success": 10,
+        "exactInputSingle:success": 10
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "lending-incident",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": -1158.925145978108,
+      "versusStarterUsdc": -1335.3634718343092,
+      "versusNoopUsdc": 113.15376300859498,
+      "includedTxCount": 18,
+      "revertCount": 2,
+      "submitFailures": 0,
+      "pairedTrades": 9,
+      "partialPairs": 2,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 336,
+          "cross_venue_pair": 9,
+          "settlement_cooldown": 9,
+          "no_fundable_exit": 9
+        },
+        "pairedTrades": 9,
+        "submitted": 18,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 7,
+          "oneFilled": 2
+        }
+      },
+      "artifact": {
+        "id": 12293637031,
+        "name": "ascon-market-result-lending-incident-505",
+        "digest": "sha256:04962286de00ee35689527c1a7b8343676135c1e3b12d3ebf117c2656c5ee78f",
+        "size_in_bytes": 818732
+      },
+      "startedAt": "2026-10-20T19:34:22.270155+00:00",
+      "finishedAt": "2026-10-20T19:47:08.399870+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 9,
+        "swap:success": 1,
+        "exchange:success": 6,
+        "exchange:reverted": 2
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "spike",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 537.3535425522568,
+      "versusStarterUsdc": -628.9489517783804,
+      "versusNoopUsdc": 47.12563823553501,
+      "includedTxCount": 4,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 2,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 350,
+          "cross_venue_pair": 2,
+          "settlement_cooldown": 2,
+          "no_fundable_exit": 8
+        },
+        "pairedTrades": 2,
+        "submitted": 4,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 2
+        }
+      },
+      "artifact": {
+        "id": 12295235236,
+        "name": "ascon-market-result-spike-505",
+        "digest": "sha256:d1d6f7cc497aa8bd5c01cc979a92fb96b802c6a7b3502ac631234ec41ff00f86",
+        "size_in_bytes": 827708
+      },
+      "startedAt": "2026-10-20T19:48:02.827198+00:00",
+      "finishedAt": "2026-10-20T20:00:58.027150+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 2,
+        "exactInputSingle:success": 2
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "vuln",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 309.3724251301028,
+      "versusStarterUsdc": 321.8272983028728,
+      "versusNoopUsdc": 282.1377890564909,
+      "includedTxCount": 15,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 6,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 343,
+          "cross_venue_pair": 6,
+          "settlement_cooldown": 9,
+          "epoch_exit": 3,
+          "no_fundable_exit": 2
+        },
+        "pairedTrades": 6,
+        "submitted": 15,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 6
+        }
+      },
+      "artifact": {
+        "id": 12294435248,
+        "name": "ascon-market-result-vuln-505",
+        "digest": "sha256:de9a4139f97afadb35e470a8a986233c541811dd6402b100725f4504a04876da",
+        "size_in_bytes": 842263
+      },
+      "startedAt": "2026-10-20T19:34:42.812566+00:00",
+      "finishedAt": "2026-10-20T19:47:39.014885+00:00",
+      "transactionsByMethodStatus": {
+        "swap:success": 8,
+        "exactInputSingle:success": 5,
+        "exchange:success": 2
+      },
+      "submissionFailureReasons": {}
+    },
+    {
+      "regime": "whale",
+      "seed": 505,
+      "passed": true,
+      "pnlUsdc": 3857.679390838952,
+      "versusStarterUsdc": 2783.19240855721,
+      "versusNoopUsdc": 3320.0485069075075,
+      "includedTxCount": 58,
+      "revertCount": 0,
+      "submitFailures": 0,
+      "pairedTrades": 28,
+      "partialPairs": 0,
+      "execution": {
+        "decisionReasons": {
+          "no_profitable_pair": 299,
+          "cross_venue_pair": 28,
+          "settlement_cooldown": 30,
+          "no_fundable_exit": 5,
+          "epoch_exit": 2
+        },
+        "pairedTrades": 28,
+        "submitted": 58,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {
+          "bothFilled": 28
+        }
+      },
+      "artifact": {
+        "id": 12293645272,
+        "name": "ascon-market-result-whale-505",
+        "digest": "sha256:7cc0ca5b03d96a692242258a54a1aa70dbffecc172070369dcbb40d0a4a7fb67",
+        "size_in_bytes": 820733
+      },
+      "startedAt": "2026-10-20T19:20:43.544777+00:00",
+      "finishedAt": "2026-10-20T19:33:28.140856+00:00",
+      "transactionsByMethodStatus": {
+        "exactInputSingle:success": 30,
+        "swap:success": 25,
+        "exchange:success": 3
+      },
+      "submissionFailureReasons": {}
+    }
+  ],
+  "baselineComparison": {
+    "evidenceFile": "2026-10-20-public-matrix.json",
+    "repositoryCommit": "b6ac83f7ffad985639b220c46201c036ed8b0b67",
+    "overall": {
+      "scenarios": 60,
+      "meanPnlUsdc": -33.16331350681745,
+      "meanVersusStarterUsdc": -816.0462498270659,
+      "meanVersusNoopUsdc": 127.04724620738101,
+      "winsAgainstStarter": 19,
+      "winsAgainstNoop": 37,
+      "includedTransactions": 2521,
+      "revertedTransactions": 115
+    },
+    "meanStarterDeficitReductionPercent": 64.20804625268003
+  },
+  "startupRetry": {
+    "workflowRun": 39478740739,
+    "jobId": 118834446476,
+    "regime": "spike",
+    "seed": 202,
+    "artifactId": 12293051692,
+    "artifactZipSha256": "915b9b0460ee37c4c4bb5142d8b091a1ed360bf74981ef0d0e181d6699ce5a89",
+    "reason": "Official simulator wallet funding could not locate ERC20 balance slot for token 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512; no scenario summary or agent trades were produced.",
+    "candidateChanged": false,
+    "backtestLog": [
+      "[backtest] scenario key: public sha256:5940f4fcac9ac09f1ad6fdb1a34d8fa4ef87862ab5edbc6364020a83c730d8e0",
+      "[backtest] scenario 1/1 spike#202",
+      "[setup] funded 5/28 wallets",
+      "[setup] funded 10/28 wallets",
+      "[setup] funded 15/28 wallets",
+      "[setup] funded 20/28 wallets",
+      "[backtest] scenario spike#202 failed: could not locate ERC20 balance slot for token 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    ],
+    "failedAttempt": 1,
+    "retryAttempt": 2,
+    "retryJobId": 118855699759,
+    "retryPassed": true,
+    "retryArtifact": {
+      "id": 12294428487,
+      "name": "ascon-market-result-spike-202",
+      "digest": "sha256:3660c6750ed2430d5caed02737440efbcac1d09fd4f1fd1eb11106524ca94611",
+      "size_in_bytes": 854695,
+      "created_at": "2026-10-20T20:16:49Z",
+      "expires_at": "2026-10-27T20:16:48Z"
+    },
+    "failedAggregateArtifact": {
+      "id": 12295250168,
+      "name": "ascon-public-matrix-report",
+      "digest": "sha256:84fa5a57e5367b7e13562fb13e03447662af1582d6577a142b5a0bccb2f0bfa7",
+      "size_in_bytes": 4664,
+      "created_at": "2026-10-20T20:02:10Z",
+      "expires_at": "2026-11-19T20:02:09Z"
+    },
+    "initialReport": {
+      "regime": "spike",
+      "seed": 202,
+      "published_case": true,
+      "passed": false,
+      "problems": [
+        "expected one new run summary, got 0"
+      ],
+      "started_at": "2026-10-20T19:36:20.339104+00:00",
+      "finished_at": "2026-10-20T19:36:33.141616+00:00",
+      "expected": {
+        "blocks": 360,
+        "blockTimeSec": 2
+      },
+      "eris_revision": "e5b93b651bba2384aedfa891cecbf7b64d05b88b",
+      "source_sha256": {
+        "constants.py": "296432e0fcb15f948b23a419221019bb89ddc553995cd43a0501f50b30961b19",
+        "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433",
+        "strategy.py": "121cdd6ded095faa73b0b1b514c4ae2c5ada41f224210a0a6bcfe758dc9f6b8c"
+      },
+      "resources": {},
+      "run_directory": null,
+      "agents": [],
+      "execution": {
+        "decisionReasons": {},
+        "pairedTrades": 0,
+        "submitted": 0,
+        "submitFailures": 0,
+        "malformedLogLines": 0,
+        "pairOutcomes": {}
+      },
+      "frozen": true,
+      "live_llm_validated": false
+    },
+    "explanation": "Retry required only because the official wallet-funding stage failed before any agent traded. No strategy, state, image, seed, duration or cadence was changed."
+  }
+}
