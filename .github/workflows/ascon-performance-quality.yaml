@@ -1,0 +1,40 @@
+name: ASCON performance quality
+
+on:
+  push:
+    branches: ['experiment/ascon-quality']
+    paths: ['competition/**', '.github/workflows/ascon-performance-quality.yaml']
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: make ascon-install ascon-prepare
+      - run: npm ci --ignore-scripts
+        working-directory: .eris/eris-agent-simulator
+      - run: uv run --project competition --frozen ruff format competition
+      - run: make ascon-check
+      - name: Exercise the real Python replacement bridge
+        working-directory: .eris/eris-agent-simulator
+        run: ERIS_PYTHON="$GITHUB_WORKSPACE/competition/.venv/bin/python" node --import tsx ../../competition/tests/bridge-smoke.mjs
+      - name: Export canonical sources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          files = [*Path('competition/agents/eris-adaptive-v1').glob('*'), Path('competition/validation.py'), Path('competition/tests/test_strategy.py'), Path('competition/tests/test_validation.py')]
+          for p in sorted(files):
+              if p.is_file():
+                  print('CANONICAL_SOURCE '+json.dumps({'path': str(p), 'content': p.read_text()}))
+          PY

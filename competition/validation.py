@@ -14,6 +14,7 @@ import subprocess
 import threading
 from datetime import UTC, datetime
 from pathlib import Path
+from statistics import mean, median
 
 import tools
 
@@ -132,10 +133,43 @@ def observe_containers(done: threading.Event, resources: dict) -> None:
         done.wait(5)
 
 
-def run_case(checkout: Path, case: dict, output: Path) -> None:
+def validate_case(case: dict, published: list[dict], *, allow_extra_seed: bool = False) -> None:
+    if case in published:
+        return
+    seed = case.get("seed")
+    if (
+        allow_extra_seed
+        and case.get("regime") in {row["regime"] for row in published}
+        and isinstance(seed, int)
+        and not isinstance(seed, bool)
+        and 0 <= seed < 2**32
+    ):
+        return
+    raise ValueError("Select a published regime/seed pair, or explicitly allow an extra seed for a published regime")
+
+
+def summarize_metrics(metrics: list[dict]) -> dict:
+    """Descriptive comparisons, separate from the execution/resource pass flag."""
+    if not metrics:
+        return {"scenarios": 0}
+    return {
+        "scenarios": len(metrics),
+        "meanPnlUsdc": mean(row["pnlUsdc"] for row in metrics),
+        "medianPnlUsdc": median(row["pnlUsdc"] for row in metrics),
+        "meanVersusStarterUsdc": mean(row["versusStarterUsdc"] for row in metrics),
+        "medianVersusStarterUsdc": median(row["versusStarterUsdc"] for row in metrics),
+        "meanVersusNoopUsdc": mean(row["versusNoopUsdc"] for row in metrics),
+        "winsVersusStarter": sum(row["versusStarterUsdc"] > 0 for row in metrics),
+        "winsVersusNoop": sum(row["versusNoopUsdc"] > 0 for row in metrics),
+        "worstVersusStarterUsdc": min(row["versusStarterUsdc"] for row in metrics),
+        "worstPnlUsdc": min(row["pnlUsdc"] for row in metrics),
+    }
+
+
+def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool = False) -> None:
     tools.stage(checkout)
-    if case not in public_cases(checkout):
-        raise ValueError("Select a published regime/seed pair")
+    published = public_cases(checkout)
+    validate_case(case, published, allow_extra_seed=allow_extra_seed)
     config = yaml_json(checkout, f"config/regimes/{case['regime']}.yaml")["run"]
     expected = {key: config[key] for key in ("blocks", "blockTimeSec")}
     if not (checkout / "backtest/state/manifest.json").exists():
@@ -201,6 +235,7 @@ def run_case(checkout: Path, case: dict, output: Path) -> None:
         write_json(output / "summary.json", summary)
     report = {
         **case,
+        "published_case": case in published,
         "passed": not problems,
         "problems": problems,
         "started_at": started,
@@ -257,6 +292,11 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
             "eris_revision": tools.revision(),
             "source_sha256": current_hashes,
             "metrics": metrics,
+            "performance": summarize_metrics(metrics),
+            "performanceByRegime": {
+                regime: summarize_metrics([row for row in metrics if row["regime"] == regime])
+                for regime in sorted({row["regime"] for row in metrics})
+            },
             "live_llm_validated": False,
             "note": "Frozen execution/resource evidence. Three-agent comparisons do not predict contest placement.",
         },
@@ -274,6 +314,7 @@ def main() -> None:
     parser.add_argument("--inputs", type=Path)
     parser.add_argument("--regime")
     parser.add_argument("--seed", type=int)
+    parser.add_argument("--allow-extra-seed", action="store_true", help="Allow an additional seed for a published regime")
     parser.add_argument("--github-output", type=Path)
     args = parser.parse_args()
     checkout = args.eris.resolve()
@@ -286,7 +327,10 @@ def main() -> None:
             with args.github_output.open("a") as stream:
                 stream.write("matrix=" + json.dumps(matrix, separators=(",", ":")) + "\n")
     elif args.operation == "run":
-        run_case(checkout, {"regime": args.regime, "seed": args.seed}, args.out.resolve())
+        run_case(
+            checkout, {"regime": args.regime, "seed": args.seed}, args.out.resolve(),
+            allow_extra_seed=args.allow_extra_seed,
+        )
     elif args.inputs:
         aggregate(checkout, args.inputs, args.out)
     else:
