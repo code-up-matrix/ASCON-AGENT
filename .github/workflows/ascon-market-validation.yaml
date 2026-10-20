@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
   # Push diffs cover only the new commits. A pull_request path filter includes
   # the entire PR, so publishing its results would rerun the 60-case matrix.
-  # Workflow-only edits can be exercised with workflow_dispatch.
+  # Workflow edits also validate their scenario scheduling and evidence checks.
   push:
     paths:
       - 'competition/**'
+      - '.github/workflows/ascon-market-validation.yaml'
 
 permissions:
   contents: read
@@ -165,8 +166,10 @@ jobs:
             .eris/eris-agent-simulator/runs/
           retention-days: 7
 
+  # Additional-seed cases use the same prepared images and can occupy spare
+  # runners while the two public smoke cases gate the remaining public matrix.
   holdout:
-    needs: [prepare, smoke]
+    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 40
     strategy:
