@@ -95,3 +95,36 @@ def test_incomplete_matrix_is_never_reported_as_passed(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="Incomplete"):
         validation.aggregate(tmp_path, tmp_path, output)
     assert validation.read_json(output)["public_matrix_passed"] is False
+
+
+def test_extra_seed_requires_explicit_opt_in_and_cannot_change_regime():
+    published = [{"regime": "calm", "seed": 101}]
+    extra = {"regime": "calm", "seed": 606}
+    with pytest.raises(ValueError, match="explicitly"):
+        validation.validate_case(extra, published)
+    validation.validate_case(extra, published, allow_extra_seed=True)
+    for invalid in (
+        {"regime": "../../custom", "seed": 606},
+        {"regime": "calm", "seed": -1},
+        {"regime": "calm", "seed": True},
+        {"regime": "calm", "seed": 2**32},
+    ):
+        with pytest.raises(ValueError):
+            validation.validate_case(invalid, published, allow_extra_seed=True)
+
+
+def test_performance_comparison_keeps_losses_and_wins_separate():
+    result = validation.summarize_metrics(
+        [
+            {"pnlUsdc": -10, "versusStarterUsdc": -100, "versusNoopUsdc": 2},
+            {"pnlUsdc": 20, "versusStarterUsdc": 10, "versusNoopUsdc": -4},
+            {"pnlUsdc": 50, "versusStarterUsdc": 30, "versusNoopUsdc": 8},
+        ]
+    )
+    assert result["meanPnlUsdc"] == 20
+    assert result["winsVersusStarter"] == 2
+    assert result["meanVersusStarterUsdc"] == -20
+    assert result["medianVersusStarterUsdc"] == 10
+    assert result["winsVersusNoop"] == 2
+    assert result["worstPnlUsdc"] == -10
+    assert validation.summarize_metrics([]) == {"scenarios": 0}
