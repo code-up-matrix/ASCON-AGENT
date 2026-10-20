@@ -343,8 +343,14 @@ def candidates(
 
 
 def paired_candidates(
-    obs: Observation, markets: list[MarketView], *, equity: Decimal, exposure: Decimal,
-    margin: Decimal, size_bps: int, gas_cost: Decimal,
+    obs: Observation,
+    markets: list[MarketView],
+    *,
+    equity: Decimal,
+    exposure: Decimal,
+    margin: Decimal,
+    size_bps: int,
+    gas_cost: Decimal,
 ) -> list[Pair]:
     """Find funded round trips without treating the reference as redeemable.
 
@@ -369,12 +375,26 @@ def paired_candidates(
                     continue
                 try:
                     buy_cap, _ = trade_size(
-                        obs, market, buy_venue, token_in=limits.QUOTE_ASSET, price=buy,
-                        size_bps=size_bps, equity=equity, exposure=exposure, reduce_only=False,
+                        obs,
+                        market,
+                        buy_venue,
+                        token_in=limits.QUOTE_ASSET,
+                        price=buy,
+                        size_bps=size_bps,
+                        equity=equity,
+                        exposure=exposure,
+                        reduce_only=False,
                     )
                     sell_cap, _ = trade_size(
-                        obs, market, sell_venue, token_in=market.base, price=sell,
-                        size_bps=size_bps, equity=equity, exposure=exposure, reduce_only=False,
+                        obs,
+                        market,
+                        sell_venue,
+                        token_in=market.base,
+                        price=sell,
+                        size_bps=size_bps,
+                        equity=equity,
+                        exposure=exposure,
+                        reduce_only=False,
                     )
                     if buy_cap <= 0 or sell_cap <= 0:
                         continue
@@ -407,12 +427,18 @@ def pair_action(pair: Pair, priority: int):
     constructors = {"uniswap": swap, "balancer": balancer_swap, "curve": curve_swap}
     actions = [
         constructors[pair.buy_venue.protocol](
-            token_in=limits.QUOTE_ASSET, base=pair.market.base, amount_in=str(pair.buy_amount),
-            slippage_bps=limits.SLIPPAGE_BPS, max_priority_fee_per_gas_wei=str(priority),
+            token_in=limits.QUOTE_ASSET,
+            base=pair.market.base,
+            amount_in=str(pair.buy_amount),
+            slippage_bps=limits.SLIPPAGE_BPS,
+            max_priority_fee_per_gas_wei=str(priority),
         ),
         constructors[pair.sell_venue.protocol](
-            token_in=pair.market.base, base=pair.market.base, amount_in=str(pair.sell_amount),
-            slippage_bps=limits.SLIPPAGE_BPS, max_priority_fee_per_gas_wei=str(priority),
+            token_in=pair.market.base,
+            base=pair.market.base,
+            amount_in=str(pair.sell_amount),
+            slippage_bps=limits.SLIPPAGE_BPS,
+            max_priority_fee_per_gas_wei=str(priority),
         ),
     ]
     return bundle(actions=actions, maxPriorityFeePerGasWei=str(priority))
@@ -489,21 +515,36 @@ def decide_valid(obs: Observation, ctx: Context):
         and units(obs.balances.eth_wei) >= limits.MIN_GAS_WEI + 2 * gas_wei
     ):
         pairs = paired_candidates(
-            obs, markets, equity=equity, exposure=exposure,
-            margin=margin, size_bps=size_bps, gas_cost=gas_cost,
+            obs,
+            markets,
+            equity=equity,
+            exposure=exposure,
+            margin=margin,
+            size_bps=size_bps,
+            gas_cost=gas_cost,
         )
         if pairs:
             pair = max(pairs, key=lambda item: item.expected_net)
-            ctx.log({
-                "marker": "ASCON_DECISION", "decision": "bundle",
-                "reason": "cross_venue_pair", "regime": name, "block": block,
-                "base": pair.market.base, "buy_venue": pair.buy_venue.protocol,
-                "sell_venue": pair.sell_venue.protocol,
-                "buy_amount_in": str(pair.buy_amount), "sell_amount_in": str(pair.sell_amount),
-                "notional_usdc": str(pair.cash_in), "estimated_net_edge_usdc": str(pair.expected_net),
-                "estimated_gas_usdc": str(2 * gas_cost), "priority_fee_wei": str(priority),
-                "both_legs_prefunded": True, "atomic": False,
-            })
+            ctx.log(
+                {
+                    "marker": "ASCON_DECISION",
+                    "decision": "bundle",
+                    "reason": "cross_venue_pair",
+                    "regime": name,
+                    "block": block,
+                    "base": pair.market.base,
+                    "buy_venue": pair.buy_venue.protocol,
+                    "sell_venue": pair.sell_venue.protocol,
+                    "buy_amount_in": str(pair.buy_amount),
+                    "sell_amount_in": str(pair.sell_amount),
+                    "notional_usdc": str(pair.cash_in),
+                    "estimated_net_edge_usdc": str(pair.expected_net),
+                    "estimated_gas_usdc": str(2 * gas_cost),
+                    "priority_fee_wei": str(priority),
+                    "both_legs_prefunded": True,
+                    "atomic": False,
+                }
+            )
             state.last_action_block = block
             return pair_action(pair, priority)
     if not limits.ALLOW_DIRECTIONAL_TRADES and not reduce_only and not recovering:

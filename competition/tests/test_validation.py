@@ -132,14 +132,32 @@ def test_performance_comparison_keeps_losses_and_wins_separate():
 
 
 def test_execution_report_distinguishes_pair_decisions_from_transactions():
-    log = "\n".join(json.dumps(row) for row in [
-        {"marker": "ASCON_DECISION", "reason": "cross_venue_pair"},
-        {"event": "submitted"},
-        {"event": "submitted"},
-        {"event": "submit_failed"},
-    ])
+    log = "\n".join(
+        json.dumps(row)
+        for row in [
+            {"marker": "ASCON_DECISION", "reason": "cross_venue_pair"},
+            {"event": "submitted"},
+            {"event": "submitted"},
+            {"event": "submit_failed"},
+        ]
+    )
     report = validation.execution_activity(log + "\nnot-json\n")
     assert report["pairedTrades"] == 1
     assert report["submitted"] == 2
     assert report["submitFailures"] == 1
     assert report["malformedLogLines"] == 1
+
+
+def test_pair_outcomes_use_settled_receipts_instead_of_submission_count():
+    records = [
+        {"marker": "ASCON_DECISION", "reason": "cross_venue_pair", "block": b} for b in (10, 12, 14)
+    ]
+    records += [
+        {"event": "submitted", "bundleId": str(b), "blockSeen": b, "hash": h}
+        for b, h in ((10, "a"), (10, "b"), (12, "c"), (12, "d"), (14, "e"))
+    ]
+    report = validation.execution_activity(
+        "\n".join(json.dumps(row) for row in records),
+        {"a": "success", "b": "success", "c": "success", "d": "reverted"},
+    )
+    assert report["pairOutcomes"] == {"bothFilled": 1, "oneFilled": 1, "noneFilled": 1}

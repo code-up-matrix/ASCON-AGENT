@@ -6,6 +6,7 @@ to label a partial scenario set as a completed public matrix.
 """
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -134,7 +135,7 @@ def observe_containers(done: threading.Event, resources: dict) -> None:
         done.wait(5)
 
 
-def execution_activity(log: str) -> dict:
+def execution_activity(log: str, settled: dict[str, str] | None = None) -> dict:
     records = []
     malformed = 0
     for line in log.splitlines():
@@ -149,13 +150,29 @@ def execution_activity(log: str) -> dict:
         except ValueError:
             malformed += 1
     decisions = [row for row in records if row.get("marker") == "ASCON_DECISION"]
-    return {
+    result = {
         "decisionReasons": dict(Counter(str(row.get("reason")) for row in decisions)),
         "pairedTrades": sum(row.get("reason") == "cross_venue_pair" for row in decisions),
         "submitted": sum(row.get("event") == "submitted" for row in records),
         "submitFailures": sum(row.get("event") == "submit_failed" for row in records),
         "malformedLogLines": malformed,
     }
+    if settled is not None:
+        outcomes = Counter()
+        for decision in decisions:
+            if decision.get("reason") != "cross_venue_pair":
+                continue
+            hashes = {
+                row["hash"] for row in records
+                if row.get("event") == "submitted"
+                and row.get("blockSeen") == decision.get("block")
+                and row.get("bundleId") is not None
+                and isinstance(row.get("hash"), str)
+            }
+            filled = sum(settled.get(tx_hash) == "success" for tx_hash in hashes)
+            outcomes["bothFilled" if filled == 2 else "oneFilled" if filled == 1 else "noneFilled"] += 1
+        result["pairOutcomes"] = dict(outcomes)
+    return result
 
 
 def validate_case(case: dict, published: list[dict], *, allow_extra_seed: bool = False) -> None:
@@ -192,6 +209,7 @@ def summarize_metrics(metrics: list[dict]) -> dict:
         "revertCount": sum(row.get("revertCount", 0) for row in metrics),
         "submitFailures": sum(row.get("submitFailures", 0) for row in metrics),
         "pairedTrades": sum(row.get("pairedTrades", 0) for row in metrics),
+        "partialPairs": sum(row.get("partialPairs", 0) for row in metrics),
     }
 
 
@@ -249,6 +267,7 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
     summaries = set(runs.glob("*/summary.json")) - before
     summary = {}
     run_dir = None
+    settled: dict[str, str] = {}
     if len(summaries) != 1:
         problems.append(f"expected one new run summary, got {len(summaries)}")
     else:
@@ -263,6 +282,8 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
         }
         problems.extend(assess(summary, expected, resources, logs))
         write_json(output / "summary.json", summary)
+        with (run_dir / "blocks.csv").open() as stream:
+            settled = {row["hash"]: row["status"] for row in csv.DictReader(stream) if row["ownerId"] == "eris-adaptive-v1"}
     report = {
         **case,
         "published_case": case in published,
@@ -276,16 +297,22 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
         "resources": resources,
         "run_directory": str(run_dir) if run_dir else None,
         "agents": summary.get("agents", []),
-        "execution": execution_activity(logs.get("eris-adaptive-v1", "")),
+        "execution": execution_activity(logs.get("eris-adaptive-v1", ""), settled),
         "frozen": True,
         "live_llm_validated": False,
     }
     write_json(output / "report.json", report)
     print(
-        "SCENARIO_RESULT " + json.dumps({
-            **{key: report[key] for key in ("regime", "seed", "passed", "problems", "source_sha256", "execution")},
-            "agents": [{key: agent.get(key) for key in ("id", "pnlUsdc", "netPnlUsdc", "includedTxCount", "revertCount")} for agent in report["agents"]],
-        }),
+        "SCENARIO_RESULT "
+        + json.dumps(
+            {
+                **{key: report[key] for key in ("regime", "seed", "passed", "problems", "source_sha256", "execution")},
+                "agents": [
+                    {key: agent.get(key) for key in ("id", "pnlUsdc", "netPnlUsdc", "includedTxCount", "revertCount")}
+                    for agent in report["agents"]
+                ],
+            }
+        ),
         flush=True,
     )
     if problems:
@@ -321,6 +348,7 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
                     "revertCount": agents["eris-adaptive-v1"].get("revertCount", 0),
                     "submitFailures": report.get("execution", {}).get("submitFailures", 0),
                     "pairedTrades": report.get("execution", {}).get("pairedTrades", 0),
+                    "partialPairs": report.get("execution", {}).get("pairOutcomes", {}).get("oneFilled", 0),
                 }
             )
     write_json(

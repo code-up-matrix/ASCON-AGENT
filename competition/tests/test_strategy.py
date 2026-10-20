@@ -273,7 +273,11 @@ def test_resident_jsonl_process_and_imports_survive_two_requests(observation, tm
     original = strategy
     strategy = tmp_path / "strategy.py"
     strategy.write_text(original.read_text())
-    constants = (original.parent / "constants.py").read_text().replace("ALLOW_DIRECTIONAL_TRADES = False", "ALLOW_DIRECTIONAL_TRADES = True")
+    constants = (
+        (original.parent / "constants.py")
+        .read_text()
+        .replace("ALLOW_DIRECTIONAL_TRADES = False", "ALLOW_DIRECTIONAL_TRADES = True")
+    )
     (tmp_path / "constants.py").write_text(constants)
     requests = [
         {
