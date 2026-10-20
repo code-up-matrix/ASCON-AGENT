@@ -532,6 +532,7 @@ def decide_valid(obs: Observation, ctx: Context):
                     "reason": "cross_venue_pair",
                     "regime": name,
                     "block": block,
+                    "round": obs.round,
                     "base": pair.market.base,
                     "buy_venue": pair.buy_venue.protocol,
                     "sell_venue": pair.sell_venue.protocol,

@@ -149,9 +149,8 @@ def test_execution_report_distinguishes_pair_decisions_from_transactions():
 
 
 def test_pair_outcomes_use_settled_receipts_instead_of_submission_count():
-    records = [
-        {"marker": "ASCON_DECISION", "reason": "cross_venue_pair", "block": b} for b in (10, 12, 14)
-    ]
+    records = [{"marker": "ASCON_DECISION", "reason": "cross_venue_pair", "block": b + 1000, "round": b}
+        for b in (10, 12, 14)]
     records += [
         {"event": "submitted", "bundleId": str(b), "blockSeen": b, "hash": h}
         for b, h in ((10, "a"), (10, "b"), (12, "c"), (12, "d"), (14, "e"))

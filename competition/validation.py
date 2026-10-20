@@ -163,9 +163,10 @@ def execution_activity(log: str, settled: dict[str, str] | None = None) -> dict:
             if decision.get("reason") != "cross_venue_pair":
                 continue
             hashes = {
-                row["hash"] for row in records
+                row["hash"]
+                for row in records
                 if row.get("event") == "submitted"
-                and row.get("blockSeen") == decision.get("block")
+                and row.get("blockSeen") == decision.get("round")
                 and row.get("bundleId") is not None
                 and isinstance(row.get("hash"), str)
             }
@@ -283,7 +284,9 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
         problems.extend(assess(summary, expected, resources, logs))
         write_json(output / "summary.json", summary)
         with (run_dir / "blocks.csv").open() as stream:
-            settled = {row["hash"]: row["status"] for row in csv.DictReader(stream) if row["ownerId"] == "eris-adaptive-v1"}
+            settled = {
+                row["hash"]: row["status"] for row in csv.DictReader(stream) if row["ownerId"] == "eris-adaptive-v1"
+            }
     report = {
         **case,
         "published_case": case in published,
