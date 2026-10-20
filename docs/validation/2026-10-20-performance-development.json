@@ -1,0 +1,1323 @@
+{
+  "reviewedAt": "2026-10-20",
+  "purpose": "Development comparisons; these four selected cases were used for selection and are not held-out evidence.",
+  "erisRevision": "e5b93b651bba2384aedfa891cecbf7b64d05b88b",
+  "baselineCommit": "4606cb00d2a0ee1efc43b3f4cb23b398c00efbf2",
+  "candidateChoice": "pair-only",
+  "selectionReason": "Positive excess over holding the starting basket in all four development cases, fewer transactions and higher candidate P&L than the mixed version in three of four cases. It still trails the starter in three cases; full coverage remains required.",
+  "extraSeedSelectedBeforeComparison": 606,
+  "workflowRuns": [
+    39468855890,
+    39469591284,
+    39472006926,
+    39472225375
+  ],
+  "frozen": true,
+  "paidInferenceUsed": false,
+  "scenarios": [
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "014e581515f85e468406ad9adfc46bb7be6dad441c366cdce9f56598beaa8a78",
+        "prompt.md": "f79db03198639aee0af9176d02b06709e8b6e90a2c5b98ebc13cca935906c6a2",
+        "strategy.py": "e60ca01748191fbecb3931cb1287cdb427b30da2db2161a2c491c81328776a96"
+      },
+      "variant": "baseline",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -106.89102966626524,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 5716.405808016789,
+          "netPnlUsdc": 5823.296837691887,
+          "includedTxCount": 355,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 708.732823191749,
+          "netPnlUsdc": 815.6238528638787,
+          "includedTxCount": 69,
+          "revertCount": 10
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 221,
+        "relative_value": 67,
+        "settlement_cooldown": 71,
+        "epoch_exit": 4
+      },
+      "directions": {
+        "WETH/WETH/uniswap": 23,
+        "WBTC/WBTC/uniswap": 1,
+        "WBTC/WBTC/curve": 2,
+        "WBTC/WBTC/balancer": 22,
+        "WETH/WETH/balancer": 13,
+        "WETH/USDC/uniswap": 1,
+        "WBTC/USDC/curve": 8,
+        "WBTC/USDC/balancer": 1
+      },
+      "rejections": {
+        "submit_failed": 2
+      },
+      "gas_used": 7148683,
+      "mean_tx_index": 12.231884057971014
+    },
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2a2eda5224cb0a2d53f1a563bc3e93136d1a94dd43383c9d51d3a7753daeb959",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "risk",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 514.060152340171,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -8.440155274627614,
+          "netPnlUsdc": -522.5003076133144,
+          "includedTxCount": 346,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 845.3185639820003,
+          "netPnlUsdc": 331.25841164133453,
+          "includedTxCount": 72,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 210,
+        "relative_value": 72,
+        "settlement_cooldown": 72,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/uniswap": 3,
+        "WBTC/WBTC/curve": 22,
+        "WBTC/WBTC/balancer": 3,
+        "WBTC/USDC/curve": 32,
+        "WBTC/USDC/balancer": 4,
+        "WBTC/WBTC/uniswap": 6,
+        "WETH/USDC/uniswap": 2
+      },
+      "rejections": {},
+      "gas_used": 9165200,
+      "mean_tx_index": 12.222222222222221
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "b2bc117ae3babf0b6c9cfd87fef35376d8e538b395da8f972aa9276a806dc274",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "priority",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 840.4516833559173,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 3935.3280920521793,
+          "netPnlUsdc": 3094.876408694414,
+          "includedTxCount": 287,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 833.813189694527,
+          "netPnlUsdc": -6.638493653503247,
+          "includedTxCount": 75,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 205,
+        "relative_value": 75,
+        "settlement_cooldown": 75,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/balancer": 5,
+        "WBTC/USDC/uniswap": 1,
+        "WETH/WETH/curve": 10,
+        "WETH/WETH/uniswap": 14,
+        "WETH/WETH/balancer": 2,
+        "WBTC/USDC/curve": 6,
+        "WETH/USDC/balancer": 4,
+        "WETH/USDC/uniswap": 7,
+        "WBTC/WBTC/uniswap": 3,
+        "WBTC/WBTC/balancer": 5,
+        "WBTC/WBTC/curve": 18
+      },
+      "rejections": {},
+      "gas_used": 9168823,
+      "mean_tx_index": 0.96
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "b2bc117ae3babf0b6c9cfd87fef35376d8e538b395da8f972aa9276a806dc274",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "priority",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -563.2122725232184,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -306.78346680836694,
+          "netPnlUsdc": 256.4288057156082,
+          "includedTxCount": 352,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": -468.492352186935,
+          "netPnlUsdc": 94.71992033954302,
+          "includedTxCount": 42,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 262,
+        "relative_value": 46,
+        "settlement_cooldown": 46,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/WBTC/curve": 4,
+        "WBTC/USDC/balancer": 7,
+        "WETH/USDC/balancer": 7,
+        "WBTC/USDC/curve": 6,
+        "WETH/USDC/curve": 4,
+        "WETH/WETH/uniswap": 9,
+        "WETH/USDC/uniswap": 8,
+        "WETH/WETH/balancer": 1
+      },
+      "rejections": {
+        "submit_failed": 4
+      },
+      "gas_used": 4844640,
+      "mean_tx_index": 1.4523809523809523
+    },
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "b2bc117ae3babf0b6c9cfd87fef35376d8e538b395da8f972aa9276a806dc274",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "priority",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 514.060152340171,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 587.4613984652824,
+          "netPnlUsdc": 73.40124612393265,
+          "includedTxCount": 345,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 453.7418098274502,
+          "netPnlUsdc": -60.31834251321561,
+          "includedTxCount": 60,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 234,
+        "relative_value": 60,
+        "settlement_cooldown": 60,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/uniswap": 6,
+        "WBTC/WBTC/curve": 20,
+        "WBTC/WBTC/balancer": 4,
+        "WBTC/USDC/curve": 20,
+        "WBTC/USDC/balancer": 4,
+        "WBTC/WBTC/uniswap": 5,
+        "WETH/USDC/uniswap": 1
+      },
+      "rejections": {},
+      "gas_used": 7799958,
+      "mean_tx_index": 1
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "014e581515f85e468406ad9adfc46bb7be6dad441c366cdce9f56598beaa8a78",
+        "prompt.md": "f79db03198639aee0af9176d02b06709e8b6e90a2c5b98ebc13cca935906c6a2",
+        "strategy.py": "e60ca01748191fbecb3931cb1287cdb427b30da2db2161a2c491c81328776a96"
+      },
+      "variant": "baseline",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -563.2122725232184,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -697.2839104072627,
+          "netPnlUsdc": -134.0716378877114,
+          "includedTxCount": 355,
+          "revertCount": 4
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": -633.4739140165912,
+          "netPnlUsdc": -70.26164150176919,
+          "includedTxCount": 14,
+          "revertCount": 2
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 325,
+        "relative_value": 15,
+        "settlement_cooldown": 19,
+        "epoch_exit": 4
+      },
+      "directions": {
+        "WBTC/WBTC/curve": 5,
+        "WETH/WETH/uniswap": 11,
+        "WETH/WETH/balancer": 1,
+        "WBTC/WBTC/balancer": 2
+      },
+      "rejections": {
+        "submit_failed": 5
+      },
+      "gas_used": 1562414,
+      "mean_tx_index": 12.714285714285714
+    },
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "014e581515f85e468406ad9adfc46bb7be6dad441c366cdce9f56598beaa8a78",
+        "prompt.md": "f79db03198639aee0af9176d02b06709e8b6e90a2c5b98ebc13cca935906c6a2",
+        "strategy.py": "e60ca01748191fbecb3931cb1287cdb427b30da2db2161a2c491c81328776a96"
+      },
+      "variant": "baseline",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 514.060152340171,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 425.1761580661405,
+          "netPnlUsdc": -88.8839942709892,
+          "includedTxCount": 351,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 427.2601552192209,
+          "netPnlUsdc": -86.79999711806886,
+          "includedTxCount": 52,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 259,
+        "relative_value": 48,
+        "settlement_cooldown": 52,
+        "epoch_exit": 5
+      },
+      "directions": {
+        "WBTC/WBTC/curve": 23,
+        "WBTC/WBTC/uniswap": 4,
+        "WBTC/USDC/uniswap": 2,
+        "WBTC/USDC/curve": 16,
+        "WETH/WETH/uniswap": 7,
+        "WETH/WETH/curve": 1
+      },
+      "rejections": {},
+      "gas_used": 6699577,
+      "mean_tx_index": 12.923076923076923
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "014e581515f85e468406ad9adfc46bb7be6dad441c366cdce9f56598beaa8a78",
+        "prompt.md": "f79db03198639aee0af9176d02b06709e8b6e90a2c5b98ebc13cca935906c6a2",
+        "strategy.py": "e60ca01748191fbecb3931cb1287cdb427b30da2db2161a2c491c81328776a96"
+      },
+      "variant": "baseline",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 840.4516833559173,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4240.277216240371,
+          "netPnlUsdc": 3399.825532874631,
+          "includedTxCount": 275,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 434.82703253139334,
+          "netPnlUsdc": -405.6246508066688,
+          "includedTxCount": 50,
+          "revertCount": 2
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 259,
+        "relative_value": 48,
+        "settlement_cooldown": 52,
+        "epoch_exit": 5
+      },
+      "directions": {
+        "WETH/WETH/curve": 6,
+        "WETH/WETH/uniswap": 22,
+        "WETH/WETH/balancer": 6,
+        "WBTC/WBTC/uniswap": 1,
+        "WBTC/WBTC/curve": 18
+      },
+      "rejections": {
+        "submit_failed": 2
+      },
+      "gas_used": 5854694,
+      "mean_tx_index": 12.74
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2a2eda5224cb0a2d53f1a563bc3e93136d1a94dd43383c9d51d3a7753daeb959",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "risk",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -106.89102966626524,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 5020.093227548961,
+          "netPnlUsdc": 5126.984257224132,
+          "includedTxCount": 353,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 402.63055953590083,
+          "netPnlUsdc": 509.52158920734655,
+          "includedTxCount": 79,
+          "revertCount": 6
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 196,
+        "relative_value": 79,
+        "settlement_cooldown": 83,
+        "epoch_exit": 5
+      },
+      "directions": {
+        "WETH/WETH/uniswap": 19,
+        "WBTC/WBTC/uniswap": 11,
+        "WBTC/WBTC/curve": 3,
+        "WBTC/WBTC/balancer": 7,
+        "WETH/WETH/balancer": 13,
+        "WETH/USDC/uniswap": 2,
+        "WBTC/USDC/uniswap": 5,
+        "WBTC/USDC/curve": 22,
+        "WETH/USDC/curve": 2
+      },
+      "rejections": {
+        "submit_failed": 4
+      },
+      "gas_used": 8886219,
+      "mean_tx_index": 12.253164556962025
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2a2eda5224cb0a2d53f1a563bc3e93136d1a94dd43383c9d51d3a7753daeb959",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "risk",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -563.2122725232184,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -234.02558156115992,
+          "netPnlUsdc": 329.186690983508,
+          "includedTxCount": 353,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": -562.4654237856594,
+          "netPnlUsdc": 0.7468487366568297,
+          "includedTxCount": 46,
+          "revertCount": 5
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 255,
+        "relative_value": 50,
+        "settlement_cooldown": 50,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/WBTC/curve": 3,
+        "WBTC/USDC/balancer": 2,
+        "WETH/USDC/balancer": 9,
+        "WBTC/USDC/curve": 13,
+        "WETH/USDC/curve": 1,
+        "WETH/WETH/uniswap": 11,
+        "WETH/USDC/uniswap": 5,
+        "WBTC/USDC/uniswap": 1,
+        "WBTC/WBTC/balancer": 5
+      },
+      "rejections": {
+        "submit_failed": 4
+      },
+      "gas_used": 5199422,
+      "mean_tx_index": 12.673913043478262
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2a2eda5224cb0a2d53f1a563bc3e93136d1a94dd43383c9d51d3a7753daeb959",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "risk",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 840.4516833559173,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4612.538032447323,
+          "netPnlUsdc": 3772.0863491033815,
+          "includedTxCount": 294,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 661.7318354304007,
+          "netPnlUsdc": -178.71984791533032,
+          "includedTxCount": 75,
+          "revertCount": 1
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 204,
+        "relative_value": 75,
+        "settlement_cooldown": 75,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/balancer": 5,
+        "WBTC/USDC/uniswap": 1,
+        "WETH/WETH/curve": 10,
+        "WETH/WETH/uniswap": 15,
+        "WETH/WETH/balancer": 10,
+        "WBTC/USDC/curve": 6,
+        "WETH/USDC/balancer": 3,
+        "WETH/USDC/uniswap": 7,
+        "WETH/USDC/curve": 2,
+        "WBTC/WBTC/uniswap": 2,
+        "WBTC/WBTC/curve": 14
+      },
+      "rejections": {},
+      "gas_used": 8646364,
+      "mean_tx_index": 12.173333333333334
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "b2bc117ae3babf0b6c9cfd87fef35376d8e538b395da8f972aa9276a806dc274",
+        "prompt.md": "03374dd09ffc07925b3956e31f9fa21823d8ad500cc2517c0fb982f82b18ff98",
+        "strategy.py": "13ce7dbf527db6d224279ebf8550787f604614f32734cb8a2ec73b2ee52f9051"
+      },
+      "variant": "priority",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -106.89102966626524,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4562.6698364759795,
+          "netPnlUsdc": 4669.560866151136,
+          "includedTxCount": 350,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 676.0150874642859,
+          "netPnlUsdc": 782.9061171374778,
+          "includedTxCount": 81,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 190,
+        "relative_value": 82,
+        "settlement_cooldown": 86,
+        "epoch_exit": 5
+      },
+      "directions": {
+        "WETH/WETH/uniswap": 19,
+        "WBTC/WBTC/uniswap": 8,
+        "WBTC/WBTC/curve": 5,
+        "WBTC/WBTC/balancer": 12,
+        "WETH/WETH/balancer": 12,
+        "WBTC/USDC/uniswap": 3,
+        "WBTC/USDC/curve": 26,
+        "WETH/USDC/uniswap": 1,
+        "WETH/WETH/curve": 1
+      },
+      "rejections": {
+        "submit_failed": 5
+      },
+      "gas_used": 9601691,
+      "mean_tx_index": 1.1358024691358024
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2af0bfceb66fb55f37e3de873982989c18f0f1e957bff902f82f5f57c8264cee",
+        "prompt.md": "4dc30dfb470bc0686949de888c8bc60dcfd79f642c684601d333887f80e26f6f",
+        "strategy.py": "c489f545664cf11f6873aed6f8516adcfb0f9b2c63969f512ef1854853728fbf"
+      },
+      "variant": "sizing",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -563.2122725232184,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -189.7427983773814,
+          "netPnlUsdc": 373.4694741466956,
+          "includedTxCount": 350,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": -702.4151592287526,
+          "netPnlUsdc": -139.20288670771697,
+          "includedTxCount": 57,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 236,
+        "relative_value": 59,
+        "settlement_cooldown": 59,
+        "no_fundable_exit": 8
+      },
+      "directions": {
+        "WBTC/WBTC/curve": 9,
+        "WETH/WETH/balancer": 9,
+        "WETH/USDC/balancer": 10,
+        "WETH/USDC/uniswap": 2,
+        "WBTC/USDC/curve": 11,
+        "WBTC/USDC/uniswap": 3,
+        "WETH/WETH/uniswap": 3,
+        "WBTC/WBTC/balancer": 5,
+        "WBTC/USDC/balancer": 6,
+        "WBTC/WBTC/uniswap": 1
+      },
+      "rejections": {
+        "submit_failed": 2
+      },
+      "gas_used": 6517426,
+      "mean_tx_index": 1.105263157894737
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2af0bfceb66fb55f37e3de873982989c18f0f1e957bff902f82f5f57c8264cee",
+        "prompt.md": "4dc30dfb470bc0686949de888c8bc60dcfd79f642c684601d333887f80e26f6f",
+        "strategy.py": "c489f545664cf11f6873aed6f8516adcfb0f9b2c63969f512ef1854853728fbf"
+      },
+      "variant": "sizing",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -106.89102966626524,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4498.611586747167,
+          "netPnlUsdc": 4605.502616422338,
+          "includedTxCount": 349,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 1853.1542316535488,
+          "netPnlUsdc": 1960.0452613288217,
+          "includedTxCount": 61,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 228,
+        "relative_value": 63,
+        "settlement_cooldown": 67,
+        "epoch_exit": 5
+      },
+      "directions": {
+        "WETH/WETH/uniswap": 11,
+        "WBTC/WBTC/uniswap": 10,
+        "WETH/WETH/balancer": 9,
+        "WBTC/WBTC/curve": 9,
+        "WBTC/USDC/curve": 18,
+        "WETH/USDC/balancer": 5,
+        "WBTC/WBTC/balancer": 3,
+        "WBTC/USDC/balancer": 1,
+        "WBTC/USDC/uniswap": 2
+      },
+      "rejections": {
+        "submit_failed": 6
+      },
+      "gas_used": 7371944,
+      "mean_tx_index": 1.098360655737705
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2af0bfceb66fb55f37e3de873982989c18f0f1e957bff902f82f5f57c8264cee",
+        "prompt.md": "4dc30dfb470bc0686949de888c8bc60dcfd79f642c684601d333887f80e26f6f",
+        "strategy.py": "c489f545664cf11f6873aed6f8516adcfb0f9b2c63969f512ef1854853728fbf"
+      },
+      "variant": "sizing",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 840.4516833559173,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4191.530546590264,
+          "netPnlUsdc": 3351.0788632411713,
+          "includedTxCount": 274,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 1517.6325478166546,
+          "netPnlUsdc": 677.1808644785342,
+          "includedTxCount": 61,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 232,
+        "relative_value": 61,
+        "settlement_cooldown": 61,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/balancer": 4,
+        "WBTC/USDC/curve": 4,
+        "WBTC/WBTC/curve": 13,
+        "WETH/WETH/balancer": 13,
+        "WETH/WETH/uniswap": 6,
+        "WETH/USDC/uniswap": 5,
+        "WETH/USDC/balancer": 5,
+        "WETH/USDC/curve": 2,
+        "WBTC/USDC/uniswap": 4,
+        "WBTC/WBTC/uniswap": 5
+      },
+      "rejections": {},
+      "gas_used": 7035751,
+      "mean_tx_index": 1.3278688524590163
+    },
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2af0bfceb66fb55f37e3de873982989c18f0f1e957bff902f82f5f57c8264cee",
+        "prompt.md": "4dc30dfb470bc0686949de888c8bc60dcfd79f642c684601d333887f80e26f6f",
+        "strategy.py": "c489f545664cf11f6873aed6f8516adcfb0f9b2c63969f512ef1854853728fbf"
+      },
+      "variant": "sizing",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 514.060152340171,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 643.8444933332939,
+          "netPnlUsdc": 129.78434099220613,
+          "includedTxCount": 348,
+          "revertCount": 4
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 636.317575925641,
+          "netPnlUsdc": 122.25742358567368,
+          "includedTxCount": 59,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 237,
+        "relative_value": 59,
+        "settlement_cooldown": 59,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/uniswap": 10,
+        "WBTC/WBTC/balancer": 3,
+        "WETH/WETH/uniswap": 3,
+        "WBTC/WBTC/curve": 11,
+        "WETH/WETH/balancer": 4,
+        "WBTC/USDC/balancer": 1,
+        "WBTC/USDC/curve": 13,
+        "WBTC/WBTC/uniswap": 6,
+        "WETH/USDC/balancer": 7,
+        "WETH/USDC/uniswap": 1
+      },
+      "rejections": {},
+      "gas_used": 7042797,
+      "mean_tx_index": 1.1355932203389831
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2ea2d1c77861fb713d5f7c0b98019b48a900efee40dd586429e7e605834c05d0",
+        "prompt.md": "d9e015abee1f4dfe9d905f20bfee43263bee94ede3cdaaedd15f5acb85a4555e",
+        "strategy.py": "1973624d3c86820026394e5cdc0b411431af191b4105621eefe1f39ed83dc370"
+      },
+      "variant": "paired",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -106.89102966626524,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 3699.334851309235,
+          "netPnlUsdc": 3806.2258809844498,
+          "includedTxCount": 349,
+          "revertCount": 2
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 2521.2907884958986,
+          "netPnlUsdc": 2628.1818181711715,
+          "includedTxCount": 74,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 247,
+        "relative_value": 37,
+        "settlement_cooldown": 57,
+        "cross_venue_pair": 17,
+        "no_fundable_exit": 1,
+        "epoch_exit": 4
+      },
+      "directions": {
+        "WETH/WETH/uniswap": 4,
+        "WBTC/WBTC/uniswap": 7,
+        "WETH/WETH/balancer": 7,
+        "WBTC/WBTC/curve": 7,
+        "WBTC/USDC/curve": 11,
+        "WETH/USDC/balancer": 2,
+        "WBTC/USDC/balancer": 2,
+        "WBTC/USDC/uniswap": 1
+      },
+      "rejections": {},
+      "gas_used": 8520066,
+      "mean_tx_index": 1.2162162162162162
+    },
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2ea2d1c77861fb713d5f7c0b98019b48a900efee40dd586429e7e605834c05d0",
+        "prompt.md": "d9e015abee1f4dfe9d905f20bfee43263bee94ede3cdaaedd15f5acb85a4555e",
+        "strategy.py": "1973624d3c86820026394e5cdc0b411431af191b4105621eefe1f39ed83dc370"
+      },
+      "variant": "paired",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 514.060152340171,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 643.8444933332939,
+          "netPnlUsdc": 129.78434099220613,
+          "includedTxCount": 348,
+          "revertCount": 4
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 636.317575925641,
+          "netPnlUsdc": 122.25742358567368,
+          "includedTxCount": 59,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 236,
+        "relative_value": 59,
+        "settlement_cooldown": 59,
+        "no_fundable_exit": 9
+      },
+      "directions": {
+        "WBTC/USDC/uniswap": 10,
+        "WBTC/WBTC/balancer": 3,
+        "WETH/WETH/uniswap": 3,
+        "WBTC/WBTC/curve": 11,
+        "WETH/WETH/balancer": 4,
+        "WBTC/USDC/balancer": 1,
+        "WBTC/USDC/curve": 13,
+        "WBTC/WBTC/uniswap": 6,
+        "WETH/USDC/balancer": 7,
+        "WETH/USDC/uniswap": 1
+      },
+      "rejections": {},
+      "gas_used": 7042797,
+      "mean_tx_index": 1.1355932203389831
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2ea2d1c77861fb713d5f7c0b98019b48a900efee40dd586429e7e605834c05d0",
+        "prompt.md": "d9e015abee1f4dfe9d905f20bfee43263bee94ede3cdaaedd15f5acb85a4555e",
+        "strategy.py": "1973624d3c86820026394e5cdc0b411431af191b4105621eefe1f39ed83dc370"
+      },
+      "variant": "paired",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -563.2122725232184,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -480.87940502309357,
+          "netPnlUsdc": 82.3328674956283,
+          "includedTxCount": 352,
+          "revertCount": 2
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": -603.1772643902223,
+          "netPnlUsdc": -39.96499188459711,
+          "includedTxCount": 65,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 227,
+        "relative_value": 62,
+        "settlement_cooldown": 64,
+        "cross_venue_pair": 2,
+        "no_fundable_exit": 8
+      },
+      "directions": {
+        "WBTC/WBTC/curve": 10,
+        "WETH/WETH/balancer": 14,
+        "WETH/USDC/balancer": 9,
+        "WETH/USDC/uniswap": 2,
+        "WBTC/USDC/curve": 10,
+        "WBTC/USDC/uniswap": 4,
+        "WETH/WETH/uniswap": 2,
+        "WBTC/WBTC/balancer": 5,
+        "WBTC/USDC/balancer": 6
+      },
+      "rejections": {
+        "submit_failed": 1
+      },
+      "gas_used": 7356860,
+      "mean_tx_index": 0.9384615384615385
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "2ea2d1c77861fb713d5f7c0b98019b48a900efee40dd586429e7e605834c05d0",
+        "prompt.md": "d9e015abee1f4dfe9d905f20bfee43263bee94ede3cdaaedd15f5acb85a4555e",
+        "strategy.py": "1973624d3c86820026394e5cdc0b411431af191b4105621eefe1f39ed83dc370"
+      },
+      "variant": "paired",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 840.4516833559173,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4051.367394387067,
+          "netPnlUsdc": 3210.9157110314263,
+          "includedTxCount": 275,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 1516.9767626294633,
+          "netPnlUsdc": 676.5250792893494,
+          "includedTxCount": 59,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_net_edge": 240,
+        "relative_value": 55,
+        "settlement_cooldown": 57,
+        "cross_venue_pair": 2,
+        "no_fundable_exit": 8
+      },
+      "directions": {
+        "WBTC/USDC/balancer": 4,
+        "WBTC/USDC/curve": 4,
+        "WBTC/WBTC/curve": 13,
+        "WETH/WETH/balancer": 12,
+        "WETH/WETH/uniswap": 6,
+        "WETH/USDC/uniswap": 4,
+        "WETH/USDC/balancer": 6,
+        "WETH/USDC/curve": 2,
+        "WBTC/USDC/uniswap": 1,
+        "WBTC/WBTC/uniswap": 3
+      },
+      "rejections": {},
+      "gas_used": 6790177,
+      "mean_tx_index": 1.152542372881356
+    },
+    {
+      "regime": "calm",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "e6d06bf67df7d2444a5f1a09ba701799f505c146dbc1bf9bf975cac5bdd78578",
+        "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433",
+        "strategy.py": "aeeb618d0fef7f65f09f0b72e2b9999579235c05145e692599876eaf5f24aae2"
+      },
+      "variant": "pair-only",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 514.060152340171,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 247.95244118499977,
+          "netPnlUsdc": -266.10771114754607,
+          "includedTxCount": 349,
+          "revertCount": 2
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 684.0838883482211,
+          "netPnlUsdc": 170.02373600805004,
+          "includedTxCount": 10,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_profitable_pair": 344,
+        "cross_venue_pair": 5,
+        "settlement_cooldown": 5,
+        "no_fundable_exit": 8
+      },
+      "directions": {},
+      "rejections": {},
+      "gas_used": 1065432,
+      "mean_tx_index": 1.3
+    },
+    {
+      "regime": "cex-drift",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "e6d06bf67df7d2444a5f1a09ba701799f505c146dbc1bf9bf975cac5bdd78578",
+        "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433",
+        "strategy.py": "aeeb618d0fef7f65f09f0b72e2b9999579235c05145e692599876eaf5f24aae2"
+      },
+      "variant": "pair-only",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": 840.4516833559173,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 3971.4311271435727,
+          "netPnlUsdc": 3130.9794437899545,
+          "includedTxCount": 275,
+          "revertCount": 0
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 994.4400783564633,
+          "netPnlUsdc": 153.988395000546,
+          "includedTxCount": 28,
+          "revertCount": 0
+        }
+      ],
+      "reasons": {
+        "no_profitable_pair": 327,
+        "cross_venue_pair": 14,
+        "settlement_cooldown": 14,
+        "no_fundable_exit": 8
+      },
+      "directions": {},
+      "rejections": {},
+      "gas_used": 3457393,
+      "mean_tx_index": 1.8571428571428572
+    },
+    {
+      "regime": "whale",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "e6d06bf67df7d2444a5f1a09ba701799f505c146dbc1bf9bf975cac5bdd78578",
+        "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433",
+        "strategy.py": "aeeb618d0fef7f65f09f0b72e2b9999579235c05145e692599876eaf5f24aae2"
+      },
+      "variant": "pair-only",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -106.89102966626524,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": 4316.885027579614,
+          "netPnlUsdc": 4423.776057254814,
+          "includedTxCount": 356,
+          "revertCount": 2
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": 2827.8089394769777,
+          "netPnlUsdc": 2934.6999691430537,
+          "includedTxCount": 58,
+          "revertCount": 1
+        }
+      ],
+      "reasons": {
+        "no_profitable_pair": 301,
+        "cross_venue_pair": 27,
+        "settlement_cooldown": 31,
+        "epoch_exit": 5
+      },
+      "directions": {
+        "WBTC/WBTC/uniswap": 2,
+        "WETH/WETH/balancer": 1,
+        "WBTC/WBTC/curve": 2
+      },
+      "rejections": {},
+      "gas_used": 6128765,
+      "mean_tx_index": 1.3793103448275863
+    },
+    {
+      "regime": "crash",
+      "seed": 101,
+      "passed": true,
+      "problems": [],
+      "source_sha256": {
+        "constants.py": "e6d06bf67df7d2444a5f1a09ba701799f505c146dbc1bf9bf975cac5bdd78578",
+        "prompt.md": "918e8871ef50b524a41fba8c94f51e354df6729f6e0429176173b7a5b2459433",
+        "strategy.py": "aeeb618d0fef7f65f09f0b72e2b9999579235c05145e692599876eaf5f24aae2"
+      },
+      "variant": "pair-only",
+      "agents": [
+        {
+          "id": "noop",
+          "pnlUsdc": -563.2122725232184,
+          "netPnlUsdc": 0,
+          "includedTxCount": 0,
+          "revertCount": 0
+        },
+        {
+          "id": "my-arb-py",
+          "pnlUsdc": -190.08985414131894,
+          "netPnlUsdc": 373.122418362007,
+          "includedTxCount": 353,
+          "revertCount": 1
+        },
+        {
+          "id": "eris-adaptive-v1",
+          "pnlUsdc": -283.63354196837463,
+          "netPnlUsdc": 279.57873055612436,
+          "includedTxCount": 16,
+          "revertCount": 1
+        }
+      ],
+      "reasons": {
+        "no_profitable_pair": 338,
+        "cross_venue_pair": 8,
+        "settlement_cooldown": 8,
+        "no_fundable_exit": 9
+      },
+      "directions": {},
+      "rejections": {},
+      "gas_used": 1586975,
+      "mean_tx_index": 3.125
+    }
+  ],
+  "limitations": [
+    "Only calm, crash, cex-drift and whale seed 101 were used for development.",
+    "Market interactions and wall-clock ordering can change control returns between runs.",
+    "Paired bundles are independently funded but not atomic.",
+    "The disconnected local pilots were incomplete and are excluded."
+  ]
+}

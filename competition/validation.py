@@ -6,14 +6,17 @@ to label a partial scenario set as a completed public matrix.
 """
 
 import argparse
+import csv
 import hashlib
 import json
 import math
 import re
 import subprocess
 import threading
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
+from statistics import mean, median
 
 import tools
 
@@ -132,10 +135,89 @@ def observe_containers(done: threading.Event, resources: dict) -> None:
         done.wait(5)
 
 
-def run_case(checkout: Path, case: dict, output: Path) -> None:
+def execution_activity(log: str, settled: dict[str, str] | None = None) -> dict:
+    records = []
+    malformed = 0
+    for line in log.splitlines():
+        if not line.strip():
+            continue
+        try:
+            value = json.loads(line)
+            if isinstance(value, dict):
+                records.append(value)
+            else:
+                malformed += 1
+        except ValueError:
+            malformed += 1
+    decisions = [row for row in records if row.get("marker") == "ASCON_DECISION"]
+    result = {
+        "decisionReasons": dict(Counter(str(row.get("reason")) for row in decisions)),
+        "pairedTrades": sum(row.get("reason") == "cross_venue_pair" for row in decisions),
+        "submitted": sum(row.get("event") == "submitted" for row in records),
+        "submitFailures": sum(row.get("event") == "submit_failed" for row in records),
+        "malformedLogLines": malformed,
+    }
+    if settled is not None:
+        outcomes = Counter()
+        for decision in decisions:
+            if decision.get("reason") != "cross_venue_pair":
+                continue
+            hashes = {
+                row["hash"]
+                for row in records
+                if row.get("event") == "submitted"
+                and row.get("blockSeen") == decision.get("round")
+                and row.get("bundleId") is not None
+                and isinstance(row.get("hash"), str)
+            }
+            filled = sum(settled.get(tx_hash) == "success" for tx_hash in hashes)
+            outcomes["bothFilled" if filled == 2 else "oneFilled" if filled == 1 else "noneFilled"] += 1
+        result["pairOutcomes"] = dict(outcomes)
+    return result
+
+
+def validate_case(case: dict, published: list[dict], *, allow_extra_seed: bool = False) -> None:
+    if case in published:
+        return
+    seed = case.get("seed")
+    if (
+        allow_extra_seed
+        and case.get("regime") in {row["regime"] for row in published}
+        and isinstance(seed, int)
+        and not isinstance(seed, bool)
+        and 0 <= seed < 2**32
+    ):
+        return
+    raise ValueError("Select a published regime/seed pair, or explicitly allow an extra seed for a published regime")
+
+
+def summarize_metrics(metrics: list[dict]) -> dict:
+    """Descriptive comparisons, separate from the execution/resource pass flag."""
+    if not metrics:
+        return {"scenarios": 0}
+    return {
+        "scenarios": len(metrics),
+        "meanPnlUsdc": mean(row["pnlUsdc"] for row in metrics),
+        "medianPnlUsdc": median(row["pnlUsdc"] for row in metrics),
+        "meanVersusStarterUsdc": mean(row["versusStarterUsdc"] for row in metrics),
+        "medianVersusStarterUsdc": median(row["versusStarterUsdc"] for row in metrics),
+        "meanVersusNoopUsdc": mean(row["versusNoopUsdc"] for row in metrics),
+        "winsVersusStarter": sum(row["versusStarterUsdc"] > 0 for row in metrics),
+        "winsVersusNoop": sum(row["versusNoopUsdc"] > 0 for row in metrics),
+        "worstVersusStarterUsdc": min(row["versusStarterUsdc"] for row in metrics),
+        "worstPnlUsdc": min(row["pnlUsdc"] for row in metrics),
+        "includedTxCount": sum(row.get("includedTxCount", 0) for row in metrics),
+        "revertCount": sum(row.get("revertCount", 0) for row in metrics),
+        "submitFailures": sum(row.get("submitFailures", 0) for row in metrics),
+        "pairedTrades": sum(row.get("pairedTrades", 0) for row in metrics),
+        "partialPairs": sum(row.get("partialPairs", 0) for row in metrics),
+    }
+
+
+def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool = False) -> None:
     tools.stage(checkout)
-    if case not in public_cases(checkout):
-        raise ValueError("Select a published regime/seed pair")
+    published = public_cases(checkout)
+    validate_case(case, published, allow_extra_seed=allow_extra_seed)
     config = yaml_json(checkout, f"config/regimes/{case['regime']}.yaml")["run"]
     expected = {key: config[key] for key in ("blocks", "blockTimeSec")}
     if not (checkout / "backtest/state/manifest.json").exists():
@@ -152,6 +234,7 @@ def run_case(checkout: Path, case: dict, output: Path) -> None:
     observer = threading.Thread(target=observe_containers, args=(done, resources), daemon=True)
     observer.start()
     problems = []
+    logs: dict[str, str] = {}
     started = datetime.now(UTC).isoformat()
     try:
         with (output / "backtest.log").open("w") as log:
@@ -185,6 +268,7 @@ def run_case(checkout: Path, case: dict, output: Path) -> None:
     summaries = set(runs.glob("*/summary.json")) - before
     summary = {}
     run_dir = None
+    settled: dict[str, str] = {}
     if len(summaries) != 1:
         problems.append(f"expected one new run summary, got {len(summaries)}")
     else:
@@ -199,8 +283,13 @@ def run_case(checkout: Path, case: dict, output: Path) -> None:
         }
         problems.extend(assess(summary, expected, resources, logs))
         write_json(output / "summary.json", summary)
+        with (run_dir / "blocks.csv").open() as stream:
+            settled = {
+                row["hash"]: row["status"] for row in csv.DictReader(stream) if row["ownerId"] == "eris-adaptive-v1"
+            }
     report = {
         **case,
+        "published_case": case in published,
         "passed": not problems,
         "problems": problems,
         "started_at": started,
@@ -211,22 +300,43 @@ def run_case(checkout: Path, case: dict, output: Path) -> None:
         "resources": resources,
         "run_directory": str(run_dir) if run_dir else None,
         "agents": summary.get("agents", []),
+        "execution": execution_activity(logs.get("eris-adaptive-v1", ""), settled),
         "frozen": True,
         "live_llm_validated": False,
     }
     write_json(output / "report.json", report)
-    print(json.dumps({"case": case, "passed": not problems, "problems": problems}), flush=True)
+    print(
+        "SCENARIO_RESULT "
+        + json.dumps(
+            {
+                **{key: report[key] for key in ("regime", "seed", "passed", "problems", "source_sha256", "execution")},
+                "agents": [
+                    {key: agent.get(key) for key in ("id", "pnlUsdc", "netPnlUsdc", "includedTxCount", "revertCount")}
+                    for agent in report["agents"]
+                ],
+            }
+        ),
+        flush=True,
+    )
     if problems:
         raise ValueError("Market validation failed; inspect report.json and backtest.log")
 
 
-def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
-    expected = {(c["regime"], c["seed"]) for c in public_cases(checkout)}
+def aggregate(checkout: Path, inputs: Path, output: Path, *, extra_seed: int | None = None) -> None:
+    published = public_cases(checkout)
+    if extra_seed is not None:
+        if any(c["seed"] == extra_seed for c in published):
+            raise ValueError("Extra-seed evidence must use a seed outside the public matrix")
+        for regime in {c["regime"] for c in published}:
+            validate_case({"regime": regime, "seed": extra_seed}, published, allow_extra_seed=True)
+    expected = {(c["regime"], c["seed"] if extra_seed is None else extra_seed) for c in published}
+    label = "public" if extra_seed is None else "extra-seed"
+    pass_key = "public_matrix_passed" if extra_seed is None else "extra_seed_matrix_passed"
     reports = [read_json(p) for p in sorted(inputs.glob("**/report.json"))]
     seen = [(r["regime"], r["seed"]) for r in reports]
     problems = []
     if set(seen) != expected or len(seen) != len(expected):
-        problems.append("public scenario coverage is incomplete, duplicated or unexpected")
+        problems.append(f"{label} scenario coverage is incomplete, duplicated or unexpected")
     current_hashes = source_hashes()
     for report in reports:
         if not report.get("passed"):
@@ -245,25 +355,39 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
                     "pnlUsdc": candidate,
                     "versusStarterUsdc": candidate - agents["my-arb-py"]["pnlUsdc"],
                     "versusNoopUsdc": candidate - agents["noop"]["pnlUsdc"],
+                    "includedTxCount": agents["eris-adaptive-v1"].get("includedTxCount", 0),
+                    "revertCount": agents["eris-adaptive-v1"].get("revertCount", 0),
+                    "submitFailures": report.get("execution", {}).get("submitFailures", 0),
+                    "pairedTrades": report.get("execution", {}).get("pairedTrades", 0),
+                    "partialPairs": report.get("execution", {}).get("pairOutcomes", {}).get("oneFilled", 0),
                 }
             )
     write_json(
         output,
         {
-            "public_matrix_passed": not problems,
+            pass_key: not problems,
+            "scenario_set": label,
+            "extra_seed": extra_seed,
             "problems": sorted(set(problems)),
             "expected_scenarios": len(expected),
             "reported_scenarios": len(reports),
             "eris_revision": tools.revision(),
             "source_sha256": current_hashes,
             "metrics": metrics,
+            "performance": summarize_metrics(metrics),
+            "performanceByRegime": {
+                regime: summarize_metrics([row for row in metrics if row["regime"] == regime])
+                for regime in sorted({row["regime"] for row in metrics})
+            },
             "live_llm_validated": False,
             "note": "Frozen execution/resource evidence. Three-agent comparisons do not predict contest placement.",
         },
     )
-    print(f"Public matrix: {len(reports)}/{len(expected)} scenarios; passed={not problems}")
+    print(f"{label} matrix: {len(reports)}/{len(expected)} scenarios; passed={not problems}")
+    marker = "PUBLIC_MATRIX_RESULT " if extra_seed is None else "EXTRA_SEED_MATRIX_RESULT "
+    print(marker + json.dumps(read_json(output)), flush=True)
     if problems:
-        raise ValueError("Incomplete or failing public market matrix")
+        raise ValueError(f"Incomplete or failing {label} market matrix")
 
 
 def main() -> None:
@@ -274,6 +398,9 @@ def main() -> None:
     parser.add_argument("--inputs", type=Path)
     parser.add_argument("--regime")
     parser.add_argument("--seed", type=int)
+    parser.add_argument(
+        "--allow-extra-seed", action="store_true", help="Allow an additional seed for a published regime"
+    )
     parser.add_argument("--github-output", type=Path)
     args = parser.parse_args()
     checkout = args.eris.resolve()
@@ -285,10 +412,19 @@ def main() -> None:
         if args.github_output:
             with args.github_output.open("a") as stream:
                 stream.write("matrix=" + json.dumps(matrix, separators=(",", ":")) + "\n")
+                holdout = {"regime": sorted({case["regime"] for case in cases})}
+                stream.write("holdout=" + json.dumps(holdout, separators=(",", ":")) + "\n")
     elif args.operation == "run":
-        run_case(checkout, {"regime": args.regime, "seed": args.seed}, args.out.resolve())
+        run_case(
+            checkout,
+            {"regime": args.regime, "seed": args.seed},
+            args.out.resolve(),
+            allow_extra_seed=args.allow_extra_seed,
+        )
     elif args.inputs:
-        aggregate(checkout, args.inputs, args.out)
+        if args.allow_extra_seed and args.seed is None:
+            parser.error("aggregate --allow-extra-seed requires --seed")
+        aggregate(checkout, args.inputs, args.out, extra_seed=args.seed if args.allow_extra_seed else None)
     else:
         parser.error("aggregate requires --inputs")
 
