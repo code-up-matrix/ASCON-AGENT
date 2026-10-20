@@ -53,9 +53,8 @@ RECOVERY_TRADE_USDC = Decimal(100)
 MIN_GAS_WEI = 10**16
 MAX_PRIORITY_FEE_WEI = 2 * 10**9
 PRIORITY_MULTIPLIER = 3
-# Observations do not expose base fee or a size-specific gas quote. Keep these
-# explicit and report costs as estimates; calibrate against settled tx receipts.
-ASSUMED_BASE_FEE_WEI = 10**9
+# Pinned sdk/src/feeRule.ts caps total gas price at the priority bid.
+# Gas units remain a conservative estimate, checked against settled receipts.
 ASSUMED_SWAP_GAS = 350_000
 
 ENABLE_PAIRED_TRADES = True

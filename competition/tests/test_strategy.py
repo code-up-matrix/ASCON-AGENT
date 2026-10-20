@@ -423,7 +423,7 @@ def test_pair_never_relies_on_pending_buy_to_fund_sell(engine, observation, cont
 
 def test_pair_requires_gas_for_both_legs(engine, observation, context):
     paired_observation(observation)
-    observation["balances"]["ethWei"] = "10700000000000000"
+    observation["balances"]["ethWei"] = "10060000000000000"
     assert decide(engine, observation, context)["type"] != "bundle"
 
 
@@ -444,3 +444,13 @@ def test_pair_only_mode_keeps_funded_round_trips(engine, observation, context, m
     monkeypatch.setattr(engine.limits, "ALLOW_DIRECTIONAL_TRADES", False)
     paired_observation(observation)
     assert decide(engine, observation, context)["type"] == "bundle"
+
+
+def test_gas_estimate_obeys_the_pinned_total_fee_cap(engine, observation, context):
+    paired_observation(observation)
+    action = decide(engine, observation, context)
+    assert action["type"] == "bundle"
+    message = context.messages[-1]["log"]
+    bid = int(message["priority_fee_wei"])
+    expected = Decimal(2 * engine.limits.ASSUMED_SWAP_GAS * bid) / 10**18 * 3000
+    assert Decimal(message["estimated_gas_usdc"]) == expected
