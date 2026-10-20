@@ -32,6 +32,9 @@ MIN_CASH_RESERVE_USDC = Decimal(1000)
 MAX_BASE_EXPOSURE_BPS = 3000
 MAX_TOTAL_EXPOSURE_BPS = 5000
 MAX_POOL_INPUT_BPS = 10
+# Pinned Eris Balancer/Curve adapters quote 0.1 base units, then quote the
+# resulting USDC back into base. Their observations currently omit reserves.
+AMM_QUOTE_PROBE_BASE = Decimal("0.1")
 SLIPPAGE_BPS = 35
 MAX_DRAWDOWN_BPS = Decimal(1000)
 EXIT_BLOCKS = 8

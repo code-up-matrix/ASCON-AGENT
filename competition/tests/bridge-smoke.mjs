@@ -10,6 +10,8 @@ const { PyBridge } = await official("example/agents/runtime/pyBridge.ts");
 const { loadConfig } = await official("sdk/src/config.ts");
 const { loadImproveAgent, parseRevision } = await official("example/agents/runtime/improve.ts");
 const { pythonObservation } = await official("test/helpers/python.ts");
+const { balancerAdapter } = await official("sdk/src/protocols/balancer.ts");
+const { curveAdapter } = await official("sdk/src/protocols/curve.ts");
 const agentDir = resolve("example/agents/eris-adaptive-v1");
 const policy = loadImproveAgent(agentDir);
 assert.equal(policy.language, "python");
@@ -57,7 +59,39 @@ try {
   runner.setSource(reverted.source);
   assert.equal((await runner.decide(observation(4))).action.type, "swap");
   assert.equal(logs.at(-1).marker, "ASCON_DECISION");
-  console.log("Official Python bridge PASS: resident decisions, compiled replacement and restored source; no model call.");
+  // Exercise the actual adapter's observation contract: reserves are optional
+  // in the schema and absent from the pinned Balancer/Curve observe() output.
+  for (const [protocol, adapter, actionType] of [
+    ["balancer", balancerAdapter, "balancerSwap"],
+    ["curve", curveAdapter, "curveSwap"],
+  ]) {
+    const quote = {
+      priceUsdcPerWeth: Math.sqrt(2500 * 2510),
+      sellPriceUsdcPerWeth: 2500,
+      buyPriceUsdcPerWeth: 2510,
+      effectiveHalfSpreadBps: 20,
+    };
+    const venue = await adapter.observe(
+      { fairPrices: { WETH: 3000 } },
+      { ...quote, markets: [{ ...quote, market: { base: "WETH", key: "WETH/USDC" } }] },
+      {},
+      3000,
+    );
+    assert.equal(venue.reserves, undefined);
+    const obs = observation(10);
+    obs.runId = `real-${protocol}-observation`;
+    obs.fairPriceUsdcPerWeth = 3000;
+    obs.fairPricesUsd = { WETH: 3000 };
+    obs.baseDecimals = { WETH: 18 };
+    obs.baseBalances = {};
+    obs.enabledProtocols = [protocol];
+    obs.protocols = { [protocol]: venue };
+    const reply = await runner.decide(obs);
+    assert.equal(reply.action.type, actionType);
+    assert.equal(reply.action.tokenIn, "USDC");
+    assert.ok(BigInt(reply.action.amountIn) > 0n && BigInt(reply.action.amountIn) <= 250_000_000n);
+  }
+  console.log("Official Python bridge PASS: decisions, replacement/restoration and real AMM observation shapes; no model call.");
 } finally {
   await runner.close();
 }

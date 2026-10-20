@@ -115,6 +115,7 @@ class TestEveryJobIsCapped:
         # silently escape them. .y*ml because both spellings are live (claude.yml).
         assert _ALL_WORKFLOWS == [
             ".github/workflows/ascon-ci.yaml",
+            ".github/workflows/ascon-market-validation.yaml",
             ".github/workflows/ci.yaml",
             ".github/workflows/claude.yml",
             ".github/workflows/fetch_diagnostic.yaml",
@@ -260,6 +261,7 @@ class TestNonBotWorkflowCapsStayInBand:
         # check above rather than escaping both parametrizations.
         assert _NON_BOT_WORKFLOWS == [
             ".github/workflows/ascon-ci.yaml",
+            ".github/workflows/ascon-market-validation.yaml",
             ".github/workflows/ci.yaml",
             ".github/workflows/claude.yml",
             ".github/workflows/fetch_diagnostic.yaml",

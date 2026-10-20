@@ -29,11 +29,12 @@ ignore = ["E501"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S603", "S607"]
 "tools.py" = ["S603", "S607"] # Commands are fixed argv lists, never a shell.
+"validation.py" = ["S603", "S607"] # Fixed commands for the local simulator and Docker inspection.
 
 [tool.basedpyright]
 pythonVersion = "3.11"
 typeCheckingMode = "standard"
-include = ["agents", "tools.py"]
+include = ["agents", "tools.py", "validation.py"]
 venvPath = "."
 venv = ".venv"
 extraPaths = ["agents/eris-adaptive-v1"]

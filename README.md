@@ -4,9 +4,11 @@ A Python trading agent for **NYX ASCON**, built against the official Eris simula
 The existing forecasting application is retained; its documentation
 is in [FORECASTING.md](FORECASTING.md).
 
-**Status:** initial implementation with offline tests and a submission packaging
-workflow. Profitability, Docker resource compliance and live LLM revisions still
-need simulator validation. See [validation results](docs/ASCON_VALIDATION.md).
+**Status:** the frozen candidate passed all **60 public market scenarios** under
+observed **2 CPU / 4 GiB Docker limits**, with successful trades on all three venues.
+CI and bundle checks pass. Live LLM revision testing and final submission checks
+remain; trading results are mixed and trail the starter on average.
+See [validation results](docs/ASCON_VALIDATION.md).
 
 ## Start here
 
@@ -70,6 +72,8 @@ cash, not a liquidation execution feature.
 | `competition/rosters/` | Frozen comparison and manual improving runs |
 | `competition/tools.py` | Pinned runtime setup, checks, bundle, frozen backtests and explicit local LLM commands |
 | `competition/llm/` | Local OpenRouter/AkashML selection using the official inference transport |
+| `competition/validation.py` | Full public-scenario, Docker-limit and result aggregation checks |
+| `docs/validation/` | Reviewed scenario results and artifact/source hashes |
 | `docs/ASCON_SETUP.md` | Installation, keys, local simulation and packaging |
 | `docs/ASCON_VALIDATION.md` | Completed checks and remaining acceptance work |
 | `FORECASTING.md` | Forecasting application guide, including optional FRED research |

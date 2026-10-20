@@ -117,7 +117,7 @@ def quote_prices(venue: AgentVenue) -> tuple[Decimal, Decimal]:
 
 
 def depth_cap(obs: Observation, market: MarketView, venue: AgentVenue, token_in: str) -> int:
-    """Cap input to a fraction of visible/virtual reserves; not a fill guarantee."""
+    """Bound input by visible depth or the pinned adapter's executable probe."""
     protocol = getattr(obs.protocols, venue.protocol)
     if protocol is None:
         return 0
@@ -139,10 +139,21 @@ def depth_cap(obs: Observation, market: MarketView, venue: AgentVenue, token_in:
             else (Decimal(units(liquidity)) / raw_sqrt_price)
         )
     else:
+        # Balancer/Curve observe() supplies executable quotes but no reserves.
+        # Stay within the amount actually probed, even when reserves are supplied.
+        # The quote->base probe spends the proceeds of the 0.1-base sell probe.
+        if venue.sell_price is None or venue.buy_price is None:
+            return 0
+        probe_cap = (
+            max(0, int(limits.AMM_QUOTE_PROBE_BASE * number(venue.sell_price) * limits.USDC_SCALE) - 1)
+            if token_in == limits.QUOTE_ASSET
+            else int(limits.AMM_QUOTE_PROBE_BASE * (10**market.base_decimals))
+        )
         reserves = getattr(quote, "reserves", None)
         if reserves is None:
-            return 0
+            return probe_cap
         reserve = Decimal(units(reserves.usdc if token_in == limits.QUOTE_ASSET else reserves.weth))
+        return min(probe_cap, max(0, int(reserve * limits.MAX_POOL_INPUT_BPS / limits.BPS)))
     return max(0, int(reserve * limits.MAX_POOL_INPUT_BPS / limits.BPS))
 
 
