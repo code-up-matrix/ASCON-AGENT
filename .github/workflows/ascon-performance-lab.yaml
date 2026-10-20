@@ -55,6 +55,16 @@ jobs:
           uv run --project competition --frozen ruff format competition
           git diff -- competition
           make ascon-check
+      - name: Export canonical sources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          files = [*Path('competition/agents/eris-adaptive-v1').glob('*'), Path('competition/validation.py'), Path('competition/tests/test_strategy.py'), Path('competition/tests/test_validation.py')]
+          for p in sorted(files):
+              if p.is_file():
+                  print('CANONICAL_SOURCE '+json.dumps({'path': str(p), 'content': p.read_text()}))
+          PY
       - name: Select the ablation
         env:
           VARIANT: ${{ matrix.variant }}

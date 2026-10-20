@@ -415,7 +415,7 @@ def pair_action(pair: Pair, priority: int):
             slippage_bps=limits.SLIPPAGE_BPS, max_priority_fee_per_gas_wei=str(priority),
         ),
     ]
-    return bundle(actions=actions, max_priority_fee_per_gas_wei=str(priority))
+    return bundle(actions=actions, maxPriorityFeePerGasWei=str(priority))
 
 
 def wait(ctx: Context, reason: str, **details):
