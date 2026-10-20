@@ -149,8 +149,9 @@ def test_execution_report_distinguishes_pair_decisions_from_transactions():
 
 
 def test_pair_outcomes_use_settled_receipts_instead_of_submission_count():
-    records = [{"marker": "ASCON_DECISION", "reason": "cross_venue_pair", "block": b + 1000, "round": b}
-        for b in (10, 12, 14)]
+    records = [
+        {"marker": "ASCON_DECISION", "reason": "cross_venue_pair", "block": b + 1000, "round": b} for b in (10, 12, 14)
+    ]
     records += [
         {"event": "submitted", "bundleId": str(b), "blockSeen": b, "hash": h}
         for b, h in ((10, "a"), (10, "b"), (12, "c"), (12, "d"), (14, "e"))
@@ -160,3 +161,18 @@ def test_pair_outcomes_use_settled_receipts_instead_of_submission_count():
         {"a": "success", "b": "success", "c": "success", "d": "reverted"},
     )
     assert report["pairOutcomes"] == {"bothFilled": 1, "oneFilled": 1, "noneFilled": 1}
+
+
+def test_extra_seed_aggregate_cannot_be_mistaken_for_public_coverage(tmp_path, monkeypatch):
+    monkeypatch.setattr(validation, "public_cases", lambda _: [{"regime": "calm", "seed": 101}])
+    monkeypatch.setattr(validation, "source_hashes", lambda: {})
+    output = tmp_path / "extra.json"
+    with pytest.raises(ValueError, match="Incomplete"):
+        validation.aggregate(tmp_path, tmp_path, output, extra_seed=606)
+    report = validation.read_json(output)
+    assert report["extra_seed_matrix_passed"] is False
+    assert report["scenario_set"] == "extra-seed"
+    assert report["extra_seed"] == 606
+    assert "public_matrix_passed" not in report
+    with pytest.raises(ValueError, match="outside the public"):
+        validation.aggregate(tmp_path, tmp_path, output, extra_seed=101)

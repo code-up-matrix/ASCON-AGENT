@@ -322,13 +322,21 @@ def run_case(checkout: Path, case: dict, output: Path, *, allow_extra_seed: bool
         raise ValueError("Market validation failed; inspect report.json and backtest.log")
 
 
-def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
-    expected = {(c["regime"], c["seed"]) for c in public_cases(checkout)}
+def aggregate(checkout: Path, inputs: Path, output: Path, *, extra_seed: int | None = None) -> None:
+    published = public_cases(checkout)
+    if extra_seed is not None:
+        if any(c["seed"] == extra_seed for c in published):
+            raise ValueError("Extra-seed evidence must use a seed outside the public matrix")
+        for regime in {c["regime"] for c in published}:
+            validate_case({"regime": regime, "seed": extra_seed}, published, allow_extra_seed=True)
+    expected = {(c["regime"], c["seed"] if extra_seed is None else extra_seed) for c in published}
+    label = "public" if extra_seed is None else "extra-seed"
+    pass_key = "public_matrix_passed" if extra_seed is None else "extra_seed_matrix_passed"
     reports = [read_json(p) for p in sorted(inputs.glob("**/report.json"))]
     seen = [(r["regime"], r["seed"]) for r in reports]
     problems = []
     if set(seen) != expected or len(seen) != len(expected):
-        problems.append("public scenario coverage is incomplete, duplicated or unexpected")
+        problems.append(f"{label} scenario coverage is incomplete, duplicated or unexpected")
     current_hashes = source_hashes()
     for report in reports:
         if not report.get("passed"):
@@ -357,7 +365,9 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
     write_json(
         output,
         {
-            "public_matrix_passed": not problems,
+            pass_key: not problems,
+            "scenario_set": label,
+            "extra_seed": extra_seed,
             "problems": sorted(set(problems)),
             "expected_scenarios": len(expected),
             "reported_scenarios": len(reports),
@@ -373,10 +383,11 @@ def aggregate(checkout: Path, inputs: Path, output: Path) -> None:
             "note": "Frozen execution/resource evidence. Three-agent comparisons do not predict contest placement.",
         },
     )
-    print(f"Public matrix: {len(reports)}/{len(expected)} scenarios; passed={not problems}")
-    print("PUBLIC_MATRIX_RESULT " + json.dumps(read_json(output)), flush=True)
+    print(f"{label} matrix: {len(reports)}/{len(expected)} scenarios; passed={not problems}")
+    marker = "PUBLIC_MATRIX_RESULT " if extra_seed is None else "EXTRA_SEED_MATRIX_RESULT "
+    print(marker + json.dumps(read_json(output)), flush=True)
     if problems:
-        raise ValueError("Incomplete or failing public market matrix")
+        raise ValueError(f"Incomplete or failing {label} market matrix")
 
 
 def main() -> None:
@@ -401,6 +412,8 @@ def main() -> None:
         if args.github_output:
             with args.github_output.open("a") as stream:
                 stream.write("matrix=" + json.dumps(matrix, separators=(",", ":")) + "\n")
+                holdout = {"regime": sorted({case["regime"] for case in cases})}
+                stream.write("holdout=" + json.dumps(holdout, separators=(",", ":")) + "\n")
     elif args.operation == "run":
         run_case(
             checkout,
@@ -409,7 +422,9 @@ def main() -> None:
             allow_extra_seed=args.allow_extra_seed,
         )
     elif args.inputs:
-        aggregate(checkout, args.inputs, args.out)
+        if args.allow_extra_seed and args.seed is None:
+            parser.error("aggregate --allow-extra-seed requires --seed")
+        aggregate(checkout, args.inputs, args.out, extra_seed=args.seed if args.allow_extra_seed else None)
     else:
         parser.error("aggregate requires --inputs")
 
