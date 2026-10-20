@@ -503,7 +503,7 @@ def decide_valid(obs: Observation, ctx: Context):
         return wait(ctx, "settlement_cooldown")
     name, margin, size_bps = regime(obs)
     priority = priority_bid(obs)
-    gas_wei = limits.ASSUMED_SWAP_GAS * (limits.ASSUMED_BASE_FEE_WEI + priority)
+    gas_wei = limits.ASSUMED_SWAP_GAS * priority
     if units(obs.balances.eth_wei) < limits.MIN_GAS_WEI + gas_wei:
         return wait(ctx, "gas_reserve_after_estimated_cost")
     gas_cost = Decimal(gas_wei) / limits.WEI_SCALE * fair
