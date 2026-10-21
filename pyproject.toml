@@ -37,7 +37,7 @@ dependencies = [
     "openpyxl>=3.1.5",
     "xlrd>=2.0.2",
     "python-docx>=1.2.0",
-    "pillow>=12.3.0",
+    "pillow>=13.0.0", # Includes GHSA-8g5g-8vmr-9782 and related image decoder security fixes
     "lxml>=6.1.2",
 ]
 # Package freshness is enforced by tool.uv.exclude-newer below.
@@ -72,12 +72,16 @@ dev = [
 [tool.uv]
 required-version = ">=0.12.10"
 exclude-newer = "1 week"
-# Emergency CA-trust fix (GHSA-6q48-6c7w-9gw2), admitting only releases before this cutoff.
-# Remove this dated certifi exception on/after 2026-10-27 to restore its one-week delay.
-exclude-newer-package = { certifi = "2026-10-20T20:00:00Z" }
+# Emergency CA-trust and image-decoder fixes, admitting only releases before these cutoffs.
+# Remove these dated exceptions on/after 2026-10-28 to restore their one-week delay.
+exclude-newer-package = { certifi = "2026-10-20T20:00:00Z", pillow = "2026-10-21T00:00:00Z" }
 # Transitive through openai-agents: fix GHSA-84m7-p3x7-pcfv without adding
 # an unused direct dependency or changing the repository's freshness policy.
 constraint-dependencies = ["mcp>=1.30.0"]
+# forecasting-tools 0.2.92 (and current 0.3.4) caps Pillow below its security fixes.
+# Keep the framework stable while validating Pillow 13 with the image/full CI suite.
+# Remove this override once the pinned framework permits Pillow 13.
+override-dependencies = ["pillow>=13.0.0,<14"]
 exclude-dependencies = [
     # gitpython arrives only as streamlit <- forecasting-tools, and nothing we run
     # imports it: streamlit's sole use is a lazy `import git` inside
