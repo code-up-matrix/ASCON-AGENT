@@ -2,7 +2,7 @@
 
 **The repaired frozen candidate passed all 60 public scenarios and all 12 additional-seed scenarios under observed 2 CPU / 4 GiB Docker limits.** Performance improved, but the candidate still trails the starter on average. Live LLM revision and organizer acceptance remain unverified.
 
-Validated October 20, 2026. Tested repository commit: `8cadc87a0c728ee509f77d2a4ee5a6c1a3d1ed8c`. Eris/Python SDK pin: `e5b93b651bba2384aedfa891cecbf7b64d05b88b`. Later documentation commits do not change the validated agent source hashes.
+Validated October 20, 2026. Tested repository commit: `8cadc87a0c728ee509f77d2a4ee5a6c1a3d1ed8c`. Eris/Python SDK pin: `e5b93b651bba2384aedfa891cecbf7b64d05b88b`. Later documentation and retained-application dependency commits do not change the validated agent source hashes.
 
 ## Full market and resource evidence
 
@@ -84,6 +84,12 @@ The [pinned official scorer](https://github.com/NyxFoundation/eris-agent-simulat
 | Retained application suite | 10,855 passed, 40 skipped, 5 deselected; 93% coverage |
 | Repository lint, types, import contracts, vulnerability audit and secret scan | Passed |
 | Official bundle | Agent bytes, upstream license, absence of environment files and SHA-256 verified |
+
+### Dependency audit follow-up
+
+The publication audit detected [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2), published while the market validation was running. The retained application used certifi 2026.7.22, whose trust bundle included an affected emSign root. Its requirement and lockfile now select **certifi 2026.10.19**, the advised fixed release; no other package version changed.
+
+The fixed package was uploaded on October 20, so a dated certifi-only cutoff admits it while the default one-week freshness rule still applies to other dependencies. Remove that dated exception on or after **October 27, 2026** to restore certifi's normal one-week delay. The competition lockfile does not contain certifi, and the validated strategy/SDK/bundle are unchanged. The existing audit suppressions were not expanded.
 
 The [validated candidate artifact](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478740739/artifacts/12291507824) contains the submission ZIP and its manifest. The **inner submission ZIP** SHA-256 is:
 

@@ -30,7 +30,7 @@ dependencies = [
     "json-repair>=0.61.1",
     "ijson>=3.5.1",
     "pypdf>=6.19.0",
-    "certifi>=2026.5.20",
+    "certifi>=2026.10.19", # GHSA-6q48-6c7w-9gw2: remove compromised emSign trust root
     "brotli>=1.2.0",                                        # aiohttp's optional `br` decoder; see [tool.deptry] DEP002
     "backports-zstd>=1.7.0 ; python_full_version < '3.14'", # aiohttp's optional `zstd` decoder; stdlib from 3.14 on
     "curl-cffi>=0.15.0",
@@ -72,6 +72,9 @@ dev = [
 [tool.uv]
 required-version = ">=0.12.10"
 exclude-newer = "1 week"
+# Emergency CA-trust fix (GHSA-6q48-6c7w-9gw2), admitting only releases before this cutoff.
+# Remove this dated certifi exception on/after 2026-10-27 to restore its one-week delay.
+exclude-newer-package = { certifi = "2026-10-20T20:00:00Z" }
 # Transitive through openai-agents: fix GHSA-84m7-p3x7-pcfv without adding
 # an unused direct dependency or changing the repository's freshness policy.
 constraint-dependencies = ["mcp>=1.30.0"]
