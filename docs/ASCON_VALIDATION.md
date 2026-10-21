@@ -91,6 +91,8 @@ The publication audit detected [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/
 
 The fixed package was uploaded on October 20, so a dated certifi-only cutoff admits it while the default one-week freshness rule still applies to other dependencies. Remove that dated exception on or after **October 27, 2026** to restore certifi's normal one-week delay. The competition lockfile does not contain certifi, and the validated strategy/SDK/bundle are unchanged. The existing audit suppressions were not expanded.
 
+The [publication job](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39530278944) verified the complete repository tree (`2751967738ea67b13150ae04e79936001ea39164`) against the locally reviewed patch before committing it. The generated lockfile also passes `uv lock --check --offline`.
+
 The [validated candidate artifact](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478740739/artifacts/12291507824) contains the submission ZIP and its manifest. The **inner submission ZIP** SHA-256 is:
 
 ```text
