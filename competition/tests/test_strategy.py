@@ -32,7 +32,7 @@ def test_buy_uses_official_wire_schema_and_bounded_cash(engine, observation, con
     action = decide(engine, observation, context)
     assert action["type"] == "swap"
     assert action["tokenIn"] == "USDC"
-    assert 0 < int(action["amountIn"]) <= 1_000_000_000
+    assert 0 < int(action["amountIn"]) <= 1_250_000_000
     assert int(observation["balances"]["usdcUnits"]) - int(action["amountIn"]) >= 7_500_000_000
     assert action["slippageBps"] == 35
 
@@ -43,7 +43,7 @@ def test_fee_band_means_no_trade(engine, observation, context):
 
 
 def test_best_net_executable_venue_wins(engine, observation, context):
-    add_balancer(observation, buy=2700, sell=2690)
+    add_balancer(observation, buy=2500, sell=2490)
     assert decide(engine, observation, context)["type"] == "balancerSwap"
 
 
@@ -157,11 +157,17 @@ def test_end_of_epoch_does_not_open_position(engine, observation, context):
     assert decide(engine, observation, context)["type"] == "noop"
 
 
-def test_end_of_epoch_exits_without_profitable_edge(engine, observation, context):
+def test_end_of_epoch_preserves_inventory_when_selling_loses_value(engine, observation, context):
     observation["blocksRemaining"] = 4
     observation["balances"]["wethWei"] = "1000000000000000000"
-    action = decide(engine, observation, context)
-    assert action["tokenIn"] == "WETH"
+    assert decide(engine, observation, context)["type"] == "noop"
+
+
+def test_end_of_epoch_can_still_sell_a_profitable_edge(engine, observation, context):
+    observation["blocksRemaining"] = 4
+    observation["balances"]["wethWei"] = "1000000000000000000"
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 3200
+    assert decide(engine, observation, context)["tokenIn"] == "WETH"
     assert context.messages[-1]["log"]["reason"] == "epoch_exit"
 
 
@@ -195,6 +201,7 @@ def test_settlement_cooldown(engine, observation, context):
 
 
 def test_repeated_execution_failures_pause_entries(engine, observation, context):
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 2800
     observation["competition"] = {
         "maxCompetitorPriorityFeeWei": "0",
         "maxBlockPriorityFeeWei": "0",
@@ -203,6 +210,20 @@ def test_repeated_execution_failures_pause_entries(engine, observation, context)
         "recentSampleSize": 10,
     }
     assert decide(engine, observation, context)["reason"] == "recent_execution_failures"
+    observation["blockNumber"] = "111"
+    assert decide(engine, observation, context)["reason"] == "recent_execution_failures"
+    # The outcome ring stays unchanged while idle; allow a small profitable probe.
+    observation["blockNumber"] = "112"
+    probe = decide(engine, observation, context)
+    assert probe["type"] == "swap"
+    assert int(probe["amountIn"]) <= 100_000_000
+    observation["blockNumber"] = "114"
+    assert decide(engine, observation, context)["reason"] == "recent_execution_failures"
+    observation["blockNumber"] = "124"
+    assert decide(engine, observation, context)["type"] == "swap"
+    observation["blockNumber"] = "126"
+    observation["competition"]["recentRevertRate"] = 0.2
+    assert int(decide(engine, observation, context)["amountIn"]) > 100_000_000
 
 
 def test_wbtc_uses_eight_decimals(engine, observation, context):
@@ -229,7 +250,7 @@ def test_wbtc_uses_eight_decimals(engine, observation, context):
 def test_unavailable_wbtc_venue_still_counts_towards_total_exposure(engine, observation, context):
     observation["fairPricesUsd"] = {"WETH": 3000, "WBTC": 60000}
     observation["baseDecimals"] = {"WBTC": 8}
-    observation["baseBalances"] = {"WBTC": "100000000"}
+    observation["baseBalances"] = {"WBTC": "200000000"}
     assert decide(engine, observation, context)["type"] == "noop"
 
 
@@ -247,8 +268,17 @@ def test_decisions_repeat_for_identical_inputs(engine, observation, context):
     assert decide(engine, deepcopy(observation), context) == one
 
 
-def test_resident_jsonl_process_and_imports_survive_two_requests(observation):
+def test_resident_jsonl_process_and_imports_survive_two_requests(observation, tmp_path):
     strategy = Path(__file__).resolve().parents[1] / "agents" / "eris-adaptive-v1" / "strategy.py"
+    original = strategy
+    strategy = tmp_path / "strategy.py"
+    strategy.write_text(original.read_text())
+    constants = (
+        (original.parent / "constants.py")
+        .read_text()
+        .replace("ALLOW_DIRECTIONAL_TRADES = False", "ALLOW_DIRECTIONAL_TRADES = True")
+    )
+    (tmp_path / "constants.py").write_text(constants)
     requests = [
         {
             "id": index,
@@ -277,3 +307,150 @@ def test_resident_jsonl_process_and_imports_survive_two_requests(observation):
     for response in responses:
         TypeAdapter(Action).validate_python(response["action"])
         assert response["action"]["type"] == "swap"
+
+
+def test_official_starting_basket_can_buy_a_discount(engine, observation, context):
+    observation["balances"]["wethWei"] = "8000000000000000000"
+    observation["baseBalances"] = {"WBTC": "40000000"}
+    observation["baseDecimals"] = {"WBTC": 8}
+    observation["fairPricesUsd"] = {"WETH": 3000, "WBTC": 60000}
+    action = decide(engine, observation, context)
+    assert action["type"] == "swap"
+    assert action["tokenIn"] == "USDC"
+    assert int(action["amountIn"]) > 0
+
+
+def test_forced_drawdown_exit_selects_best_price_not_rounding(engine, observation, context):
+    engine.state.run_id = observation["runId"]
+    engine.state.high_water = Decimal(50000)
+    observation["balances"]["wethWei"] = "1000000000000000000"
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 2700
+    add_balancer(observation, buy=2910, sell=2900)
+    assert decide(engine, observation, context)["type"] == "balancerSwap"
+
+
+def test_priority_bid_is_bounded_when_oracle_dominates_fee_observation(engine, observation):
+    observation["competition"] = {
+        "maxCompetitorPriorityFeeWei": "50000000000",
+        "maxBlockPriorityFeeWei": "50000000000",
+        "lastTxIndex": 14,
+        "recentRevertRate": 0,
+        "recentSampleSize": 10,
+    }
+    assert engine.priority_bid(Observation.model_validate(observation)) == 300_000_000
+    observation["limits"]["maxPriorityFeePerGasWei"] = "150000000"
+    assert engine.priority_bid(Observation.model_validate(observation)) == 150_000_000
+    observation["limits"]["defaultPriorityFeePerGasWei"] = "50000000000"
+    observation["limits"]["maxPriorityFeePerGasWei"] = "1000000000000"
+    assert engine.priority_bid(Observation.model_validate(observation)) == 2_000_000_000
+
+
+@pytest.mark.parametrize("buy_base", [True, False])
+def test_balancer_inverse_quotes_bound_size_and_impact(engine, observation, context, buy_base):
+    # Independently compute the two actual constant-product queries.
+    x, y, probe, factor = Decimal(1000), Decimal(2_700_000), Decimal("0.1"), Decimal("0.997")
+    quote_out = y * probe * factor / (x + probe * factor)
+    base_out = x * quote_out * factor / (y + quote_out * factor)
+    sell, buy = quote_out / probe, quote_out / base_out
+    add_balancer(observation, buy=float(buy), sell=float(sell))
+    observation["balances"]["wethWei"] = str(8 * 10**18)
+    observation["baseBalances"] = {"WBTC": "40000000"}
+    observation["baseDecimals"] = {"WBTC": 8}
+    fair = 3000 if buy_base else 2400
+    observation["fairPricesUsd"] = {"WETH": fair, "WBTC": 60000}
+    observation["fairPriceUsdcPerWeth"] = fair
+    observation["history"] = [
+        {"round": i, "poolPriceUsdcPerWeth": 2700, "fairPriceUsdcPerWeth": fair} for i in range(6)
+    ]
+    observation["protocols"].pop("uniswap")
+    obs = Observation.model_validate(observation)
+    market = engine.selected_markets(obs)[0]
+    venue = market.venues[0]
+    inferred = engine.balancer_depth(market, venue)
+    assert inferred is not None
+    assert abs(inferred[0] / Decimal(10**18) - 900) < Decimal("0.0001")
+    assert abs(inferred[1] / Decimal(10**6) - 2_430_000) < Decimal("0.1")
+    action = decide(engine, observation, context)
+    assert action["type"] == "balancerSwap"
+    amount = Decimal(action["amountIn"]) / (10**6 if buy_base else 10**18)
+    assert amount > (quote_out if buy_base else probe)
+    assert amount <= (Decimal("2430.001") if buy_base else Decimal("0.900001"))
+    actual_out = (
+        x * amount * factor / (y + amount * factor) if buy_base else y * amount * factor / (x + amount * factor)
+    )
+    actual_price = amount / actual_out if buy_base else actual_out / amount
+    estimated = engine.price_for_size(
+        obs, market, venue, action["tokenIn"], int(action["amountIn"]), buy if buy_base else sell
+    )
+    assert estimated >= actual_price if buy_base else estimated <= actual_price
+
+
+def paired_observation(observation):
+    observation["balances"]["wethWei"] = str(2 * 10**18)
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 3200
+    add_balancer(observation, buy=2800, sell=2790)
+
+
+def test_pair_is_funded_even_if_either_leg_fails(engine, observation, context):
+    paired_observation(observation)
+    action = decide(engine, observation, context)
+    assert action["type"] == "bundle"
+    buy, sell = action["actions"]
+    assert buy["tokenIn"] == "USDC"
+    assert sell["tokenIn"] == "WETH"
+    assert buy["type"] != sell["type"]
+    # No credit from the other leg is needed to submit or settle either swap.
+    assert int(sell["amountIn"]) <= int(observation["balances"]["wethWei"])
+    cash_after_buy_only = int(observation["balances"]["usdcUnits"]) - int(buy["amountIn"])
+    assert cash_after_buy_only >= 6_200_000_000  # 20% of 31k spot equity.
+    base_after_buy_only = Decimal(2) + Decimal(buy["amountIn"]) / 10**6 / 2800
+    assert base_after_buy_only * 3000 <= Decimal(31_000) / 2
+    assert context.messages[-1]["log"]["atomic"] is False
+
+
+def test_pair_rejects_a_spread_that_disappears_after_round_trip_costs(engine, observation, context):
+    paired_observation(observation)
+    observation["protocols"]["uniswap"]["pool"]["priceUsdcPerWeth"] = 3000
+    add_balancer(observation, buy=2985, sell=2975)
+    assert decide(engine, observation, context)["type"] != "bundle"
+
+
+def test_pair_never_relies_on_pending_buy_to_fund_sell(engine, observation, context):
+    paired_observation(observation)
+    observation["balances"]["wethWei"] = "0"
+    assert decide(engine, observation, context)["type"] != "bundle"
+
+
+def test_pair_requires_gas_for_both_legs(engine, observation, context):
+    paired_observation(observation)
+    observation["balances"]["ethWei"] = "10060000000000000"
+    assert decide(engine, observation, context)["type"] != "bundle"
+
+
+def test_end_of_epoch_keeps_pair_disabled(engine, observation, context):
+    paired_observation(observation)
+    observation["blocksRemaining"] = 4
+    action = decide(engine, observation, context)
+    assert action["type"] != "bundle"
+    assert action["tokenIn"] == "WETH"
+
+
+def test_pair_only_mode_never_opens_a_directional_position(engine, observation, context, monkeypatch):
+    monkeypatch.setattr(engine.limits, "ALLOW_DIRECTIONAL_TRADES", False)
+    assert decide(engine, observation, context)["reason"] == "no_profitable_pair"
+
+
+def test_pair_only_mode_keeps_funded_round_trips(engine, observation, context, monkeypatch):
+    monkeypatch.setattr(engine.limits, "ALLOW_DIRECTIONAL_TRADES", False)
+    paired_observation(observation)
+    assert decide(engine, observation, context)["type"] == "bundle"
+
+
+def test_gas_estimate_uses_the_pinned_zero_base_fee_chain(engine, observation, context):
+    paired_observation(observation)
+    action = decide(engine, observation, context)
+    assert action["type"] == "bundle"
+    message = context.messages[-1]["log"]
+    bid = int(message["priority_fee_wei"])
+    expected = Decimal(2 * engine.limits.ASSUMED_SWAP_GAS * bid) / 10**18 * 3000
+    assert Decimal(message["estimated_gas_usdc"]) == expected

@@ -4,11 +4,12 @@ A Python trading agent for **NYX ASCON**, built against the official Eris simula
 The existing forecasting application is retained; its documentation
 is in [FORECASTING.md](FORECASTING.md).
 
-**Status:** the frozen candidate passed all **60 public market scenarios** under
-observed **2 CPU / 4 GiB Docker limits**, with successful trades on all three venues.
-CI and bundle checks pass. Live LLM revision testing and final submission checks
-remain; trading results are mixed and trail the starter on average.
-See [validation results](docs/ASCON_VALIDATION.md).
+**Status:** the repaired frozen candidate passed **60 public + 12 additional-seed
+scenarios** under observed **2 CPU / 4 GiB Docker limits**. Public mean P&L improved
+to **+473.19 simulated USDC**, while the starter still leads by **292.08 USDC**
+on average. CI and bundle checks pass. Live LLM revisions and final submission
+acceptance remain unverified. See [validation results](docs/ASCON_VALIDATION.md)
+and [the performance repair](docs/ASCON_PERFORMANCE.md).
 
 ## Start here
 
@@ -42,20 +43,21 @@ among the competition's designated inference services.
 
 `eris-adaptive-v1` implements the official Python `decide(obs, ctx)` / JSONL interface:
 
-- WETH/USDC and WBTC/USDC relative-value trading across supported Uniswap, Balancer
-  and Curve observations, using executable quotes when available.
+- Independently funded WETH/USDC and WBTC/USDC trade pairs across Uniswap, Balancer
+  and Curve, using executable two-sided quotes and conservative size impact.
 - Fee, estimated gas, slippage and pool-depth checks before entering a position.
 - Smaller entries during large price moves, cash and gas reserves, exposure limits,
-  decision cooldowns and pauses after excessive reverted transactions.
-- Inventory reduction near an epoch's end or after a drawdown.
+  decision cooldowns and spaced small recovery probes after excessive reverted transactions.
+- Profitable reductions near an epoch's end and emergency inventory reduction after a drawdown.
 - An improvement policy requesting LLM strategy review every 60 blocks, using the
   official runtime's version history, memory and explicit revert mechanism.
 - Separate frozen and improving rosters, an unchanged `my-arb-py` comparison agent,
   a pinned SDK/runtime, and a bundle with SHA-256 provenance.
 
-This is a single-action spot strategy. A reference-price discrepancy is not a
-guaranteed arbitrage profit: the reference lags, trades can fail, and inventory
-can lose value. Risk constants are starting assumptions, not fitted parameters.
+Paired bundles fund each leg from current balances and are not atomic: either leg
+can fail independently, and starting inventory can lose value. Standalone directional
+entries are disabled by default. Limits were reviewed with controlled frozen comparisons;
+performance on selected development cases is not proof of generalization.
 The policy asks revisions to retain risk limits; that instruction is not an
 independent runtime risk gate. The official runtime has no automatic rollback.
 

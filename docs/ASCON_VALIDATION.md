@@ -1,134 +1,114 @@
 # ASCON validation record
 
-**The frozen candidate passed all 60 public market scenarios and the Docker
-resource checks. Live LLM revisions and final submission acceptance remain unverified.**
+**The repaired frozen candidate passed all 60 public scenarios and all 12 additional-seed scenarios under observed 2 CPU / 4 GiB Docker limits.** Performance improved, but the candidate still trails the starter on average. Live LLM revision and organizer acceptance remain unverified.
 
-Validated October 20, 2026. Candidate sources: repository commit
-`b6ac83f7ffad985639b220c46201c036ed8b0b67`. Eris/Python SDK pin:
-`e5b93b651bba2384aedfa891cecbf7b64d05b88b`.
+Validated October 20, 2026. Tested repository commit: `8cadc87a0c728ee509f77d2a4ee5a6c1a3d1ed8c`. Eris/Python SDK pin: `e5b93b651bba2384aedfa891cecbf7b64d05b88b`. Later documentation and retained-application dependency commits do not change the validated agent source hashes.
 
-## Full market and Docker evidence
+## Full market and resource evidence
 
-The [market workflow](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39347083417)
-passed **60/60 scenarios**: all 12 published regimes × 5 seeds, each with the
-published 360 blocks at 2 seconds per block. It deployed all seven official venues
-and ran the candidate beside unchanged `my-arb-py` and no-op controls. Every agent
-was frozen; the workflow used no inference keys.
+The [market workflow](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478740739) completed the published 12 regimes × seeds 101, 202, 303, 404 and 505, plus all 12 regimes at seed 606. Each case retained the official **360 blocks at 2 seconds per block**. All seven official venues were deployed; the candidate ran beside unchanged starter and no-op controls. All agents were frozen and inference keys were blank.
 
-All scenarios completed without early agent exits, decision errors/timeouts,
-missing transaction logs, failed valuation reads or rule/gas violations. The
-review also checked the live epoch and interval valuation boundaries. Actual
-running containers had **2 CPUs, 4 GiB RAM, no additional swap and a read-only root**.
-All 60 results matched the same candidate source hashes, images and SDK pin.
+Every successful case passed checks for complete block windows, valuation reads, decision errors/timeouts, early exits, transaction logging and rule/gas violations. Downloaded artifact hashes were verified; all successful cases used identical agent source hashes, SDK revision, Docker images and observed resource settings: **2 CPUs, 4 GiB RAM, no additional swap, read-only root**.
 
-The [committed evidence](validation/2026-10-20-public-matrix.json) records per-case
-P&L, source and artifact hashes, observed Docker settings, transaction outcomes
-and the bundle hash. Full summaries and logs remain in the workflow's
-`ascon-market-result-<regime>-<seed>` artifacts; `ascon-public-matrix-report` contains
-the aggregate audit. Artifact retention is finite; the committed record preserves
-the reviewed results. See [the setup guide](ASCON_SETUP.md#automated-market-and-resource-validation)
-for reproduction.
+The committed [public evidence](validation/2026-10-20-performance-public.json) and [additional-seed evidence](validation/2026-10-20-performance-extra-seed.json) preserve per-case returns, execution outcomes, artifact hashes, resource settings and bundle provenance. Full logs and summaries remain in the workflow artifacts, whose retention is finite. The [previous baseline](validation/2026-10-20-public-matrix.json) remains unchanged for comparison. See [the setup guide](ASCON_SETUP.md#automated-market-and-resource-validation) for reproduction.
 
-These are execution checks under observed configured caps, not peak RAM
-measurements or certification of organizer network isolation. The official local
-Docker runner uses host networking. Full competition scoring uses other entrants
-and hidden scenarios, so this three-agent test does not predict placement.
+### Startup retry
+
+The first spike/202 attempt stopped during the official simulator's wallet funding: it could not locate an ERC20 balance slot. It produced no agent trades or scenario summary. The initial aggregate correctly failed. That same case passed on one unchanged retry; the other 71 successful cases were retained. The final aggregate then passed exact coverage and source/SDK checks.
+
+The evidence retains the failed attempt's log excerpt and artifact digest, both attempt identifiers, and the successful retry. No completed economic result was discarded or retried to improve a score.
+
+These are observations of configured caps, not peak-memory measurements or certification of organizer network isolation. The official local Docker runner uses host networking.
 
 ## Trading results
 
-Across the 60 scenarios, mean economic P&L was **−33.16 USDC** per scenario.
-The candidate averaged **+127.05 USDC versus no-op** and **−816.05 USDC versus the
-starter**, beating them in 37/60 and 19/60 cases respectively. It is operationally
-validated but does not consistently outperform the starter.
+The same 60 public regime/seed combinations were used before and after the repair. All monetary values below are simulated USDC per scenario, using economic `pnlUsdc` and within-run differences to controls.
 
-Each row below averages five seeds. Differences compare agents within the same
-run using `pnlUsdc`, not the runtime's separate `netPnlUsdc` or `alphaUsdc` fields.
+| Metric | Baseline | Repaired |
+| --- | ---: | ---: |
+| Mean P&L (USDC) | −33.16 | +473.19 |
+| Mean versus starter (USDC) | −816.05 | −292.08 |
+| Mean versus no-op (USDC) | +127.05 | +633.40 |
+| Wins versus starter | 19/60 | 25/60 |
+| Wins versus no-op | 37/60 | 59/60 |
+| Mined reverts / included transactions | 115 / 2,521 (4.56%) | 5 / 1,567 (0.32%) |
+| Pre-submission failures | 73 | 11 |
 
-| Regime | Mean P&L (USDC) | Versus starter | Versus no-op |
-| --- | ---: | ---: | ---: |
-| calm | +196.87 | +233.27 | +214.92 |
-| cdp-incident | -612.18 | -536.52 | +419.73 |
-| cex-drift | +591.85 | -2,976.84 | -401.00 |
-| crash | -410.81 | -1,156.63 | +0.14 |
-| depeg | +145.24 | -373.38 | -134.72 |
-| depeg-persist | +428.45 | +164.40 | +235.07 |
-| informed-flow | +289.99 | +13.82 | +307.62 |
-| launch | -23.17 | +80.86 | -2.01 |
-| lending-incident | -1,006.11 | -1,279.55 | +82.43 |
-| spike | -544.31 | -1,068.41 | +296.29 |
-| vuln | +133.73 | -145.81 | +180.00 |
-| whale | +412.50 | -2,747.74 | +326.08 |
+The mean deficit to the starter narrowed by **64.2%**, but was not eliminated. Median candidate P&L was **+276.06 USDC** and the median difference to the starter was **−102.68 USDC**. Trending prices, lending incidents and crashes remain substantial weaknesses. Market interactions and wall-clock ordering can change the controls' results between runs; this is an observed matched-set comparison, not a claim that every difference has a single cause.
 
-There were **2,521 included candidate transactions: 2,406 succeeded and 115 reverted**.
-Successful fills included 904 Uniswap, 538 Balancer and 964 Curve transactions.
-There were also 73 pre-submission failures: 70 `Too little received` responses and
-3 `BAL#507` responses. These outcomes are retained in the evidence, not hidden by
-the execution pass. The crash-101 run triggered the execution-failure pause.
-A successful simulator process alone is not evidence of successful fills or profit.
+Each row below averages all five public seeds:
 
-### Defect corrected during validation
+| Regime | Mean P&L | Versus starter | Versus no-op | Wins vs starter |
+| --- | ---: | ---: | ---: | ---: |
+| calm | +190.88 | +245.27 | +208.94 | 3/5 |
+| cdp-incident | −567.63 | −337.56 | +464.28 | 1/5 |
+| cex-drift | +1,320.61 | −2,350.97 | +327.77 | 0/5 |
+| crash | −41.10 | −943.39 | +369.84 | 1/5 |
+| depeg | +511.85 | +101.86 | +231.89 | 3/5 |
+| depeg-persist | +520.23 | +489.24 | +326.85 | 4/5 |
+| informed-flow | +731.21 | −47.24 | +748.84 | 1/5 |
+| launch | +195.94 | +38.45 | +217.10 | 3/5 |
+| lending-incident | −826.96 | −1,163.76 | +261.58 | 1/5 |
+| spike | −484.54 | −703.87 | +356.07 | 0/5 |
+| vuln | +278.13 | +310.74 | +324.41 | 5/5 |
+| whale | +3,849.71 | +856.28 | +3,763.29 | 3/5 |
 
-The [earlier baseline](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39340156274)
-completed all 60 cases, but its trade logs exposed a venue integration defect.
-The pinned Balancer/Curve adapters supply executable quotes without reserve fields;
-the old depth check therefore prevented both venues from trading.
+The candidate attempted **752 pairs**, with **16 one-leg fills**. It had **1,567 included transactions, 5 mined reverts and 11 pre-submission failures**. Successful fills occurred on Uniswap, Balancer and Curve. Paired orders are independently funded but not atomic; starting inventory and partial fills can lose value.
 
-The fix bounds missing-reserve trades to the adapter's actual 0.1-base-unit probe,
-or its USDC sell proceeds for a buy. When reserves are present, their fraction cap
-still applies. Existing cash, gas, exposure, slippage and notional limits remain.
-Tests cover actual adapter observation shapes and WETH/WBTC buys and sells. The
-corrected candidate's full matrix above confirms successful fills on all three
-venues. No return improvement is attributed solely to this fix: wall-clock order
-and interactions also affect market results.
+The [performance repair](ASCON_PERFORMANCE.md) explains the defects and the 28 controlled development runs used to choose this candidate. Those four development cases are included in the public matrix and must not be described as held out.
+
+### Additional seed
+
+The strategy was frozen before testing seed 606 across all 12 regimes. This seed was selected before paired comparisons completed and was not used for tuning. It is a public seed in other upstream examples, not a secret contest seed.
+
+All **12/12** extra cases passed the execution/resource checks. Mean candidate P&L was **+121.13 USDC**; median P&L was **−79.34 USDC**. The mean difference was **−547.43 USDC versus the starter** and **+472.88 USDC versus no-op**. The candidate won **4/12** against the starter and **12/12** against no-op, with **223 included transactions, 2 mined reverts, 3 pre-submission failures and 5 partial pairs**.
+
+These 12 cases are separate from the public 60. Their mean must not be compared to the old 60-case mean as a same-set improvement. They support execution robustness and value over holding this basket, but do not establish consistent starter outperformance.
+
+### Interpretation of competition scoring
+
+The [pinned official scorer](https://github.com/NyxFoundation/eris-agent-simulator/blob/e5b93b651bba2384aedfa891cecbf7b64d05b88b/core/src/scoring/deviationScore.ts) standardizes economic P&L among non-benchmark entrants **within each epoch**, then applies epoch-order weights. This report's raw-USDC means are diagnostics, not predicted contest scores. A three-agent roster, known regimes and one additional seed do not establish performance against the full field or hidden scenarios.
 
 ## Other completed checks
 
-[Competition CI](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39347089061)
-and [repository CI](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39347089063)
-passed for the tested candidate.
+[Competition CI](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478747285) and [repository CI](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478747434) passed for the tested source.
 
 | Check | Result |
 | --- | --- |
-| Python strategy, SDK protocol and result-audit tests | 65 passed on Python 3.11.16 |
+| Python strategy, SDK protocol and audit tests | 84 passed on Python 3.11.16 |
 | OpenRouter/AkashML configuration tests | 6 passed on Node.js 24 |
 | Competition lint, formatting and types | Passed; 0 type errors/warnings |
 | Official static checker | Passed across 50 staged/upstream files |
-| Actual TypeScript-to-Python bridge | Decisions, compiled replacement/restoration and actual AMM observation shapes passed |
-| Official improvement policy loader/parser | Synthetic replacement passed; no real model called |
-| Official inference transport | Both providers passed mocked routing, authorization, token caps, usage/errors and credential-filtering checks |
-| Full retained application suite | 10,855 passed, 40 skipped, 5 deselected; 93% coverage |
+| Actual TypeScript-to-Python bridge | Paired decisions, compiled replacement/restoration and actual AMM observations passed |
+| Official improvement policy and inference transport | Synthetic revision and mocked provider transport passed; no real model called |
+| Retained application suite | 10,855 passed, 40 skipped, 5 deselected; 93% coverage |
 | Repository lint, types, import contracts, vulnerability audit and secret scan | Passed |
-| Official bundle | Source bytes, license, absence of environment files and SHA-256 manifest verified |
+| Official bundle | Agent bytes, upstream license, absence of environment files and SHA-256 verified |
 
-The CI-built candidate is in `ascon-validated-candidate-input` on the market run.
-Its ZIP SHA-256 is:
+### Dependency audit follow-up
+
+The publication audit detected [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2), published while the market validation was running. The retained application used certifi 2026.7.22, whose trust bundle included an affected emSign root. Its requirement and lockfile now select **certifi 2026.10.19**, the advised fixed release. That certifi patch changed no other package version.
+
+A later audit found nine Pillow advisories, including the critical [JPEG decoder overflow](https://github.com/python-pillow/Pillow/security/advisories/GHSA-8g5g-8vmr-9782). Pillow **12.3.0 → 13.0.0** is the only package version changed in that follow-up. The pinned forecasting framework (0.2.92), and its current 0.3.4 release, both cap Pillow below 13. A scoped uv override admits `pillow>=13.0.0,<14` while retaining the existing framework; remove that override when the pinned framework permits Pillow 13. The [Pillow 13 release notes](https://pillow.readthedocs.io/en/stable/releasenotes/13.0.0.html) were reviewed against the application image APIs, and the full existing CI suite checks compatibility.
+
+The fixed certifi package was uploaded on October 20 and Pillow on October 16. Dated package-specific cutoffs admit these security releases while the default one-week freshness rule still applies to other dependencies. Remove both dated exceptions on or after **October 28, 2026** to restore their normal one-week delay. Neither package appears in the competition lockfile, so the validated strategy/SDK/bundle are unchanged. The existing audit suppressions were not expanded.
+
+The [certifi publication job](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39530278944) verified the complete repository tree (`2751967738ea67b13150ae04e79936001ea39164`) against the locally reviewed patch before committing it. The generated lockfile also passes `uv lock --check --offline`.
+
+The [Pillow publication job](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39531196949) likewise verified tree `bbe9f8029fa17d504ca6f8ae2e2e441ac8310a46` before publishing the generated lockfile and scoped override.
+
+The [validated candidate artifact](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478740739/artifacts/12291507824) contains the submission ZIP and its manifest. The **inner submission ZIP** SHA-256 is:
 
 ```text
-4f3d010dd07cbcd04045e5eb18272a28bbbd129d9454b8e6a2869f48f62b1f4d
+56094304f14049cebd47d9d78c117e4f4f5ea99747b2e3a90b8ce540f64cf579
 ```
 
-A later rebuild can have different ZIP metadata; verify its source hashes as well
-as its own archive hash. Packaging does not constitute an accepted submission.
+The outer Actions artifact has a separate digest, recorded in the evidence. Rebuilding can change ZIP metadata; verify source hashes as well as the rebuilt archive's hash. Packaging is not submission acceptance.
 
 ## Remaining readiness steps
 
-OpenRouter/AkashML key-presence checks found neither credential configured in this
-workspace. No real provider request has been made. Mocked transport and synthetic
-replacement tests do not validate credentials, credits, model-generated code or
-live state persistence/reversion.
+1. Configure a supported provider and approve a specific paid revision run. `AGENTS.md` requires per-run spend approval with an exact command and cost estimate. The [key guide](ASCON_SETUP.md#2-keys-which-ones-and-where) covers OpenRouter/AkashML for local development and designated competition providers.
+2. Inspect real model responses and subsequent decisions, including replacement, retention, persistence and explicit reversion in Docker. A connectivity smoke test or mocked revision is insufficient evidence for this path.
+3. Verify compatibility with the organizer's final evaluation SDK, register the provider credential separately, and submit the reviewed ZIP through the official process. Retain its accepted hash and confirmation.
 
-1. Configure one designated competition provider and approve a specific paid
-   revision run. `AGENTS.md` requires per-run spend approval with the exact command
-   and a cost estimate. The [key and run guide](ASCON_SETUP.md#2-keys-which-ones-and-where)
-   contains the local setup and commands. OpenRouter/AkashML support is for local
-   development; the published designated services are Ollama Cloud, Anthropic API
-   and OpenAI API.
-2. Inspect real revision outcomes and subsequent decisions, then validate
-   persistence/reversion and the accepted model configuration in Docker. A model
-   declining to change code validates retention, not replacement execution. A
-   connection smoke test alone does not exercise strategy revision.
-3. Check the final evaluation SDK when its hash is published on October 31.
-   Register the provider credential separately and submit the reviewed ZIP through
-   the organizer's process. Retain the accepted artifact hash and confirmation.
-
-No paid inference, competition registration or submission is automated by CI.
+No paid inference, organizer registration or submission was performed by this repair.

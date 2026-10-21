@@ -249,10 +249,11 @@ run on the same conditions. Public seeds may change after an official rule updat
 ### Automated market and resource validation
 
 The **ASCON market validation** GitHub Actions workflow runs on competition-source
-pushes or manual dispatch. Documentation-only pushes do not repeat the matrix.
-It deploys the pinned local economy, builds the three official agent images, and runs the published calm and
-crash scenarios first. When those pass, it runs the other 58 regime/seed pairs in
-parallel. Every scenario retains its official block count and timing. The workflow
+or market-workflow pushes, or manual dispatch. Documentation-only pushes do not
+repeat the matrix. It deploys the pinned local economy and builds the three official
+agent images. The published calm/crash smoke cases and all 12 regimes at additional
+seed 606 then run in parallel. Passing both smoke cases releases the remaining
+58 published regime/seed pairs. Every scenario retains its official block count and timing. The workflow
 uses no inference keys; all agents are frozen.
 
 The check fails for incomplete block windows, missing/failed valuation reads,
@@ -267,14 +268,32 @@ Download `ascon-public-matrix-report` from the workflow run for coverage, source
 hashes and economic P&L against both controls. The individual
 `ascon-market-result-<regime>-<seed>` artifacts contain summaries and execution
 logs. The aggregate passes only when all 60 cases pass with the same candidate
-sources and runtime pin. A green offline workflow is a separate result.
+sources and runtime pin. The separate `ascon-extra-seed-report` requires all 12 regimes
+at seed 606 with matching sources and SDK; its results never count toward public coverage.
+Performance summaries include mean/median P&L, within-run control differences, wins,
+mined reverts, pre-submission failures and partially filled pairs. Receipt outcomes
+match simulator rounds, which can differ from chain block numbers. A green offline
+workflow is a separate result.
 
 On a Docker-enabled machine with deployed state and the images already built,
 run the same audit from the repository root:
 
 ```bash
 uv run --project competition --frozen python competition/validation.py run --regime calm --seed 101 --out dist/market/calm-101
+
+# Additional seed; the default audit refuses non-public regime/seed combinations.
+uv run --project competition --frozen python competition/validation.py run --regime calm --seed 606 --allow-extra-seed --out dist/holdout/calm-606
 ```
+
+After collecting all 12 extra-seed reports under `dist/holdout`, aggregate them with:
+
+```bash
+uv run --project competition --frozen python competition/validation.py aggregate --inputs dist/holdout --seed 606 --allow-extra-seed --out dist/extra-seed-report.json
+```
+
+Use a seed that was not used for selecting changes when evaluating generalization.
+Keep strategy bytes frozen across the set. See [the performance repair](ASCON_PERFORMANCE.md)
+for the current selection protocol and measured results.
 
 ## 5. Test the required LLM improvement path explicitly
 

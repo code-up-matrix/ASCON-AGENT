@@ -34,15 +34,30 @@ const runner = new PyBridge(
 const observation = (round) => {
   const obs = pythonObservation(round);
   obs.balances.usdcUnits = "25000000000";
-  obs.balances.wethWei = "0";
-  obs.enabledProtocols = ["uniswap"];
+  obs.balances.wethWei = "2000000000000000000";
+  obs.fairPriceUsdcPerWeth = 3000;
+  obs.fairPricesUsd = { WETH: 3000 };
+  obs.baseDecimals = { WETH: 18 };
+  obs.baseBalances = {};
+  obs.history = Array.from({ length: 6 }, (_, round) => ({
+    round, poolPriceUsdcPerWeth: 3000, fairPriceUsdcPerWeth: 3000,
+  }));
+  obs.enabledProtocols = ["uniswap", "balancer"];
+  obs.protocols.uniswap.pool.priceUsdcPerWeth = 3200;
   obs.protocols.uniswap.pool.liquidity = "100000000000000000";
+  obs.protocols.balancer = {
+    priceUsdcPerWeth: Math.sqrt(2500 * 2510),
+    sellPriceUsdcPerWeth: 2500,
+    buyPriceUsdcPerWeth: 2510,
+    effectiveHalfSpreadBps: 20,
+  };
   return obs;
 };
 try {
   const first = await runner.decide(observation(1));
-  assert.equal(first.action.type, "swap");
-  assert.equal(first.action.tokenIn, "USDC");
+  assert.equal(first.action.type, "bundle");
+  assert.equal(first.action.actions[0].tokenIn, "USDC");
+  assert.equal(first.action.actions[1].tokenIn, "WETH");
   assert.equal((await runner.decide(observation(2))).action.reason, "settlement_cooldown");
   const parsed = parseRevision({
     notes: "Offline fixture: mark the replacement to prove it executes.",
@@ -52,12 +67,12 @@ try {
   const revised = await runner.prepareSource(parsed.revision.executorPy);
   assert.equal(revised.ok, true);
   runner.setSource(revised.source);
-  assert.equal((await runner.decide(observation(3))).action.type, "swap");
+  assert.equal((await runner.decide(observation(3))).action.type, "bundle");
   assert.equal(logs.at(-1).marker, "ASCON_REVISION_TEST");
   const reverted = await runner.prepareSource(original);
   assert.equal(reverted.ok, true);
   runner.setSource(reverted.source);
-  assert.equal((await runner.decide(observation(4))).action.type, "swap");
+  assert.equal((await runner.decide(observation(4))).action.type, "bundle");
   assert.equal(logs.at(-1).marker, "ASCON_DECISION");
   // Exercise the actual adapter's observation contract: reserves are optional
   // in the schema and absent from the pinned Balancer/Curve observe() output.
@@ -84,14 +99,19 @@ try {
     obs.fairPricesUsd = { WETH: 3000 };
     obs.baseDecimals = { WETH: 18 };
     obs.baseBalances = {};
-    obs.enabledProtocols = [protocol];
-    obs.protocols = { [protocol]: venue };
+    obs.enabledProtocols = ["uniswap", protocol];
+    obs.protocols = { uniswap: obs.protocols.uniswap, [protocol]: venue };
     const reply = await runner.decide(obs);
-    assert.equal(reply.action.type, actionType);
-    assert.equal(reply.action.tokenIn, "USDC");
-    assert.ok(BigInt(reply.action.amountIn) > 0n && BigInt(reply.action.amountIn) <= 250_000_000n);
+    assert.equal(reply.action.type, "bundle");
+    const [buy, sell] = reply.action.actions;
+    assert.equal(buy.type, actionType);
+    assert.equal(buy.tokenIn, "USDC");
+    assert.ok(BigInt(buy.amountIn) > 0n && BigInt(buy.amountIn) <= 250_000_000n);
+    assert.equal(sell.type, "swap");
+    assert.equal(sell.tokenIn, "WETH");
+    assert.ok(BigInt(sell.amountIn) <= BigInt(obs.balances.wethWei));
   }
-  console.log("Official Python bridge PASS: decisions, replacement/restoration and real AMM observation shapes; no model call.");
+  console.log("Official Python bridge PASS: paired decisions, replacement/restoration and real AMM observation shapes; no model call.");
 } finally {
   await runner.close();
 }

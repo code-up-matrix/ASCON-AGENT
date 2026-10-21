@@ -4,10 +4,11 @@ on:
   workflow_dispatch:
   # Push diffs cover only the new commits. A pull_request path filter includes
   # the entire PR, so publishing its results would rerun the 60-case matrix.
-  # Workflow-only edits can be exercised with workflow_dispatch.
+  # Workflow edits also validate their scenario scheduling and evidence checks.
   push:
     paths:
       - 'competition/**'
+      - '.github/workflows/ascon-market-validation.yaml'
 
 permissions:
   contents: read
@@ -20,6 +21,11 @@ env:
   ERIS_AGENT_FROZEN: '1'
   ERIS_DOCKER_MEM: 4g
   ERIS_DOCKER_CPUS: '2'
+  OLLAMA_API_KEY: ''
+  OPENAI_API_KEY: ''
+  ANTHROPIC_API_KEY: ''
+  OPENROUTER_API_KEY: ''
+  AKASHML_API_KEY: ''
 
 jobs:
   prepare:
@@ -27,6 +33,7 @@ jobs:
     timeout-minutes: 60
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
+      holdout: ${{ steps.plan.outputs.holdout }}
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v7
@@ -159,9 +166,52 @@ jobs:
             .eris/eris-agent-simulator/runs/
           retention-days: 7
 
+  # Additional-seed cases use the same prepared images and can occupy spare
+  # runners while the two public smoke cases gate the remaining public matrix.
+  holdout:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix: ${{ fromJSON(needs.prepare.outputs.holdout) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.11.16'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: make ascon-install ascon-prepare
+      - run: npm ci --ignore-scripts
+        working-directory: .eris/eris-agent-simulator
+      - uses: actions/download-artifact@v4
+        with:
+          name: ascon-market-state
+          path: dist/market-state
+      - name: Load identical state and images
+        run: |
+          tar -C .eris/eris-agent-simulator -xzf dist/market-state/state.tar.gz
+          gzip -dc dist/market-state/images.tar.gz | docker load
+      - name: Run preregistered extra seed without changing scenario timing
+        run: uv run --project competition --frozen python competition/validation.py run --regime "${{ matrix.regime }}" --seed 606 --allow-extra-seed --out "dist/holdout/${{ matrix.regime }}-606"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ascon-holdout-result-${{ matrix.regime }}-606
+          path: |
+            dist/holdout/
+            .eris/eris-agent-simulator/runs/
+          retention-days: 7
+
   report:
     if: always()
-    needs: [prepare, smoke, public-matrix]
+    needs: [prepare, smoke, public-matrix, holdout]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -186,4 +236,19 @@ jobs:
         with:
           name: ascon-public-matrix-report
           path: dist/public-matrix-report.json
+          retention-days: 30
+
+      - uses: actions/download-artifact@v4
+        if: always()
+        with:
+          pattern: ascon-holdout-result-*
+          path: dist/holdout-results
+      - name: Require all extra-seed regimes and matching candidate hashes
+        if: always()
+        run: uv run --project competition --frozen python competition/validation.py aggregate --inputs dist/holdout-results --seed 606 --allow-extra-seed --out dist/extra-seed-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ascon-extra-seed-report
+          path: dist/extra-seed-report.json
           retention-days: 30
