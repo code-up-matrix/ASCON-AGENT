@@ -95,6 +95,8 @@ The fixed certifi package was uploaded on October 20 and Pillow on October 16. D
 
 The [certifi publication job](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39530278944) verified the complete repository tree (`2751967738ea67b13150ae04e79936001ea39164`) against the locally reviewed patch before committing it. The generated lockfile also passes `uv lock --check --offline`.
 
+The [Pillow publication job](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39531196949) likewise verified tree `bbe9f8029fa17d504ca6f8ae2e2e441ac8310a46` before publishing the generated lockfile and scoped override.
+
 The [validated candidate artifact](https://github.com/code-up-matrix/ASCON-AGENT/actions/runs/39478740739/artifacts/12291507824) contains the submission ZIP and its manifest. The **inner submission ZIP** SHA-256 is:
 
 ```text
